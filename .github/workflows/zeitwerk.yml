@@ -44,5 +44,8 @@ jobs:
           max_attempts: 3
           command: bundle install --jobs 4 --retry 3
 
+      - name: Create empty application.yml
+        run: touch config/application.yml
+
       - name: Check zeitwerk class loading
         run: bundle exec rails zeitwerk:check

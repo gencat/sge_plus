@@ -34,6 +34,9 @@ jobs:
             ${{ runner.OS }}-rubydeps-
             ${{ runner.OS }}-
 
+      - name: Create empty application.yml
+        run: touch config/application.yml
+
       - name: Set bundle local config configvendor/bundle path
         run: bundle config set --local path 'vendor/bundle'
 
