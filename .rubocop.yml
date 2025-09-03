@@ -1,2 +1,11 @@
 inherit_gem:
   decidim-dev: rubocop-decidim.yml
+
+Rails/BulkChangeTable:
+  Enabled: false
+
+Rails/ThreeStateBooleanColumn:
+  Enabled: false
+
+Style/FetchEnvVar:
+  Enabled: false

@@ -27,6 +27,7 @@ class MoveAuthorizationsToNewApi < ActiveRecord::Migration[5.1]
     self.table_name = :decidim_components
   end
 
+  # rubocop: disable Style/SafeNavigationChainLength
   def up
     Organization.find_each do |organization|
       migrated_authorizations = organization.available_authorizations.map do |authorization|
@@ -51,6 +52,7 @@ class MoveAuthorizationsToNewApi < ActiveRecord::Migration[5.1]
       component.save!
     end
   end
+  # rubocop: enable Style/SafeNavigationChainLength
 
   def down
     Organization.find_each do |organization|

@@ -8,7 +8,7 @@ describe "Homepage" do
   let!(:organization) do
     create(
       :organization,
-      name: {ca: "SGE Plus"},
+      name: { ca: "SGE Plus" },
       default_locale: :en,
       available_locales: [:ca, :en, :es]
     )

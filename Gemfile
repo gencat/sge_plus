@@ -31,6 +31,3 @@ group :development do
   gem "listen", "~> 3.1"
   gem "web-console", "~> 4.2"
 end
-
-group :production do
-end
