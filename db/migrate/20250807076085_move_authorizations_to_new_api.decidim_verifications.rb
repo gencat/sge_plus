@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # This migration comes from decidim_verifications (originally 20171030133426)
+# This file has been modified by `decidim upgrade:migrations` task on 2025-09-03 08:54:23 UTC
 #
 # Assumes to authorizations in the old format (as rectify form classes) will be
 # registered as the underscored class name using the new API. For example, a
@@ -27,7 +28,6 @@ class MoveAuthorizationsToNewApi < ActiveRecord::Migration[5.1]
     self.table_name = :decidim_components
   end
 
-  # rubocop: disable Style/SafeNavigationChainLength
   def up
     Organization.find_each do |organization|
       migrated_authorizations = organization.available_authorizations.map do |authorization|
@@ -52,7 +52,6 @@ class MoveAuthorizationsToNewApi < ActiveRecord::Migration[5.1]
       component.save!
     end
   end
-  # rubocop: enable Style/SafeNavigationChainLength
 
   def down
     Organization.find_each do |organization|

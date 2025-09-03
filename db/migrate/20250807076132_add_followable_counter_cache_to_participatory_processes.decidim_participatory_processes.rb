@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 # This migration comes from decidim_participatory_processes (originally 20210310120750)
+# This file has been modified by `decidim upgrade:migrations` task on 2025-09-03 08:54:23 UTC
 class AddFollowableCounterCacheToParticipatoryProcesses < ActiveRecord::Migration[5.2]
   def change
-    add_column :decidim_participatory_processes, :follows_count, :integer, null: false, default: 0
-    add_index :decidim_participatory_processes, :follows_count
+    add_column :decidim_participatory_processes, :follows_count, :integer, null: false, default: 0, index: true
 
     reversible do |dir|
       dir.up do
