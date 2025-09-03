@@ -1,0 +1,102 @@
+.gencat-navbar {
+  background-color: var(--colors-gencat-gray-hover);
+
+  .custom-navbar {
+    @apply flex justify-between w-full py-4 container;
+    padding-left: 77px;
+
+    img {
+      height: 2rem;
+    }
+
+    // Hide external link icon
+    a {
+      color: white;
+      font-size: 20px;
+      
+      &:hover {
+        color: white;
+        text-decoration: underline;
+      }
+
+      span {
+        display: none;
+      }
+    }
+  }
+
+  .language-choose {
+    @include mq($until: large_phone) {
+      display: none !important;
+    }
+  }
+}
+
+.main-bar__container {
+  background-color: var(--colors-gencat-text-grey);
+
+  .main-bar__links-desktop__item {
+    color: white;
+
+    &:hover {
+      color: var(--colors-gencat-text-grey);
+
+      svg {
+        fill: var(--colors-gencat-text-grey);
+      }
+    }
+
+    svg {
+      fill: white;
+    }
+  }
+
+  .part-circle {
+    display: inline;
+    position: relative;
+    height: 2.000em;
+    width: 2.000em;
+    float: left;
+    margin-left: .5em;
+    padding: .40em;
+    background: var(--colors-gencat-text-normal);
+    border-radius: 100%;
+    color: white;
+    font-weight: normal;
+    font-size: .875em;
+    text-align: center;
+    line-height: 1.1em;
+  
+    &:hover {
+      background-color: white;
+      color: black;
+    }
+  }
+
+  .main-bar__logo {
+    span {
+      display: none;
+    }
+
+    img {
+      height: 2em;
+      text-indent: -555em;
+      margin: .5em 15px;
+      cursor: pointer;
+    }
+  }
+  
+  .main-bar__links-mobile__trigger {
+    svg {
+      color: white;
+    }
+  }
+
+  .main-bar__avatar {
+    border-color: white !important;
+  
+    span {
+      color: white;
+    }
+  }
+}

@@ -2,7 +2,98 @@
 // Notice that this file is included at the very end of the stylesheets packs to have
 // more priority
 //
-// To override the Tailwind CSS configuration you can do so by following the instructions
-// available at https://docs.decidim.org/en/develop/customize/styles.html#_tailwind_css
+// To override CSS variables or Foundation settings use _decidim-settings.scss
 //
 // By default this is empty.
+
+$breakpoints: (
+  small: 0,
+  smallmedium: 450px,
+  medium: 640px,
+  mediumlarge: 800px,
+  large: 1024px,
+  xlarge: 1200px,
+  xxlarge: 1440px,
+);
+
+:root {
+  --colors-gencat-red: #c00000;
+  --colors-gencat-select: #efefef;
+  --colors-gencat-gray-hover: #404040;
+  --colors-gencat-gray-dark: #2c2930;
+  --colors-gencat-black-footer: #020202;
+  --colors-gencat-gray-footer: #d3d3d3;
+  --colors-gencat-gray-medium: #828282;
+  --colors-gencat-text-normal: #666666;
+  --colors-gencat-text-grey: #333;
+
+  --colors-card-default: #d9d9d9;
+  --colors-card-info: #d9edf7;
+  --colors-card-warning: #fcf8e3;
+  --colors-card-danger: #f2dede;
+  --colors-card-success: #dff0d8;
+  --colors-card-primary: #f5f5f5;
+}
+
+@mixin breakpoint($point) {
+  @if $point == small {
+    @media (max-width: 600px) { @content; }
+  }
+  @elseif $point == medium {
+    @media (max-width: 900px) { @content; }
+  }
+  @elseif $point == large {
+    @media (max-width: 1200px) { @content; }
+  }
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  src: url('fonts/OpenSans-Regular.ttf');
+  src: url('fonts/OpenSans-Regular.ttf?#iefix') format('truetype'),
+       url('fonts/OpenSans-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Open Sans Semibold';
+  src: url('fonts/OpenSans-Semibold.ttf');
+  src: url('fonts/OpenSans-Semibold.ttf?#iefix') format('truetype'),
+       url('fonts/OpenSans-Semibold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Open Sans Bold';
+  src: url('fonts/OpenSans-Bold.ttf');
+  src: url('fonts/OpenSans-Bold.ttf?#iefix') format('truetype'),
+       url('fonts/OpenSans-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Open Sans Italic';
+  src: url('fonts/OpenSans-Italic.ttf');
+  src: url('fonts/OpenSans-Italic.ttf?#iefix') format('truetype'),
+       url('fonts/OpenSans-Italic.ttf') format('truetype');
+}
+
+@import "stylesheets/vendor/bootstrap";
+@import "stylesheets/vendor/mq";
+
+@import "stylesheets/general/base";
+@import "stylesheets/general/budgets";
+@import "stylesheets/general/alerts";
+@import "stylesheets/general/fixes";
+@import "stylesheets/general/footer";
+@import "stylesheets/general/home";
+@import "stylesheets/general/main";
+@import "stylesheets/general/navbar";
+
+@import "stylesheets/decidims_finder";
+
+@import "stylesheets/top_comments/base";
+
+// QUILL EDITOR
+
+// Fix space between number and text in li elements
+.ql-editor-display ol li::before {
+  width: auto;
+}

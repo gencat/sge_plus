@@ -1,0 +1,56 @@
+// FEDER
+.footer-feder {
+  color: var(--colors-gencat-text-grey2);
+
+  .main-footer__top {
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+
+    img {
+      max-width: 280px;
+    }
+
+    .external-link-indicator {
+      top: -8px !important;
+      right: -250px !important;
+    }
+  }
+}
+
+.main-footer {
+  background-color: var(--colors-gencat-gray-footer) !important;
+
+  p,
+  h2,
+  a {
+    color: var(--colors-gencat-black-footer);
+  }
+
+  li,
+  a {
+    text-decoration-line: none !important;
+    text-decoration: none !important;
+    font-weight: normal !important;
+  }
+
+  &__language-container {
+    span {
+      color: var(--colors-gencat-black-footer) !important;
+    }
+
+    button {
+      border-color: var(--colors-gencat-black-footer);
+    }
+    
+    svg {
+      fill: var(--colors-gencat-black-footer) !important;
+    }
+  }
+}
+
+.mini-footer {
+  background-color: var(--colors-gencat-gray-dark) !important;
+}
