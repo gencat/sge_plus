@@ -10,6 +10,11 @@ on:
 
 env:
   RUBY_VERSION: 3.3.4
+  DB_DATABASE: app
+  DB_USERNAME: postgres
+  DB_PASSWORD: postgres
+  DB_HOST: localhost
+  SECRET_KEY_BASE: "secret_key_base"
 
 jobs:
   test-report:

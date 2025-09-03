@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 # This migration comes from decidim_debates (originally 20210310120652)
-# This file has been modified by `decidim upgrade:migrations` task on 2025-09-03 08:54:23 UTC
 class AddFollowableCounterCacheToDebates < ActiveRecord::Migration[5.2]
   def change
-    add_column :decidim_debates_debates, :follows_count, :integer, null: false, default: 0, index: true
+    add_column :decidim_debates_debates, :follows_count, :integer, null: false, default: 0
+    add_index :decidim_debates_debates, :follows_count
 
     reversible do |dir|
       dir.up do

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 # This migration comes from decidim_meetings (originally 20210727085318)
-# This file has been modified by `decidim upgrade:migrations` task on 2025-09-03 08:54:23 UTC
 class AddStateFieldToMeeting < ActiveRecord::Migration[6.0]
   def change
-    add_column :decidim_meetings_meetings, :state, :string, index: true
+    add_column :decidim_meetings_meetings, :state, :string
+    add_index :decidim_meetings_meetings, :state
   end
 end

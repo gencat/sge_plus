@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:11
+        image: postgres:16
         ports: ["5432:5432"]
         options: >-
           --health-cmd pg_isready
@@ -30,7 +30,9 @@ jobs:
         image: redis:3.2-alpine
         ports: ["6379:6379"]
     env:
-      DB_TEST_DATABASE: app-test
+      TEST_DB_DATABASE: app_test
+      TEST_DB_USERNAME: "postgres"
+      TEST_DB_PASSWORD: "postgres"
       DB_DATABASE: app
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
@@ -38,6 +40,19 @@ jobs:
       SECRET_KEY_BASE: "secret_key_base"
 
     steps:
+      - name: Wait for Postgres
+        run: |
+          until pg_isready -h localhost -p 5432 -U postgres; do
+            sleep 0.5
+          done
+
+      - name: Create DB and enable pgcrypto
+        run: |
+          psql -h localhost -U postgres -d postgres -c "CREATE DATABASE $TEST_DB_DATABASE;"
+          psql -h localhost -U postgres -d $TEST_DB_DATABASE -c "CREATE EXTENSION IF NOT EXISTS pgcrypto;"
+        env:
+          PGPASSWORD: postgres
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
