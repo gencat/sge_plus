@@ -52,16 +52,16 @@ module Decidim
         end
 
         def user_can_read_participatory_space?
-          return unless permission_action.action == :read &&
-                        permission_action.subject == :participatory_space
+          return false unless permission_action.action == :read &&
+                              permission_action.subject == :participatory_space
 
           toggle_allow(user.admin? || initiative.has_authorship?(user))
         end
 
         def user_can_enter_space_area?
-          return unless permission_action.action == :enter &&
-                        permission_action.subject == :space_area &&
-                        context.fetch(:space_name, nil) == :initiatives
+          return false unless permission_action.action == :enter &&
+                              permission_action.subject == :space_area &&
+                              context.fetch(:space_name, nil) == :initiatives
 
           toggle_allow(user.admin? || has_initiatives?)
         end
@@ -71,9 +71,10 @@ module Decidim
         end
 
         def attachment_action?
-          return unless permission_action.subject == :attachment
+          return false unless permission_action.subject == :attachment
 
-          disallow! && return unless initiative.attachments_enabled?
+          disallow!
+          return false unless initiative.attachments_enabled?
 
           attachment = context.fetch(:attachment, nil)
           attached = attachment&.attached_to
@@ -89,7 +90,7 @@ module Decidim
         end
 
         def initiative_type_action?
-          return unless [:initiative_type, :initiatives_type].include? permission_action.subject
+          return false unless [:initiative_type, :initiatives_type].include? permission_action.subject
 
           initiative_type = context.fetch(:initiative_type, nil)
 
@@ -103,7 +104,7 @@ module Decidim
         end
 
         def initiative_type_scope_action?
-          return unless permission_action.subject == :initiative_type_scope
+          return false unless permission_action.subject == :initiative_type_scope
 
           initiative_type_scope = context.fetch(:initiative_type_scope, nil)
 
@@ -117,7 +118,7 @@ module Decidim
         end
 
         def initiative_committee_action?
-          return unless permission_action.subject == :initiative_committee_member
+          return false unless permission_action.subject == :initiative_committee_member
 
           request = context.fetch(:request, nil)
 
@@ -132,7 +133,7 @@ module Decidim
         end
 
         def initiative_admin_user_action?
-          return unless permission_action.subject == :initiative
+          return false unless permission_action.subject == :initiative
 
           case permission_action.action
           when :print
@@ -168,33 +169,33 @@ module Decidim
         end
 
         def initiatives_settings_action?
-          return unless permission_action.action == :update &&
-                        permission_action.subject == :initiatives_settings
+          return false unless permission_action.action == :update &&
+                              permission_action.subject == :initiatives_settings
 
           toggle_allow(user.admin?)
         end
 
         def moderator_action?
-          return unless permission_action.subject == :moderation
+          return false unless permission_action.subject == :moderation
 
           allow!
         end
 
         def share_tokens_action?
-          return unless permission_action.subject == :share_tokens
+          return false unless permission_action.subject == :share_tokens
 
           allow!
         end
 
         def read_initiative_list_action?
-          return unless permission_action.subject == :initiative &&
-                        permission_action.action == :list
+          return false unless permission_action.subject == :initiative &&
+                              permission_action.action == :list
 
           allow!
         end
 
         def initiative_user_action?
-          return unless permission_action.subject == :initiative
+          return false unless permission_action.subject == :initiative
 
           case permission_action.action
           when :read

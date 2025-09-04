@@ -40,7 +40,7 @@ module Decidim
         #
         # Returns nil if there is no current_initiative, true or false
         def signature_has_steps?
-          return unless current_initiative
+          return false unless current_initiative
 
           initiative_type = current_initiative.scoped_type.type
           initiative_type.collect_user_extra_fields? || initiative_type.validate_sms_code_on_votes?

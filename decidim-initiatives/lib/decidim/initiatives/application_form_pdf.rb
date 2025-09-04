@@ -158,7 +158,7 @@ module Decidim
           max_width = (max_width / aspect_ratio).round
         end
 
-        return max_height, max_width
+        [max_height, max_width]
       end
 
       def font

@@ -132,7 +132,7 @@ module Decidim
       # This prevents users that know partial data from another user to sign
       # initiatives with someone elses identity.
       def document_number_authorized?
-        return if initiative.document_number_authorization_handler.blank?
+        return false if initiative.document_number_authorization_handler.blank?
 
         errors.add(:document_number, :invalid) unless authorized? && authorization_handler && authorization.unique_id == authorization_handler.unique_id
       end
