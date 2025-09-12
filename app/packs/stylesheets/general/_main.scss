@@ -1,0 +1,18 @@
+.layout-2col__aside {
+  .title-decorator {
+    color: var(--colors-gencat-text-grey) !important;
+  }
+}
+
+.layout-2col__main {
+  h2 {
+    color: var(--colors-gencat-text-grey) !important;
+  }
+}
+
+// Public filters overflow text of container
+#dropdown-menu-filters {
+  .filter span {
+    white-space: wrap;
+  }
+}
