@@ -54,6 +54,12 @@ module Decidim
       def show
         enforce_permission_to :read, :initiative, initiative: current_initiative
 
+        unless current_initiative.type.published?
+          flash[:alert] = I18n.t("decidim.initiatives.show.type_not_published")
+          redirect_to initiatives_path
+          return
+        end
+
         render layout: "decidim/initiative_head"
       end
 
@@ -139,7 +145,9 @@ module Decidim
         Initiative
           .includes(scoped_type: [:scope])
           .joins("JOIN decidim_users ON decidim_users.id = decidim_initiatives.decidim_author_id")
+          .joins(scoped_type: :type)
           .where(organization: current_organization)
+          .where(decidim_initiatives_types: { published: true })
       end
 
       def default_filter_params

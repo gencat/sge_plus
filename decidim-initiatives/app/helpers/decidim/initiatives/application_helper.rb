@@ -27,7 +27,7 @@ module Decidim
       end
 
       def filter_types_values
-        types_values = Decidim::InitiativesType.where(organization: current_organization).map do |type|
+        types_values = Decidim::InitiativesType.where(organization: current_organization, published: true).map do |type|
           TreeNode.new(
             TreePoint.new(type.id.to_s, type.title[I18n.locale.to_s])
           )

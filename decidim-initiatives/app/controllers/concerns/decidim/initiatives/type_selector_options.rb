@@ -21,6 +21,7 @@ module Decidim
           Decidim::Initiatives::InitiativeTypes
             .for(current_organization)
             .joins(:scopes)
+            .where(published: true)
             .distinct
         end
 

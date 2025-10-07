@@ -8,6 +8,7 @@ module Decidim
         mimic :initiatives_settings
 
         attribute :initiatives_order, String
+        attribute :creation_enabled, Boolean, default: true
       end
     end
   end

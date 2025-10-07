@@ -68,24 +68,6 @@
         </div>
       </div>
 
-      <% if current_initiative.published? && current_user.admin? %>
-        <div class="row">
-          <div class="columns">
-            <%= form.date_field :signature_start_date %>
-          </div>
-
-          <div class="columns">
-            <%= form.date_field :signature_end_date %>
-          </div>
-        </div>
-      <% end %>
-
-      <% if can_edit_custom_signature_end_date?(current_initiative) %>
-        <div class="row column">
-          <%= form.date_field :signature_end_date, disabled: !allowed_to?(:update, :initiative, initiative: current_initiative) %>
-        </div>
-      <% end %>
-
       <% if current_initiative.area_enabled? %>
         <div class="row column">
           <%= form.areas_select :area_id,

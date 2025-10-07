@@ -2,8 +2,12 @@
   <div class="card">
     <div class="card-section">
       <div class="row column">
+        <%= form.check_box :creation_enabled %>
+        <%= form.label :creation_enabled %>
+      </div>
+      <div class="row column">
         <%= form.select :initiatives_order, [[t(".random"),"random"],[t(".date"),"recent"],[t(".signatures"),"most_voted"],[t(".comments"),"most_commented"],[t(".publication_date"),"recently_published"]] %>
-     </div>
+      </div>
     </div>
   </div>
 </div>

@@ -13,30 +13,31 @@ module Decidim
 
         translatable_attribute :title, String
         translatable_attribute :description, Decidim::Attributes::RichText
-        attribute :banner_image
         attribute :signature_type, String
         attribute :undo_online_signatures_enabled, Boolean
         attribute :attachments_enabled, Boolean
-        attribute :custom_signature_end_date_enabled, Boolean
         attribute :comments_enabled, Boolean
-        attribute :area_enabled, Boolean
         attribute :child_scope_threshold_enabled, Boolean
         attribute :only_global_scope_enabled, Boolean
-        attribute :promoting_committee_enabled, Boolean
-        attribute :minimum_committee_members, Integer
         attribute :collect_user_extra_fields, Boolean
         translatable_attribute :extra_fields_legal_information, Decidim::Attributes::RichText
         attribute :validate_sms_code_on_votes, Boolean
         attribute :document_number_authorization_handler, String
+        attribute :signature_period_start, Decidim::Attributes::TimeWithZone
+        attribute :signature_period_end, Decidim::Attributes::TimeWithZone
+        attribute :published, Boolean, default: false
 
         validates :title, :description, translatable_presence: true
-        validates :attachments_enabled, :undo_online_signatures_enabled, :custom_signature_end_date_enabled,
-                  :area_enabled, :promoting_committee_enabled, inclusion: { in: [true, false] }
+        validates :attachments_enabled, :undo_online_signatures_enabled, inclusion: { in: [true, false] }
         validates :minimum_committee_members, numericality: { only_integer: true }, allow_nil: true
-        validates :banner_image, presence: true, if: ->(form) { !form.persisted? && form.context.initiative_type.nil? }
         validates :document_number_authorization_handler, presence: true, if: ->(form) { form.collect_user_extra_fields? }
 
-        validates :banner_image, passthru: { to: Decidim::InitiativesType }
+        validates :signature_period_start,
+          comparison: { less_than: :signature_period_end, message: "debe ser anterior a la fecha de fin" },
+          if: ->(form) { form.signature_period_end.present? && form.signature_period_start.present? }
+        validates :signature_period_end,
+          comparison: { greater_than: :signature_period_start, message: "debe ser posterior a la fecha de inicio" },
+          if: ->(form) { form.signature_period_start.present? && form.signature_period_end.present? }
 
         alias organization current_organization
 
@@ -45,10 +46,7 @@ module Decidim
         end
 
         def minimum_committee_members
-          return 0 unless promoting_committee_enabled?
-          return DEFAULT_MINIMUM_COMMITTEE_MEMBERS if super.blank?
-
-          super
+          DEFAULT_MINIMUM_COMMITTEE_MEMBERS
         end
 
         def signature_type_options

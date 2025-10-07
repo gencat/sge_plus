@@ -27,6 +27,7 @@ ca:
         user: Membre del comitè
       initiatives_settings:
         initiatives_order: Ordre
+        creation_enabled: Permetre la creació pública d'iniciatives
       initiatives_type:
         area_enabled: Permet a les autores triar l'àrea de la seva iniciativa
         attachments_enabled: Habilitat arxius adjunts
@@ -133,6 +134,7 @@ ca:
         initiatives_types:
           fields:
             created_at: Creat el
+            published: Publicat
             title: Tipus d'iniciatives
           name: Tipus d'iniciativa
         initiatives_votes:
@@ -318,7 +320,9 @@ ca:
           destroy:
             success: S'ha eliminat correctament el tipus d'iniciativa.
           edit:
+            publish: Publicar
             update: Actualitza
+            unpublish: Despublicar
           form:
             authorizations: Configuració de l'autorització
             child_scope_threshold_enabled_help_html: 'Aquest ajust de configuració no admet les votacions sense connexió. Aquest habilita els subàmbits i funciona amb un gestor d''autoritzacions que associa un àmbit a la participant. Assegura''t de seleccionar aquesta autorització, més avall a la configuració d''autoritzacions. Per a que funcioni, els àmbits han de configurar-se de forma jerárquica: 1 Pare - N fills. Per a més informació sobre com funciona aquesta configuració, consulta la <a href="https://docs.decidim.org/en/admin/spaces/initiatives/" target="_blank"> documentació sobre l''administració d''iniciatives</a>.'
@@ -553,6 +557,12 @@ ca:
           send_to_technical_validation: Enviar a validació tècnica
           send_to_technical_validation_announcement: Si tot sembla correcte, fes clic a "Enviar a validació tècnica" perquè una administradora revisi i publiqui la teva iniciativa
           signature_collection: Signatures recollides
+          signature_period:
+            label: Període de signatures
+            full_period: "%{start} - %{end}"
+            from_start_to_indefinite: "%{start} - indefinit"
+            from_publication_to_end: "Acaba el %{end}"
+            no_period: "No hi ha període de signatures i no es pot signar"
           state: Estat
           type: Tipus
         signatures_count:
@@ -597,6 +607,7 @@ ca:
           open: Obertes
           rejected: No ha aconseguit les signatures
           validating: Validació tècnica
+        type_not_published: Aquesta iniciativa no està publicada encara.
       states:
         accepted: Acceptada
         expired: Vençuda

@@ -27,10 +27,6 @@
 
 <%= form.select :scope_id, @form.available_scopes.map { |scope| [translated_attribute(scope.scope_name), scope.scope&.id] }, {}, { disabled: !@form.state_updatable? } %>
 
-<% if can_edit_custom_signature_end_date?(current_initiative) %>
-  <%= form.date_field :signature_end_date, disabled: !allowed_to?(:update, :initiative, initiative: current_initiative) %>
-<% end %>
-
 <% if current_initiative.area_enabled? %>
   <%= form.areas_select :area_id,
                         areas_for_select(current_organization),
