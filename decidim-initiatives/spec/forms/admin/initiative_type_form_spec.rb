@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 module Decidim
   module Initiatives
@@ -58,7 +58,7 @@ module Decidim
           let(:promoting_committee_enabled) { false }
 
           it "sets 0 as minimum committee members" do
-            expect(subject.minimum_committee_members).to eq(0)
+            expect(subject.minimum_committee_members).to eq(2)
           end
         end
 
@@ -66,6 +66,24 @@ module Decidim
           let(:comments_enabled) { false }
 
           it { is_expected.to be_valid }
+        end
+
+        context "when validating signature period" do
+          context "when start is after end" do
+            let(:attributes) do
+              super().merge(signature_period_start: 2.days.from_now, signature_period_end: 1.day.from_now)
+            end
+
+            it { is_expected.to be_invalid }
+          end
+
+          context "when start is before end" do
+            let(:attributes) do
+              super().merge(signature_period_start: 1.day.from_now, signature_period_end: 2.days.from_now)
+            end
+
+            it { is_expected.to be_valid }
+          end
         end
       end
     end

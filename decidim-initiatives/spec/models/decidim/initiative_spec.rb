@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 module Decidim
   describe Initiative do
@@ -303,6 +303,65 @@ module Decidim
 
       it "sorts initiatives by supports count" do
         expect(sorter.result.map(&:supports_count)).to eq([8, 5, 4, 3, 1, 0])
+      end
+    end
+
+    describe "signature period logic" do
+      let(:type) { initiatives_type }
+      let(:scope) { scoped_type }
+      let(:attrs) do
+        {
+          organization: organization,
+          scoped_type: scope,
+          title: { en: "I" },
+          description: { en: "Desc" },
+          signature_type: "online"
+        }
+      end
+
+      it "recognizes full_period and is active when now is inside the interval" do
+        type.update!(signature_period_start: 1.hour.ago, signature_period_end: 1.hour.from_now)
+        initiative = create(:initiative, **attrs, published_at: Time.current)
+        expect(initiative.signature_period_type).to eq(:full_period)
+        expect(initiative.signature_period_active?).to be true
+        expect(initiative.votes_enabled?).to be true
+      end
+
+      it "recognizes from_start_to_indefinite when only start is set" do
+        type.update!(signature_period_start: 1.hour.ago, signature_period_end: nil)
+        initiative = create(:initiative, **attrs, published_at: Time.current)
+
+        expect(initiative.signature_period_type).to eq(:from_start_to_indefinite)
+        expect(initiative.signature_period_active?).to be true
+      end
+
+      it "recognizes from_publication_to_end when only end is set" do
+        type.update!(signature_period_start: nil, signature_period_end: 1.day.from_now)
+        initiative = create(:initiative, **attrs, published_at: Time.current)
+
+        expect(initiative.signature_period_type).to eq(:from_publication_to_end)
+        expect(initiative.signature_period_active?).to be true
+      end
+
+      it "recognizes no_period when neither date is set" do
+        type.update!(signature_period_start: nil, signature_period_end: nil)
+        initiative = create(:initiative, **attrs, published_at: Time.current)
+
+        expect(initiative.signature_period_type).to eq(:no_period)
+        expect(initiative.signature_period_active?).to be false
+        expect(initiative.votes_enabled?).to be false
+      end
+
+      it "signature_period_description includes hours when both dates present" do
+        start_dt = Time.current.change(hour: 9, min: 30)
+        end_dt = 2.days.from_now.change(hour: 18, min: 15)
+        type.update!(signature_period_start: start_dt, signature_period_end: end_dt)
+
+        initiative = create(:initiative, **attrs, published_at: Time.current)
+        desc = initiative.signature_period_description
+
+        expect(desc).to include("09:30")
+        expect(desc).to include("18:15")
       end
     end
   end
