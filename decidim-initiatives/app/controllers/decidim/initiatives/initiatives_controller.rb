@@ -33,6 +33,7 @@ module Decidim
       helper_method :initiative_type, :available_initiative_types
 
       before_action :authorize_participatory_space, only: [:show]
+      before_action :set_initiatives_settings, only: %i[index show new edit]
 
       # GET /initiatives
       def index
@@ -57,10 +58,9 @@ module Decidim
         unless current_initiative.type.published?
           flash[:alert] = I18n.t("decidim.initiatives.show.type_not_published")
           redirect_to initiatives_path
-          return
+        else
+          render layout: "decidim/initiative_head"
         end
-
-        render layout: "decidim/initiative_head"
       end
 
       # GET /initiatives/:id/send_to_technical_validation
@@ -192,6 +192,10 @@ module Decidim
             args: ["decidim/documents_panel", @current_initiative]
           }
         ].select { |item| item[:enabled] }
+      end
+
+      def set_initiatives_settings
+        @initiatives_settings ||= Decidim::InitiativesSettings.find_by(organization: current_organization)
       end
     end
   end

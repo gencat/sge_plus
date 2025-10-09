@@ -27,7 +27,7 @@ en:
         user: Committee member
       initiatives_settings:
         initiatives_order: Order
-        creation_enabled: Allow public initiative creation
+        creation_enabled: Allow initiatives creation
       initiatives_type:
         area_enabled: Enable authors to choose the area for their initiative
         attachments_enabled: Enable attachments
@@ -43,6 +43,8 @@ en:
         online_signature_enabled: Online signature enabled
         only_global_scope_enabled: Only allow global scope initiatives creation
         promoting_committee_enabled: Enable promoting committee
+        signature_period_start_less_than: Signature period start must be before the end date
+        signature_period_end_greater_than: Signature period end must be after the start date
         signature_type: Signature type
         title: Title
         undo_online_signatures_enabled: Enable participants to undo their online signatures

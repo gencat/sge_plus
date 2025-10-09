@@ -27,7 +27,7 @@ es:
         user: Miembro del Comité
       initiatives_settings:
         initiatives_order: Orden
-        creation_enabled: Permitir la creación pública de iniciativas
+        creation_enabled: Permitir la creación de iniciativas
       initiatives_type:
         area_enabled: Permitir a las autoras elegir el área para su iniciativa
         attachments_enabled: Habilitar archivos adjuntos
@@ -43,6 +43,8 @@ es:
         online_signature_enabled: Firma digital habilitada
         only_global_scope_enabled: Permitir sólo la creación de iniciativas de ámbito global
         promoting_committee_enabled: Habilitar el comité promotor
+        signature_period_start_less_than: El inicio del periodo de firmas debe ser anterior a la fecha de fin
+        signature_period_end_greater_than: El fin del periodo de firmas debe ser posterior a la fecha de inicio
         signature_type: Tipo de firma
         title: Título
         undo_online_signatures_enabled: Permitir a las participantes deshacer sus firmas digitales

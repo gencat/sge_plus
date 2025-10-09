@@ -27,7 +27,7 @@ ca:
         user: Membre del comitè
       initiatives_settings:
         initiatives_order: Ordre
-        creation_enabled: Permetre la creació pública d'iniciatives
+        creation_enabled: Permetre la creació d'iniciatives
       initiatives_type:
         area_enabled: Permet a les autores triar l'àrea de la seva iniciativa
         attachments_enabled: Habilitat arxius adjunts
@@ -43,6 +43,8 @@ ca:
         online_signature_enabled: S'ha activat la signatura digital
         only_global_scope_enabled: Permetre només la creació d'iniciatives d'àmbit global
         promoting_committee_enabled: Habilita el comitè promotor
+        signature_period_start_less_than: L'inici del període de signatures ha de ser anterior a la data de finalització
+        signature_period_end_greater_than: La fi del període de signatures ha de ser posterior a la data d'inici
         signature_type: Tipus de signatura
         title: Títol
         undo_online_signatures_enabled: Permetre a les participants desfer les seves signatures digitals
@@ -320,9 +322,9 @@ ca:
           destroy:
             success: S'ha eliminat correctament el tipus d'iniciativa.
           edit:
-            publish: Publicar
+            publish: Publica
             update: Actualitza
-            unpublish: Despublicar
+            unpublish: Despublica
           form:
             authorizations: Configuració de l'autorització
             child_scope_threshold_enabled_help_html: 'Aquest ajust de configuració no admet les votacions sense connexió. Aquest habilita els subàmbits i funciona amb un gestor d''autoritzacions que associa un àmbit a la participant. Assegura''t de seleccionar aquesta autorització, més avall a la configuració d''autoritzacions. Per a que funcioni, els àmbits han de configurar-se de forma jerárquica: 1 Pare - N fills. Per a més informació sobre com funciona aquesta configuració, consulta la <a href="https://docs.decidim.org/en/admin/spaces/initiatives/" target="_blank"> documentació sobre l''administració d''iniciatives</a>.'

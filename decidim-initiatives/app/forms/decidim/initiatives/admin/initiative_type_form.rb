@@ -33,11 +33,12 @@ module Decidim
         validates :document_number_authorization_handler, presence: true, if: ->(form) { form.collect_user_extra_fields? }
 
         validates :signature_period_start,
-          comparison: { less_than: :signature_period_end, message: "debe ser anterior a la fecha de fin" },
-          if: ->(form) { form.signature_period_end.present? && form.signature_period_start.present? }
+                  comparison: { less_than: :signature_period_end, message: I18n.t("activemodel.attributes.initiatives_type.signature_period_start_less_than") },
+                  if: ->(form) { form.signature_period_end.present? && form.signature_period_start.present? }
+
         validates :signature_period_end,
-          comparison: { greater_than: :signature_period_start, message: "debe ser posterior a la fecha de inicio" },
-          if: ->(form) { form.signature_period_start.present? && form.signature_period_end.present? }
+                  comparison: { greater_than: :signature_period_start, message: I18n.t("activemodel.attributes.initiatives_type.signature_period_end_greater_than") },
+                  if: ->(form) { form.signature_period_start.present? && form.signature_period_end.present? }
 
         alias organization current_organization
 
