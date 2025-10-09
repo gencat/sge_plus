@@ -12,3 +12,9 @@ Rails/ThreeStateBooleanColumn:
 
 Style/FetchEnvVar:
   Enabled: false
+
+RSpec/DescribeClass:
+  Enabled: false
+
+RSpec/NoExpectationExample:
+  Enabled: false

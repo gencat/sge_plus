@@ -8,7 +8,7 @@ gem "decidim", "0.30.1"
 # gem "decidim-ai", "0.30.1"
 # gem "decidim-conferences", "0.30.1"
 # gem "decidim-design", "0.30.1"
-# gem "decidim-initiatives", "0.30.1"
+gem "decidim-initiatives", path: "decidim-initiatives"
 # gem "decidim-templates", "0.30.1"
 
 gem "decidim-cdtb", "~> 0.5.5"
@@ -18,7 +18,7 @@ gem "bootsnap", "~> 1.3"
 gem "puma", ">= 6.3.1"
 
 # https://github.com/hlascelles/figjam
-gem "figjam"
+gem "figjam", "2.0.0"
 
 group :development, :test do
   gem "byebug", "~> 11.0", platform: :mri
