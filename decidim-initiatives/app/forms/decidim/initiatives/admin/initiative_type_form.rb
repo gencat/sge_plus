@@ -5,7 +5,7 @@ module Decidim
     module Admin
       # A form object used to collect the all the initiative type attributes.
       class InitiativeTypeForm < Decidim::Form
-        DEFAULT_MINIMUM_COMMITTEE_MEMBERS = 2
+        DEFAULT_MINIMUM_COMMITTEE_MEMBERS = 0
 
         include TranslatableAttributes
 
