@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AddSignaturePeriodsToDecidimInitiativesTypes < ActiveRecord::Migration[7.0]
   def change
     add_column :decidim_initiatives_types, :signature_period_start, :datetime
