@@ -33,7 +33,7 @@ module Decidim
       helper_method :initiative_type, :available_initiative_types
 
       before_action :authorize_participatory_space, only: [:show]
-      before_action :set_initiatives_settings, only: %i[index show new edit]
+      before_action :set_initiatives_settings, only: [:index, :show, :new, :edit]
 
       # GET /initiatives
       def index
@@ -55,11 +55,11 @@ module Decidim
       def show
         enforce_permission_to :read, :initiative, initiative: current_initiative
 
-        unless current_initiative.type.published?
+        if current_initiative.type.published?
+          render layout: "decidim/initiative_head"
+        else
           flash[:alert] = I18n.t("decidim.initiatives.show.type_not_published")
           redirect_to initiatives_path
-        else
-          render layout: "decidim/initiative_head"
         end
       end
 

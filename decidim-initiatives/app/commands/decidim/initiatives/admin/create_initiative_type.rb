@@ -5,7 +5,6 @@ module Decidim
     module Admin
       # A command with all the business logic that creates a new initiative type
       class CreateInitiativeType < Decidim::Commands::CreateResource
-
         fetch_form_attributes :title, :description, :signature_type, :comments_enabled, :attachments_enabled,
                               :undo_online_signatures_enabled, :collect_user_extra_fields, :extra_fields_legal_information,
                               :validate_sms_code_on_votes, :document_number_authorization_handler, :child_scope_threshold_enabled,
