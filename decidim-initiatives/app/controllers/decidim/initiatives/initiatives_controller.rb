@@ -33,7 +33,7 @@ module Decidim
       helper_method :initiative_type, :available_initiative_types
 
       before_action :authorize_participatory_space, only: [:show]
-      before_action :set_initiatives_settings, only: [:index, :show, :new, :edit]
+      before_action :set_initiatives_settings, only: [:index, :show, :edit]
 
       # GET /initiatives
       def index
