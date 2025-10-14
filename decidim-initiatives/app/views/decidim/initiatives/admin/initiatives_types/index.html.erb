@@ -15,6 +15,7 @@
         <tr>
           <th><%= t("models.initiatives_types.fields.title", scope: "decidim.admin") %></th>
           <th><%= t("models.initiatives_types.fields.created_at", scope: "decidim.admin") %></th>
+          <th><%= t("models.initiatives_types.fields.published", scope: "decidim.admin") %></th>
           <th><%= t("initiatives_type.actions.title", scope: "decidim.resources") %></th>
         </tr>
       </thead>
@@ -28,6 +29,13 @@
               <%= translated_attribute initiative_type.title %></td>
             <% end %>
           <td><%= l initiative_type.created_at, format: :short %></td>
+          <td>
+            <% if initiative_type.published %>
+              <span class="label success !text-sm"><%= t("participatory_processes.index.published", scope: "decidim.admin") %></span>
+            <% else %>
+              <span class="label alert !text-sm"><%= t("participatory_processes.index.unpublished", scope: "decidim.admin") %></span>
+            <% end %>
+          </td>
           <td class="table-list__actions">
             <% if allowed_to? :update, :initiative_type, initiative_type: initiative_type %>
               <%= icon_link_to "pencil-line", edit_initiatives_type_path(initiative_type), t("actions.configure", scope: "decidim.admin"), class: "action-icon--edit" %>

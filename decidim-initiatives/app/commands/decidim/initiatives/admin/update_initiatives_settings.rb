@@ -6,7 +6,7 @@ module Decidim
       # A command with all the business logic when updating initiatives
       # settings in admin area.
       class UpdateInitiativesSettings < Decidim::Commands::UpdateResource
-        fetch_form_attributes :initiatives_order
+        fetch_form_attributes :initiatives_order, :creation_enabled
       end
     end
   end

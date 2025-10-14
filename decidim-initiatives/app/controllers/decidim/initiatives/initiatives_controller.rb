@@ -33,6 +33,7 @@ module Decidim
       helper_method :initiative_type, :available_initiative_types
 
       before_action :authorize_participatory_space, only: [:show]
+      before_action :set_initiatives_settings, only: [:index, :show, :edit]
 
       # GET /initiatives
       def index
@@ -54,7 +55,12 @@ module Decidim
       def show
         enforce_permission_to :read, :initiative, initiative: current_initiative
 
-        render layout: "decidim/initiative_head"
+        if current_initiative.type.published?
+          render layout: "decidim/initiative_head"
+        else
+          flash[:alert] = I18n.t("decidim.initiatives.show.type_not_published")
+          redirect_to initiatives_path
+        end
       end
 
       # GET /initiatives/:id/send_to_technical_validation
@@ -139,7 +145,9 @@ module Decidim
         Initiative
           .includes(scoped_type: [:scope])
           .joins("JOIN decidim_users ON decidim_users.id = decidim_initiatives.decidim_author_id")
+          .joins(scoped_type: :type)
           .where(organization: current_organization)
+          .where(decidim_initiatives_types: { published: true })
       end
 
       def default_filter_params
@@ -184,6 +192,10 @@ module Decidim
             args: ["decidim/documents_panel", @current_initiative]
           }
         ].select { |item| item[:enabled] }
+      end
+
+      def set_initiatives_settings
+        @initiatives_settings ||= Decidim::InitiativesSettings.find_by(organization: current_organization)
       end
     end
   end

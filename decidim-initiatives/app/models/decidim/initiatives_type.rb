@@ -32,6 +32,8 @@ module Decidim
     has_one_attached :banner_image
     validates_upload :banner_image, uploader: Decidim::BannerImageUploader
 
+    scope :published, -> { where(published: true) }
+
     def allowed_signature_types_for_initiatives
       return %w(online offline any) if any_signature_type?
 
@@ -52,6 +54,10 @@ module Decidim
 
     def self.log_presenter_class_for(_log)
       Decidim::Initiatives::AdminLog::InitiativesTypePresenter
+    end
+
+    def signature_period_configured?
+      signature_period_start.present? || signature_period_end.present?
     end
   end
 end

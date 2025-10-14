@@ -27,6 +27,7 @@ en:
         user: Committee member
       initiatives_settings:
         initiatives_order: Order
+        creation_enabled: Allow initiatives creation
       initiatives_type:
         area_enabled: Enable authors to choose the area for their initiative
         attachments_enabled: Enable attachments
@@ -42,6 +43,8 @@ en:
         online_signature_enabled: Online signature enabled
         only_global_scope_enabled: Only allow global scope initiatives creation
         promoting_committee_enabled: Enable promoting committee
+        signature_period_start_less_than: Signature period start must be before the end date
+        signature_period_end_greater_than: Signature period end must be after the start date
         signature_type: Signature type
         title: Title
         undo_online_signatures_enabled: Enable participants to undo their online signatures
@@ -133,6 +136,7 @@ en:
         initiatives_types:
           fields:
             created_at: Created at
+            published: Published
             title: Initiative types
           name: Initiative type
         initiatives_votes:
@@ -318,7 +322,9 @@ en:
           destroy:
             success: The initiative type has been successfully removed.
           edit:
+            publish: Publish
             update: Update
+            unpublish: Unpublish
           form:
             authorizations: Authorization settings
             child_scope_threshold_enabled_help_html: 'This config flag doesn''t support offline votes. It enables sub-scopes and works with an authorization handler that associates a scope to the user. Make sure you select that authorization, below in authorization settings. For it to work, scopes need to be configured in a hierarchical way: 1 Parent - N Child. For more info on how this configuration works, see <a href="https://docs.decidim.org/en/admin/spaces/initiatives/" target="_blank">initiatives'' admin documentation page</a>.'
@@ -553,6 +559,12 @@ en:
           send_to_technical_validation: Send to technical validation
           send_to_technical_validation_announcement: If everything looks ok, click on "Send to technical validation" for an administrator to review and publish your initiative
           signature_collection: Signature collection
+          signature_period:
+            label: Signature period
+            full_period: "%{start} - %{end}"
+            from_start_to_indefinite: "%{start} - indefinite"
+            from_publication_to_end: "Ends on %{end}"
+            no_period: "There is no signature period and it cannot be signed"
           state: State
           type: Type
         signatures_count:
@@ -597,6 +609,7 @@ en:
           open: Open
           rejected: Not enough signatures
           validating: Technical validation
+        type_not_published: This initiative is not published yet.
       states:
         accepted: Accepted
         expired: Expired

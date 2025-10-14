@@ -217,9 +217,58 @@ module Decidim
     end
 
     def votes_enabled?
-      published? &&
-        signature_start_date <= Date.current &&
-        signature_end_date >= Date.current
+      published? && signature_period_active?
+    end
+
+    # Public: Checks if the signature period is currently active based on the type's configuration
+    def signature_period_active?
+      return false unless type.signature_period_configured?
+
+      current_datetime = Time.zone.now
+      case signature_period_type
+      when :full_period
+        current_datetime >= type.signature_period_start && current_datetime <= type.signature_period_end
+      when :from_start_to_indefinite
+        current_datetime >= type.signature_period_start
+      when :from_publication_to_end
+        published_at.present? && current_datetime <= type.signature_period_end
+      when :no_period
+        false
+      end
+    end
+
+    # Public: Returns the type of signature period configuration
+    def signature_period_type
+      has_start = type.signature_period_start.present?
+      has_end = type.signature_period_end.present?
+
+      case [has_start, has_end]
+      when [true, true]
+        :full_period
+      when [true, false]
+        :from_start_to_indefinite
+      when [false, true]
+        :from_publication_to_end
+      when [false, false]
+        :no_period
+      end
+    end
+
+    # Public: Returns a human-readable description of the signature period
+    def signature_period_description
+      start_str = type.signature_period_start&.strftime("%d/%m/%Y %H:%M")
+      end_str = type.signature_period_end&.strftime("%d/%m/%Y %H:%M")
+
+      case signature_period_type
+      when :full_period
+        I18n.t("decidim.initiatives.initiatives.show.signature_period.full_period", start: start_str, end: end_str)
+      when :from_start_to_indefinite
+        I18n.t("decidim.initiatives.initiatives.show.signature_period.from_start_to_indefinite", start: start_str)
+      when :from_publication_to_end
+        I18n.t("decidim.initiatives.initiatives.show.signature_period.from_publication_to_end", end: end_str)
+      when :no_period
+        I18n.t("decidim.initiatives.initiatives.show.signature_period.no_period")
+      end
     end
 
     # Public: Check if the user has voted the question.
