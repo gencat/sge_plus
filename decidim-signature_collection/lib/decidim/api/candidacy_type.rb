@@ -13,9 +13,6 @@ module Decidim
       description "A candidacy"
 
       field :author, Decidim::Core::AuthorInterface, "The candidacy author", null: false
-      field :committee_members, [Decidim::Candidacies::CandidacyCommitteeMemberType, { null: true }], "The committee members list", null: true
-      field :description, Decidim::Core::TranslatedFieldType, "The description of this candidacy.", null: true
-      field :hashtag, GraphQL::Types::String, "The hashtag for this candidacy", null: true
       field :candidacy_supports_count, GraphQL::Types::Int,
             description: "The number of supports in this candidacy",
             method: :online_votes_count,
@@ -25,6 +22,9 @@ module Decidim
             description: "The number of votes in this candidacy",
             deprecation_reason: "candidacyVotesCount has been collapsed in onlineVotes parameter",
             null: true, method: :online_votes_count
+      field :committee_members, [Decidim::Candidacies::CandidacyCommitteeMemberType, { null: true }], "The committee members list", null: true
+      field :description, Decidim::Core::TranslatedFieldType, "The description of this candidacy.", null: true
+      field :hashtag, GraphQL::Types::String, "The hashtag for this candidacy", null: true
       field :offline_votes, GraphQL::Types::Int, "The number of offline votes in this candidacy", method: :offline_votes_count, null: true
       field :online_votes, GraphQL::Types::Int, "The number of online votes in this candidacy", method: :online_votes_count, null: true
       field :published_at, Decidim::Core::DateTimeType, "The time this candidacy was published", null: false

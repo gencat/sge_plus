@@ -185,7 +185,7 @@ module Decidim
 
         it "ignores any value in offline_votes attribute" do
           candidacy.update(offline_votes: { scope_id => candidacy.scoped_type.supports_required, "total" => candidacy.scoped_type.supports_required },
-                            online_votes: { scope_id => candidacy.scoped_type.supports_required / 2, "total" => candidacy.scoped_type.supports_required / 2 })
+                           online_votes: { scope_id => candidacy.scoped_type.supports_required / 2, "total" => candidacy.scoped_type.supports_required / 2 })
           expect(candidacy.percentage).to eq(50)
           expect(candidacy).not_to be_supports_goal_reached
         end
@@ -204,7 +204,7 @@ module Decidim
           online_votes = candidacy.scoped_type.supports_required / 4
           offline_votes = candidacy.scoped_type.supports_required / 4
           candidacy.update(offline_votes: { scope_id => offline_votes, "total" => offline_votes },
-                            online_votes: { scope_id => online_votes, "total" => online_votes })
+                           online_votes: { scope_id => online_votes, "total" => online_votes })
           expect(candidacy.percentage).to eq(50)
           expect(candidacy).not_to be_supports_goal_reached
         end
@@ -213,7 +213,7 @@ module Decidim
           online_votes = candidacy.scoped_type.supports_required * 4
           offline_votes = candidacy.scoped_type.supports_required * 4
           candidacy.update(offline_votes: { scope_id => offline_votes, "total" => offline_votes },
-                            online_votes: { scope_id => online_votes, "total" => online_votes })
+                           online_votes: { scope_id => online_votes, "total" => online_votes })
           expect(candidacy.percentage).to eq(100)
           expect(candidacy).to be_supports_goal_reached
         end
