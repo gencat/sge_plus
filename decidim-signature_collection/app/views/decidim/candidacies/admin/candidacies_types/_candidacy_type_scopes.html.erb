@@ -1,0 +1,44 @@
+<div class="card" data-component="accordion" id="accordion-<%= t("candidacies_types.candidacy_type_scopes.title", scope: "decidim.candidacies.admin") %>">
+  <div class="card-divider">
+    <h2 class="card-title gap-2" id="<%= t("candidacies_types.candidacy_type_scopes.title", scope: "decidim.candidacies.admin") %>">
+      <button class="card-divider-button" data-open="true" data-controls="panel-<%= t("candidacies_types.candidacy_type_scopes.title", scope: "decidim.candidacies.admin") %>" type="button">
+        <%= icon "arrow-right-s-line" %>
+        <span>
+          <%= t("candidacies_types.candidacy_type_scopes.title", scope: "decidim.candidacies.admin") %>
+        </span>
+      </button>
+      <%= link_to t("actions.new_candidacy_type_scope", scope: "decidim.admin"),
+                  new_candidacies_type_candidacies_type_scope_path(candidacy_type),
+                  class: "button button__sm button__secondary flex-none" if allowed_to? :create, :candidacy_type_scope %>
+    </h2>
+  </div>
+  <div id="panel-<%= t("candidacies_types.candidacy_type_scopes.title", scope: "decidim.candidacies.admin") %>" class="card-section">
+    <div class="table-scroll">
+      <table class="table-list">
+        <thead>
+        <tr>
+          <th><%= t("models.candidacies_type_scope.fields.scope", scope: "decidim.admin") %></th>
+          <th class="text-right">
+            <%= t("models.candidacies_type_scope.fields.supports_required", scope: "decidim.admin") %>
+          </th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% candidacy_type.scopes.each do |s| %>
+          <tr>
+            <td><%= translated_attribute(s.scope_name) %></td>
+            <td class="text-right"><%= s.supports_required %></td>
+            <td class="table-list__actions">
+              <%= icon_link_to "pencil-line",
+                               decidim_admin_candidacies.edit_candidacies_type_candidacies_type_scope_path(candidacy_type, s),
+                               t("actions.configure", scope: "decidim.admin"),
+                               class: "action-icon--new" if allowed_to? :edit, :candidacy_type_scope, candidacy_type_scope: s %>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

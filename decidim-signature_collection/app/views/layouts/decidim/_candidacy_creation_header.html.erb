@@ -1,0 +1,18 @@
+<div class="flex justify-center">
+  <h1 class="title-decorator my-12">
+    <%= t("new", scope: "decidim.candidacies.create_candidacy.select_candidacy_type") %>
+  </h1>
+</div>
+
+<ol id="wizard-steps" class="wizard-steps">
+  <% options = { data: { active: true }, aria: { current: "step" } } %>
+
+  <% unless single_candidacy_type? %>
+    <%= content_tag :li, t(".select_candidacy_type"), action_name == "select_candidacy_type" ? options : {} %>
+  <% end %>
+  <%= content_tag :li, t(".fill_data"), action_name == "fill_data" ? options : {} %>
+  <% if promotal_committee_required? %>
+    <%= content_tag :li, t(".promotal_committee"), action_name == "promotal_committee" ? options : {} %>
+  <% end %>
+  <%= content_tag :li, t(".finish"), action_name == "finish" ? options : {} %>
+</ol>

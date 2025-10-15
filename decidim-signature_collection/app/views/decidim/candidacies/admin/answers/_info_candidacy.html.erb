@@ -1,0 +1,25 @@
+<div class="form__wrapper">
+  <div class="card">
+    <div class="card-divider">
+      <h2 class="card-title">
+        <%= link_to "#{t ".candidacies"} > ", candidacies_path %>
+        <%= decidim_sanitize_translated(candidacy.title) %>
+      </h2>
+    </div>
+
+    <div class="card-section">
+      <div class="row column">
+        <strong><%= t ".description" %>: </strong> <%= decidim_sanitize_editor translated_attribute(candidacy.description) %>
+      </div>
+      <div class="row column">
+        <strong><%= t ".created_at" %>: </strong> <%= l candidacy.created_at, format: :decidim_short %>
+      </div>
+      <div class="row column">
+        <strong><%= t ".state" %>: </strong> <%= I18n.t(candidacy.state, scope: "decidim.candidacies.admin_states") %>
+      </div>
+      <div class="row column">
+        <strong><%= t ".candidacy_votes_count" %>: </strong> <%= candidacy.online_votes_count %>
+      </div>
+    </div>
+  </div>
+</div>

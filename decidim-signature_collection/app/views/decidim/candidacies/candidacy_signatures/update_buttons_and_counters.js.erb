@@ -1,0 +1,21 @@
+(function () {
+  'use strict';
+
+  var $candidacyVotesCount = $('#candidacy-<%= current_candidacy.id %>-progress-bar'),
+      userIdentitiesDialog = $('#user-identities'),
+      refreshUrl;
+
+  $candidacyVotesCount.html('<%= j(render partial: "decidim/candidacies/candidacies/progress_bar", locals: { candidacy: current_candidacy }) %>');
+
+  // Update the identities dialog, if exists.
+  if (userIdentitiesDialog.length) {
+    refreshUrl = userIdentitiesDialog.data('refresh-url');
+
+    $.ajax(refreshUrl).done(function(response){
+      userIdentitiesDialog.html(response);
+    });
+  } else {
+    var $candidacyVoteButton = $('#candidacy-<%= current_candidacy.id %>-vote-cabin');
+    $candidacyVoteButton.html('<%= j(render partial: "decidim/candidacies/candidacies/vote_cabin", locals: { candidacy: current_candidacy }) %>');
+  }
+}());

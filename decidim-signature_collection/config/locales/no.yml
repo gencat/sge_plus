@@ -1,0 +1,497 @@
+---
+"no":
+  activemodel:
+    attributes:
+      candidacy:
+        decidim_user_group_id: Forfatter
+        description: Beskrivelse
+        offline_votes: Personlige underskrifter
+        offline_votes_for_scope: Signatur ved fysisk oppmøte for %{scope_name}
+        scope_id: Tema
+        signature_end_date: Slutt av innsamlingsperiode for signatur
+        signature_start_date: Start av innsamlingsperiode for signatur
+        signature_type: Signatur innsamingstype
+        signature_type_values:
+          any: Blandet
+          offline: Personlig
+          online: Online
+        state: Status
+        title: Tittel
+      candidacies_committee_member:
+        user: Komité medlem
+      candidacies_type:
+        area_enabled: Muliggjør at forfattere velger område for sitt initiativ
+        attachments_enabled: Aktiver vedlegg
+        banner_image: Bannerafbeelding
+        child_scope_threshold_enabled: Aktiver signaturer for barnetema
+        collect_user_extra_fields: Samle deltakerens personlige data ved signatur
+        custom_signature_end_date_enabled: Muliggjør at forfattere kan velge slutten av signaturinnsamlingsperioden
+        description: Beskrivelse
+        document_number_authorization_handler: Fullmakt til å verifisere dokumentnummer på underskrifter
+        extra_fields_legal_information: Juridisk informasjon om innsamling av personopplysninger
+        minimum_committee_members: Minimum av komitémedlemmer
+        online_signature_enabled: Online signatur aktivert
+        only_global_scope_enabled: Bare tillat opprettelse av globale initiativtema
+        promoting_committee_enabled: Aktiver promoteringskomité
+        title: Tittel
+        undo_online_signatures_enabled: Aktiver at deltakere kan angre sine online signaturer
+        validate_sms_code_on_votes: Legg til SMS kode validerings trinn i signatur prosessen
+      candidacies_vote:
+        date_of_birth: Fødselsdato
+        document_number: Dokumentnummer
+        name_and_surname: Navn og etternavn
+        postal_code: Postnummer
+      organization_data:
+        address: Adresse
+        id_document: ID dokument
+        name: Komplett navn
+    errors:
+      models:
+        candidacy:
+          attributes:
+            attachment:
+              file: Filen er ugyldig
+              needs_to_be_reattached: Må festes på nytt
+  activerecord:
+    models:
+      decidim/candidacy_comittee:
+        one: Komité
+        other: Komitér
+      decidim/candidacy_vote:
+        one: Underskrift
+        other: Underskrifter
+  decidim:
+    admin:
+      actions:
+        new_candidacy_type: Ny intiativtype
+      filters:
+        candidacies:
+          decidim_area_id_eq:
+            label: Område
+          state_eq:
+            label: Tilstand
+            values:
+              accepted: Nok signaturer
+              created: Opprettet
+              discarded: Forkastet
+              rejected: Ikke nok signaturer
+              validating: Teknisk validering
+          type_id_eq:
+            label: Type
+        search_placeholder:
+          title_or_description_or_id_string_or_author_name_or_author_nickname_cont: Søk i %{collection} etter tittel, beskrivelse, ID eller forfatternavn.
+      menu:
+        attachments: Vedlegg
+        committee_members: Utvalgets medlemmer
+        information: Informasjon
+        candidacies: Candidacyr
+        candidacies_settings: Innstillinger
+        candidacies_types: Initiativtyper
+        moderations: Moderasjoner
+      models:
+        candidacies:
+          fields:
+            created_at: Opprettet på
+            id: ID
+            published_at: Publisert i
+            state: Status
+            supports_count: Underskrifter
+            title: Candidacyr
+        candidacies_type_scope:
+          fields:
+            scope: Tema
+            supports_required: Signaturer påkrevd
+          name: Initiativtypens omgang
+        candidacies_types:
+          fields:
+            created_at: Opprettet på
+            title: Initiativtyper
+          name: Initiativtype
+        candidacies_votes:
+          fields:
+            date_of_birth: Fødselsdato
+            document_number: Dokumentnummer
+            hash: Hash
+            candidacy_end_date: Sluttdato
+            candidacy_id: Initiativ ID
+            candidacy_signatures_count: Antall underskrifter
+            candidacy_start_date: Startdato
+            candidacy_title: Tittel på candidacyt
+            name_and_surname: Navn og etternavn
+            postal_code: Postnummer
+            timestamp: Tidsstempel
+      titles:
+        candidacies: Candidacyr
+        candidacies_types: Initiativtyper
+    events:
+      candidacies:
+        admin:
+          candidacy_sent_to_technical_validation:
+            email_intro: Candidacyt "%{resource_title}" er sendt til teknisk validering. Sjekk det ut i <a href="%{admin_candidacy_url}">admin panelet</a>
+            email_outro: Du har mottatt dette varselet fordi du er en administrator av plattformen.
+            email_subject: Initiativ "%{resource_title}" ble sendt til teknisk validering.
+            notification_title: Candidacyt "%{resource_title}" er sendt til teknisk validering. Sjekk det ut i <a href="%{admin_candidacy_path}">admin panelet</a>
+        candidacy_extended:
+          email_intro: Slutdatoen for signaturene for candidacyt %{resource_title} er blitt utvidet!
+          email_outro: Du har mottatt denne varslingen fordi du følger %{resource_title}. Du kan slutte å motta varsler hvis du følger den forrige lenken.
+          email_subject: Initiativunderskrifters sluttdato forlenget!
+          notification_title: Slutdatoen for signaturene for <a href="%{resource_path}">%{resource_title}</a> candidacyt er blitt utvidet.
+        candidacy_sent_to_technical_validation:
+          email_intro: Candidacyt "%{resource_title}" er sendt til teknisk validering. Sjekk det ut i <a href="%{admin_candidacy_url}">administratorpanelet</a>
+          email_outro: Du har mottatt dette varselet fordi du er en administrator av plattformen.
+          email_subject: Initiativ "%{resource_title}" ble sendt til teknisk validering.
+          notification_title: Candidacyt "%{resource_title}" er sendt til teknisk validering. Sjekk det ut i <a href="%{admin_candidacy_path}">administratorpanelet</a>
+        milestone_completed:
+          affected_user:
+            email_intro: Ditt initiativ %{resource_title} har oppnådd %{percentage}% av signaturene!
+            email_outro: Du har mottatt denne varslingen fordi du er forfatteren av candidacyt %{resource_title}.
+            email_subject: Ny milepæl fullført!
+            notification_title: Ditt <a href="%{resource_path}">%{resource_title}</a> initiativ har oppnådd %{percentage}% av signaturene.
+          follower:
+            email_intro: Candidacyt %{resource_title} har oppnådd %{percentage}% av signaturene!
+            email_outro: Du har mottatt denne varslingen fordi du følger %{resource_title}. Du kan slutte å motta varsler hvis du følger den forrige lenken.
+            email_subject: Ny milepæl fullført!
+            notification_title: <a href="%{resource_path}">%{resource_title}</a> candidacyt har oppnådd de %{percentage}% av signaturer.
+        support_threshold_reached:
+          email_intro: Candidacyt %{resource_title} har nådd terskelen for antall signaturer
+          email_outro: Du har mottatt dette varselet fordi du er en administrator av plattformen.
+          email_subject: Terskel for antall signaturer er nådd
+          notification_title: Candidacyt <a href="%{resource_path}">%{resource_title}</a> har nådd terskelen for antall signaturer
+    gamification:
+      badges:
+        candidacies:
+          conditions:
+          - Gå til deltakelsesområdet av Candidacyr
+          - Følg trinnene for å opprette et nytt initiativ
+          description: Dette merket blir gitt når du setter i gang nye candidacyr, og samarbeider med andre for å gjennomføre dem.
+          description_another: Denne deltakeren har fått %{score} candidacyr publisert.
+          name: Publiserte initiativ
+          next_level_in: Få %{score} flere candidacyr publisert for å nå neste nivå!
+          unearned_own: Du har ingen candidacyr publisert ennå.
+    help:
+      participatory_spaces:
+        candidacies:
+          contextual: "<p>Et <strong>initiativ</strong> er et forslag som kan forfremmes av alle på eget initiativ (uavhengig av andre kanaler eller deltakelsesrom) gjennom innsamling av (digitale) signaturer for organisasjonen for å utføre en spesifikk handling (endre en regulering, sette i gang et prosjekt, endre navnet på en avdeling eller en gate, etc.).</p> <p>Initiativtakerne kan definere dens mål, samle støtte, debattere, formidle det og definere møtepunkter der underskrifter kan samles fra deltakerne eller debattene, åpene for andre deltakere.</p> <p>Eksempler: Et initiativ kan samle underskrifter for å innkalle til en konsultasjon blant alle leddene i organisasjonene, eller for å opprette eller innkalle en forsamling, eller for å sette i gang en prosess med budsjettøkning for et territorium eller område av organisasjonen. I løpet av prosessen med å samle underskrifter, kan flere legge til dette kravet og føre det videre i organisasjonen.</p>\n"
+          page: "<p>Et <strong>initiativ</strong> er et forslag som kan forfremmes av alle på eget initiativ (uavhengig av andre kanaler eller deltakelsesrom) gjennom innsamling av (digitale) signaturer for organisasjonen for å utføre en spesifikk handling (endre en regulering, sette i gang et prosjekt, endre navnet på en avdeling eller en gate, etc.).</p> <p>Initiativtakerne kan definere dens mål, samle støtte, debattere, formidle det og definere møtepunkter der underskrifter kan samles fra deltakerne eller debattene, åpene for andre deltakere.</p> <p>Eksempler: Et initiativ kan samle underskrifter for å innkalle til en konsultasjon blant alle leddene i organisasjonene, eller for å opprette eller innkalle en forsamling, eller for å sette i gang en prosess med budsjettøkning for et territorium eller område av organisasjonen. I løpet av prosessen med å samle underskrifter, kan flere legge til dette kravet og føre det videre i organisasjonen.</p>\n"
+          title: Hva er candidacyr?
+    candidacies:
+      actions:
+        answer: Svar
+      admin:
+        answers:
+          edit:
+            answer: Svar
+            title: Svar for %{title}
+          info_candidacy:
+            created_at: Opprettet på
+            description: Beskrivelse
+            candidacy_votes_count: Stemmer teller
+            candidacies: Candidacyr
+            state: Stat
+        committee_requests:
+          index:
+            approve: Godkjenn
+            confirm_revoke: Er du sikker?
+            revoke: Tilbakekalle
+            title: Komité medlemer
+        content_blocks:
+          highlighted_candidacies:
+            max_results: Maksimal mengde elementer som skal vises
+            order:
+              default: Standard (mindre nylig)
+              label: 'Sorter element etter:'
+              most_recent: Nyeste
+        exports:
+          candidacies: Candidacyr
+        candidacies:
+          edit:
+            accept: Godta initiativ
+            confirm: Er du sikker?
+            confirm_send_to_technical_validation: Er du sikker?
+            discard: Forkastet candidacyt
+            export_pdf_signatures: Eksporter PDF av signaturer
+            export_votes: Eksporter signaturer
+            reject: Avvis initiativ
+            send_to_technical_validation: Send til teknisk validering
+            update: Oppdater
+          form:
+            settings: Innstillinger
+            title: Generell informasjon
+          index:
+            actions_title: Handling
+            preview: Forhåndsvis
+            print: Skriv ut
+          candidacy_attachments:
+            documents: Dokumenter
+            edit: Rediger
+            new: Ny
+            photos: Bilder
+        candidacies_settings:
+          edit:
+            update: Oppdater
+          form:
+            comments: Flest kommentarer
+            date: Nyeste
+            publication_date: Sist publisert
+            random: Tilfeldig
+            signatures: Flest signeringer
+            title: Innstillinger for candidacyr
+        candidacies_type_scopes:
+          edit:
+            title: Rediger initiativtypens omgang
+            update: Oppdater
+          new:
+            create: Opprett
+            title: Opprett tema for initiativtype
+        candidacies_types:
+          edit:
+            update: Oppdater
+          form:
+            authorizations: Innstillinger for autorisasjon
+            options: Valg
+          candidacy_type_scopes:
+            title: Tema for initiativtypen
+          new:
+            create: Opprett
+            title: Ny intiativtype
+      admin_log:
+        candidacy:
+          publish: "%{user_name} publiserte %{resource_name} candidacyt"
+          send_to_technical_validation: "%{user_name} sendte %{resource_name} candidacyt til teknisk validering"
+          unpublish: "%{user_name} forkastet %{resource_name} candidacyt"
+          update: "%{user_name} oppdaterte %{resource_name} candidacyt"
+        candidacies_settings:
+          update: "%{user_name} oppdaterte innstillingene for candidacyr"
+      admin_states:
+        accepted: Nok signaturer
+        created: Opprettet
+        discarded: Forkastet
+        rejected: Ikke nok signaturer
+        validating: Teknisk validering
+      application_helper:
+        filter_state_values:
+          accepted: Nok signaturer
+          all: Alle
+          answered: Besvart
+          closed: Lukket
+          open: Åpen
+          rejected: Ikke nok signaturer
+        filter_type_values:
+          all: Alle
+      committee_requests:
+        approve:
+          success: Forespørselen er godkjent.
+        new:
+          continue: Fortsett
+        revoke:
+          success: Forespørselen er ikke godkjent.
+        spawn:
+          success: Forespørselen din er sendt til initiativforfatteren.
+      content_blocks:
+        highlighted_candidacies:
+          name: Fremhevede candidacyr
+      create_candidacy:
+        fill_data:
+          back: Tilbake
+          continue: Fortsett
+          fill_data_help: "<ul> <li>Gjennomgå innholdet i ditt initiativ. Er tittelen din lett å forstå? Er målet med candidacyt ditt tydelig?</li> <li>Du må velge type signatur. Pålogget, fysisk tilstede eller en kombinasjon av begge</li> <li>Hvilket geografisk tema av satsingen?</li> </ul>"
+          more_information: "(Mer informasjon)"
+          select_area: Velg et område
+          select_scope: Velg et temaet
+        finish:
+          back: Tilbake
+          back_to_candidacies: Tilbake til candidacyr
+          confirm: Du sender nå candidacyt til en administrator for å gjennomgå og publisere det. Når det er publisert vil du ikke kunne redigere den. Er du sikker?
+          edit_my_candidacy: Rediger mitt initiativ
+          go_to_my_candidacies: Gå til mine candidacyr
+          more_information: "(Mer informasjon)"
+          send_my_candidacy: Send mitt initiativ til teknisk validering
+        finish_help:
+          publish_helper_text: Husk at for å publisere ditt initiativ må du fylle ut påkrevd informasjon og <strong>sende den til teknisk validering</strong> slik at en administrator kan gjennomgå det.
+        previous_form:
+          back: Tilbake
+          continue: Fortsett
+        promotal_committee:
+          individual_help_text: Denne typen initiativ krever en promoteringskommisjon som består av minst %{committee_size} personer (vitner). Du må dele følgende kobling til de andre som inngår i dette candidacyt. Når kontaktene dine mottar denne lenken må de følge de angitte trinnene.
+          more_information: "(Mer informasjon)"
+        select_candidacy_type:
+          back: Tilbake
+          choose_html: Jeg vil opprette en <strong>%{title}</strong>
+          more_information: (Mer informasjon)
+          select: Jeg ønsker å promotere dette candidacyt
+          select_candidacy_type_help: Candidacyr er en måte deltakerne kan gripe inn på, slik at organisasjonen kan iverksette tiltak i forsvar for den generelle interessen. Hvilket initiativ vil du lansere?
+        share_committee_link:
+          invite_to_committee_help: Lenke for å invitere folk som vil være en del av promotør komiteen
+      edit:
+        accept: Godta initiativ
+        back: Tilbake
+        confirm: Er du sikker?
+        discard: Forkaste candidacyt
+        export_pdf_signatures: Eksporter PDF med signaturer
+        export_votes: Eksporter signaturer
+        reject: Avvis initiativ
+        title: Rediger initiativ
+        update: Oppdater
+      events:
+        approve_membership_request:
+          email_intro: "%{author_nickname} aksepterte din søknad om å være en del av promotørutvalget for initiativ %{resource_title}."
+          email_outro: 'Du mottok dette varselet fordi du søkte på dette candidacyt: %{resource_title}'
+          email_subject: "%{author_nickname} aksepterte din søknad til promotørkomiteen"
+        create_candidacy_event:
+          email_intro: "%{author_name}%{author_nickname}, som du følger, har opprettet et nytt initiativ, sjekk det ut og bidra:"
+          email_outro: Du har mottatt denne varslingen fordi du følger %{author_nickname}. Du kan slutte å motta varsler hvis du følger den forrige lenken.
+          email_subject: Nytt initiativ av %{author_nickname}
+          notification_title: <a href="%{resource_path}">%{resource_title}</a> candidacyt ble opprettet av <a href="%{author_path}">%{author_name} %{author_nickname}</a>.
+        endorse_candidacy_event:
+          email_intro: "%{author_name}%{author_nickname}, som du følger, har sluttet seg til følgende initiativ: kanskje du vil bidra til samtalen:"
+          email_outro: Du har mottatt denne varslingen fordi du følger %{author_nickname}. Du kan slutte å motta varsler hvis du følger den forrige lenken.
+          email_subject: Initiativ påtegne av %{author_nickname}
+          notification_title: <a href="%{resource_path}">%{resource_title}</a> candidacyt ble påtegnet av <a href="%{author_path}">%{author_name} %{author_nickname}</a>.
+        revoke_membership_request:
+          email_outro: 'Du mottok dette varselet fordi du søkte på dette candidacyt: %{resource_title}.'
+          email_subject: "%{author_nickname} avviste din søknad til promotørkomiteen"
+          notification_title: <a href="%{author_profile_url}">%{author_nickname}</a> avviste søknaden din om å være en del av promotørutvalget i følgende initiativ <a href="%{resource_url}">%{resource_title}</a>.
+      candidacy_signatures:
+        fill_personal_data:
+          continue: Fortsett
+        finish:
+          back_to_candidacy: Tilbake til initiativ
+        sms_code:
+          continue: Sjekk kode og fortsett
+          help: Sjekk SMS mottatt på telefonen
+        sms_phone_number:
+          continue: Send meg en meldig
+      candidacy_votes:
+        create:
+          error: Det oppstod et problem med å signere candidacyt.
+        personal_data:
+          invalid: Personopplysninger samsvar ikke med informasjonen som er gitt for autorisering.
+        sms_phone:
+          invalid: Telefonnummeret er ugyldig eller venter på godkjenning. Vennligst sjekk autorisasjonene dine.
+      candidacies:
+        author_list:
+          hidden_authors_count:
+            one: og 1 til persjon
+            other: og %{count} flere personer
+        committee_members:
+          approve: Godkjenn
+          revoke: Tilbakekall
+          title: Utvalgets medlemmer
+        count:
+          title:
+            one: "%{count} initiativ"
+            other: "%{count} candidacyr"
+        filters:
+          any: Alle
+          area: Område
+          author: Forfatter
+          myself: Candidacyne mine
+          scope: Tema
+          state: Status
+          type: Type
+        index_header:
+          new_candidacy: Nytt initiativ
+        candidacies:
+          closed_candidacies_warning: Det er foreløpig ingen åpne candidacyr, men her kan du finne alle tidligere candidacyr.
+          no_candidacies_warning: Ingen candidacyr samsvarer med dine søkekriterier.
+        interactions:
+          comments_count:
+            count:
+              one: Kommentar
+              other: Kommentar
+        orders:
+          label: 'Sorter candidacyr etter:'
+          most_commented: Mest kommentert
+          most_voted: Mest signert
+          random: Tilfeldig
+          recent: Nyligst
+          recently_published: Sist publisert
+        print:
+          address: Adresse
+          author_title: Forfatteren til candidacyt
+          city: By
+          email: E-post
+          full_name: Fullt navn
+          general_title: Søknad om opptak av et initiativ
+          id_number: ID-nummer
+          candidacy:
+            attachments: Vedlagt dokumentasjon (skriv navnet på hvert dokument nedenfor)
+            description: 'Beskrivelse:'
+            title: 'Tittel:'
+            type: Type initiativ
+          legal_text: De innsamlede personopplysningene vil bli innlemmet og behandlet konfidensielt av organisasjonen i henhold til gjeldende lovgivning.
+          phone_number: Telefonnummer
+          place_date: Sted, dato
+          postal_code: Postnummer
+          province: Fylke
+          signature: Signatur
+        result:
+          candidacy_rejected_reason: Dette candidacyt er blitt avvist på grunn av manglende underskrifter.
+        show:
+          confirm: Du sender nå candidacyt til en administrator for å gjennomgå og publisere det. Når det er publisert vil du ikke kunne redigere den. Er du sikker?
+          edit: Rediger
+          send_to_technical_validation: Send til teknisk validering
+        signatures_count:
+          one: " underskrift"
+          other: " underskrifter"
+        vote_cabin:
+          already_voted: Allerede signert
+          vote: Signer
+          votes_blocked: Underskriving deaktivert
+        votes_count:
+          count:
+            one: SIGNATUR
+            other: SIGNATURER
+      candidacies_mailer:
+        creation_subject: Candidacyt ditt '%{title}' er opprettet
+        candidacy_link:
+          check_candidacy_details: Du kan se initiativ detaljene
+          here: her
+        more_information: Her har du mer informasjon om candidacyts opprettelses prosess.
+        progress_report_body_for: Candidacyt %{title} har nådd %{percentage}% av de nødvendige signaturene.
+        progress_report_for: 'Sammendrag om candidacyt: %{title}'
+        promotal_committee_help: Husk at du må invitere minst %{member_count} folk til promotør komiteen. Videresend den følgene lenken for å invitere folk til promotør komiteen
+        status_change_body_for: 'Candidacyt %{title} har endret sin status til: %{state}'
+        status_change_for: Candidacyt %{title} har endret sin status
+      modal:
+        not_authorized:
+          authorizations_page: Vis godkjennelser
+          explanation: Du må verifiseres for å opprette et nytt initiativ.
+          title: Autorisasjon kreves
+      show:
+        badge_name:
+          accepted: Nok signaturer
+          created: Opprettet
+          discarded: Forkastet
+          rejected: Ikke nok signaturer
+          validating: Teknisk validering
+      states:
+        accepted: Aksepterte
+        expired: Utløpt
+      unavailable_scope: Utilgjengelig tema
+    menu:
+      candidacies: Candidacyr
+    resources:
+      candidacy:
+        actions:
+          comment: Kommenter
+      candidacies_type:
+        actions:
+          title: Handlinger
+          vote: Signer
+  layouts:
+    decidim:
+      candidacy_creation_header:
+        fill_data: Opprett
+        finish: Fullfør
+        promotal_committee: Promotør komitè
+        select_candidacy_type: Velg
+      candidacy_signature_creation_header:
+        fill_personal_data: Fullfør dataene dine
+        finish: Fullfør
+        sms_code: SMS-kode verifisering
+        sms_phone_number: Mobiltelefon number
+        title: Signer %{candidacy_title}
+      candidacies:
+        no_candidacies_yet:
+          no_candidacies_yet: Ingen intiativer ennå!

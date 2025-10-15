@@ -1,0 +1,395 @@
+---
+lb:
+  activemodel:
+    attributes:
+      candidacy:
+        decidim_user_group_id: Autor
+        description: Beschreibung
+        offline_votes: Face-to-Face-Unterstützung
+        offline_votes_for_scope: Persönliche Unterschriften für %{scope_name}
+        scope_id: Umfang
+        signature_end_date: Ende der Unterschriftensammlung
+        signature_start_date: Beginn der Unterschriftensammlung
+        signature_type: Signatursammeltyp
+        signature_type_values:
+          any: Gemischt
+          offline: Angesicht zu Angesicht
+          online: Online
+        state: Zustand
+        title: Titel
+      candidacies_committee_member:
+        user: Ausschussmitglied
+      candidacies_type:
+        area_enabled: Die Auswahl des Bereichs von Candidacyn für Autoren freigeben
+        attachments_enabled: Anhänge freigeben
+        banner_image: Banner-Bild
+        child_scope_threshold_enabled: Unterschriften von Unterbereichen aktivieren
+        collect_user_extra_fields: Sammeln Sie persönliche Daten des Benutzers bei der Unterschrift
+        custom_signature_end_date_enabled: Die Auswahl des Enddatums der Unterschriftensammlung für Autoren freigeben
+        description: Beschreibung
+        document_number_authorization_handler: Berechtigung zur Überprüfung der Belegnummer bei Abstimmungen
+        extra_fields_legal_information: Rechtliche Informationen zur Erhebung personenbezogener Daten
+        minimum_committee_members: Minimum der Ausschussmitglieder
+        online_signature_enabled: Online-Signatur aktiviert
+        only_global_scope_enabled: Nur die Erstellung globaler Candidacyn zulassen
+        promoting_committee_enabled: Förderkomitee freigeben
+        title: Titel
+        undo_online_signatures_enabled: Ermöglichen Sie Benutzern, ihre Online-Signaturen rückgängig zu machen
+        validate_sms_code_on_votes: Fügen Sie dem Signaturprozess einen SMS-Validierungsschritt hinzu
+      candidacies_vote:
+        date_of_birth: Geburtsdatum
+        document_number: Dokumentnummer
+        name_and_surname: Name und Nachname
+        postal_code: Postleitzahl
+      organization_data:
+        address: Adress
+        id_document: ID-Dokument
+        name: Vollständiger Name
+    errors:
+      models:
+        candidacy:
+          attributes:
+            attachment:
+              file: Datei ist ungültig
+              needs_to_be_reattached: Der Anhang muss erneut angehängt werden
+  activerecord:
+    models:
+      decidim/candidacy_comittee:
+        one: Komitee
+        other: Ausschüsse
+      decidim/candidacy_vote:
+        one: Ënnerschrëft
+        other: Unterschriften
+  decidim:
+    admin:
+      actions:
+        new_candidacy_type: Neuer Candidacyntyp
+      filters:
+        candidacies:
+          decidim_area_id_eq:
+            label: Gebitt
+          state_eq:
+            label: Zustand
+            values:
+              accepted: Ausreichend Unterschriften
+              created: Erstellt
+              discarded: Verworfen
+              rejected: Zu wenige Unterschriften
+              validating: Technische Validierung
+          type_id_eq:
+            label: Typ
+        search_placeholder:
+          title_or_description_or_id_string_or_author_name_or_author_nickname_cont: Suche in %{collection} nach Titel, Beschreibung, ID oder Autoren.
+      menu:
+        attachments: Anhänge
+        committee_members: Ausschussmitglieder
+        information: Information
+        candidacies: Candidacyn
+        candidacies_types: Arten von Candidacyn
+        moderations: Moderationen
+      models:
+        candidacies:
+          fields:
+            created_at: Erstellt am
+            id: ID
+            published_at: Veröffentlicht am
+            state: Status
+            supports_count: Unterschriften
+            title: Candidacyn
+        candidacies_type_scope:
+          fields:
+            scope: Ëmfang
+            supports_required: Unterstützungen erforderlich
+          name: Typ der Candidacy
+        candidacies_types:
+          fields:
+            created_at: Erstallt den
+            title: Arten von Candidacyn
+          name: Art der Candidacy
+        candidacies_votes:
+          fields:
+            date_of_birth: Geburtsdatum
+            document_number: Nummer vum Dokument
+            hash: Hash
+            candidacy_end_date: Enddatum
+            candidacy_id: Initiativ-ID
+            candidacy_signatures_count: Anzahl der Unterschriften
+            candidacy_start_date: Ufanksdatum
+            candidacy_title: Candidacyntitel
+            name_and_surname: Name und Nachname
+            postal_code: Postleitzuel
+            timestamp: Zeitstempel
+      titles:
+        candidacies: Candidacyn
+        candidacies_types: Arten von Candidacyn
+    events:
+      candidacies:
+        admin:
+          candidacy_sent_to_technical_validation:
+            email_intro: Die Candidacy "%{resource_title}" wurde zur technischen Validierung gesendet. Über das <a href="%{admin_candidacy_url}">Admin-Panel</a> können Sie sie aufrufen
+            email_outro: Sie haben diese Benachrichtigung erhalten, weil Sie ein Administrator der Plattform sind.
+            email_subject: Die Candidacy "%{resource_title}" wurde zur technischen Validierung gesendet.
+            notification_title: Die Candidacy "%{resource_title}" wurde zur technischen Validierung gesendet. Über das <a href="%{admin_candidacy_path}">Admin-Panel</a> können Sie sie aufrufen
+        candidacy_extended:
+          email_intro: Das Enddatum der Unterschriftensammlung für die Candidacy %{resource_title} wurde verlängert!
+          email_outro: Sie haben diese Benachrichtigung erhalten, weil Sie %{resource_title} folgen. Falls Sie keine solchen Benachrichtigungen mehr erhalten möchten, besuchen Sie den obigen Link.
+          email_subject: Enddatum der Unterschriftensammlung verlängert!
+          notification_title: Das Enddatum der Unterschriftensammlung für die Candidacy <a href="%{resource_path}">%{resource_title}</a> wurde verlängert.
+        candidacy_sent_to_technical_validation:
+          email_intro: Die Candidacy „%{resource_title}“ wurde zur technischen Validierung gesendet. Über das <a href="%{admin_candidacy_url}">Admin-Panel</a> können Sie sie aufrufen
+          email_outro: Sie haben diese Benachrichtigung erhalten, weil Sie ein Administrator der Plattform sind.
+          email_subject: Die Candidacy "%{resource_title}" wurde zur technischen Validierung gesendet.
+          notification_title: Die Candidacy "%{resource_title}" wurde zur technischen Validierung gesendet. Über das <a href="%{admin_candidacy_path}">Admin-Panel</a> können Sie sie aufrufen
+        milestone_completed:
+          affected_user:
+            email_intro: Ihre Candidacy %{resource_title} hat %{percentage}% der Unterschriften erreicht!
+            email_outro: Sie haben diese Benachrichtigung erhalten, weil Sie der Autor der Candidacy %{resource_title} sind.
+            email_subject: Neuer Meilenstein abgeschlossen!
+            notification_title: Ihre Candidacy <a href="%{resource_path}">%{resource_title}</a> hat %{percentage}% der Unterschriften erreicht.
+          follower:
+            email_intro: Die Candidacy %{resource_title} hat %{percentage}% der Unterschriften erreicht!
+            email_outro: Sie haben diese Benachrichtigung erhalten, weil Sie %{resource_title} folgen. Falls Sie keine solchen Benachrichtigungen mehr erhalten möchten, besuchen Sie den obigen Link.
+            email_subject: Neuer Meilenstein abgeschlossen!
+            notification_title: Die Candidacy <a href="%{resource_path}">%{resource_title}</a> hat %{percentage}% der Unterschriften erreicht.
+        support_threshold_reached:
+          email_intro: Die Candidacy %{resource_title} hat die Mindestanzahl an Unterschriften erreicht
+          email_outro: Sie haben diese Benachrichtigung erhalten, weil Sie ein Administrator der Plattform sind.
+          email_subject: Mindestanzahl an Unterschriften erreicht
+          notification_title: Die Candidacy <a href="%{resource_path}">%{resource_title}</a> hat die Mindestanzahl an Unterschriften erreicht
+    gamification:
+      badges:
+        candidacies:
+          conditions:
+          - Gehe zum Teilnehmerbereich von Intiativen
+          - Befolgen Sie die Schritte, um eine neue Candidacy zu erstellen
+          description: Dieses Abzeichen wird gewährt, wenn Sie neue Candidacyn starten und mit anderen zusammenarbeiten, um sie durchzuführen.
+          description_another: Dieser Benutzer hat %{score} Candidacyn veröffentlicht.
+          name: Veröffentlichte Candidacyn
+          next_level_in: Holen Sie sich %{score} weitere Candidacyn veröffentlicht, um das nächste Level zu erreichen!
+          unearned_own: Sie haben noch keine Candidacyn veröffentlicht.
+    help:
+      participatory_spaces:
+        candidacies:
+          contextual: "<p>Eine Candidacy ist ein Vorschlag, der von jedermann aus eigener Candidacy (unabhängig von anderen Kanälen oder Beteiligungsräumen) durch die Sammlung von (digitalen) Unterschriften für die Organisation zur Durchführung einer bestimmten Aktion (Änderung einer Verordnung, Initiierung eines Projekts) gefördert werden kann , ändern Sie den Namen einer Abteilung oder einer Straße usw.).</p> <p>Die Initiatoren einer Candidacy können ihre Ziele festlegen, Unterstützung sammeln, diskutieren, verbreiten und Treffpunkte definieren, an denen Unterschriften der Teilnehmer oder Debatten gesammelt werden können, die für andere Teilnehmer offen sind.</p> <p>Beispiele: Eine Candidacy kann Unterschriften sammeln, um eine Konsultation unter allen Mitarbeitern einer Organisation einzuberufen, eine Versammlung zu gründen oder einzuberufen oder einen Prozess zur Aufstockung des Budgets für ein Gebiet oder einen Bereich der Organisation einzuleiten. Während des Sammelns von Unterschriften können mehr Personen zu diesem Bedarf beitragen und ihn in der Organisation vorantreiben.</p>\n"
+          page: "<p>Eine Candidacy ist ein Vorschlag, der von jedermann aus eigener Candidacy (unabhängig von anderen Kanälen oder Beteiligungsräumen) durch die Sammlung von (digitalen) Unterschriften für die Organisation zur Durchführung einer bestimmten Aktion (Änderung einer Verordnung, Initiierung eines Projekts) gefördert werden kann , ändern Sie den Namen einer Abteilung oder einer Straße usw.).</p> <p>Die Initiatoren einer Candidacy können ihre Ziele festlegen, Unterstützung sammeln, diskutieren, verbreiten und Treffpunkte definieren, an denen Unterschriften der Teilnehmer oder Debatten gesammelt werden können, die für andere Teilnehmer offen sind.</p> <p>Beispiele: Eine Candidacy kann Unterschriften sammeln, um eine Konsultation unter allen Mitarbeitern einer Organisation einzuberufen, eine Versammlung zu gründen oder einzuberufen oder einen Prozess zur Aufstockung des Budgets für ein Gebiet oder einen Bereich der Organisation einzuleiten. Während des Sammelns von Unterschriften können mehr Personen zu diesem Bedarf beitragen und ihn in der Organisation vorantreiben.</p>\n"
+          title: Was sind Candidacyn?
+    candidacies:
+      actions:
+        answer: Antworten
+      admin:
+        answers:
+          edit:
+            answer: Antworten
+            title: Antwort für %{title}
+          info_candidacy:
+            created_at: Hergestellt in
+            description: Beschreibung
+            candidacy_votes_count: Stimmen zählen
+            candidacies: Candidacyn
+            state: Zustand
+        committee_requests:
+          index:
+            approve: Genehmigen
+            confirm_revoke: Bist du sicher?
+        candidacies_types:
+          form:
+            options: Optionen
+          candidacy_type_scopes:
+            title: Bereiche für den Typ der Candidacy
+          new:
+            create: Erstellen
+            title: Neuer Candidacyntyp
+      admin_log:
+        candidacy:
+          publish: "%{user_name} hat die Candidacy %{resource_name} veröffentlicht"
+          send_to_technical_validation: "%{user_name} hat die Candidacy %{resource_name} zur technischen Validierung gesendet"
+          unpublish: "%{user_name} hat die Candidacy %{resource_name} verworfen"
+          update: "%{user_name} hat die Candidacy %{resource_name} aktualisiert"
+      admin_states:
+        accepted: Ausreichend Unterschriften
+        created: Erstellt
+        discarded: Verworfen
+        rejected: Ungenügend Unterschriften
+        validating: Technische Validierung
+      application_helper:
+        filter_state_values:
+          accepted: Ausreichend Unterschriften
+          all: Alle
+          answered: Beantwortet
+          closed: Geschlossen
+          open: Öffnen
+          rejected: Ungenügend Unterschriften
+        filter_type_values:
+          all: Alle
+      committee_requests:
+        approve:
+          success: Anfrage wurde bestätigt.
+        new:
+          continue: Fortsetzen
+        revoke:
+          success: Anfrage wurde zurückgezogen.
+        spawn:
+          success: Ihre Anfrage wurde an den Initiativautor gesendet.
+      content_blocks:
+        highlighted_candidacies:
+          name: Hervorgehobene Candidacyn
+      create_candidacy:
+        fill_data:
+          back: Zurück
+          continue: Fortsetzen
+          fill_data_help: "<ul> <li>Inhalt Ihrer Candidacy überprüfen. Ist Ihr Titel leicht verständlich? Ist das Ziel Ihrer Candidacy klar?</li> <li>Sie müssen die Art der Unterschrift wählen. Persönlich, online oder eine Kombination aus beidem</li> <li>Was ist die geografische Reichweite der Candidacy? Stadt, Bezirk?</li> </ul>"
+          more_information: "(Weitere Informationen)"
+          select_area: Wählen Sie einen Bereich aus
+          select_scope: Wählen Sie einen Bereich aus
+        finish:
+          back: Zurück
+          back_to_candidacies: Zurück zu den Candidacyn
+          edit_my_candidacy: Meine Candidacyn bearbeiten
+          go_to_my_candidacies: Geh zu meinen Candidacyn
+          more_information: "(Weitere Informationen)"
+          send_my_candidacy: Meine Candidacy zur technischen Validierung senden
+        finish_help:
+          publish_helper_text: Denken Sie daran, dass Sie für die Veröffentlichung Ihrer Candidacy die erforderlichen Informationen ausfüllen müssen und <strong>diese an die technische Validierung</strong> senden müssen, damit ein Administrator sie prüfen kann.
+        previous_form:
+          back: Zréck
+          continue: Fortsetzen
+        promotal_committee:
+          individual_help_text: Diese Art der Bürgercandidacy erfordert einen Ausschuss der Initiatoren, der aus mindestens %{committee_size} Personen (Zeugen) besteht. Sie müssen den folgenden Link mit den anderen Personen teilen, die an dieser Candidacy beteiligt sind. Wenn Ihre Kontakte diesen Link erhalten, müssen sie die angegebenen Schritte befolgen.
+          more_information: "(Weitere Informationen)"
+        select_candidacy_type:
+          back: Zréck
+          choose_html: Ich möchte eine <strong>%{title}</strong> erstellen
+          more_information: (Weitere Informationen)
+          select: Ich möchte diese Candidacy fördern
+          select_candidacy_type_help: Bürgercandidacyn sind ein Mittel, mit dem die Bürger eingreifen können, damit die Organisation Maßnahmen zur Verteidigung des Allgemeininteresses ergreifen kann, die in den Zuständigkeitsbereich der Stadtverwaltung fallen. Welche Candidacy möchten Sie starten?
+        share_committee_link:
+          invite_to_committee_help: Link, um Leute einzuladen, die Teil des Promoter-Komitees sein werden
+      edit:
+        accept: Candidacy akzeptieren
+        back: Zréck
+        confirm: Bass du sécher?
+        discard: Candidacy verwerfen
+        export_pdf_signatures: PDF der Unterschriften exportieren
+        export_votes: Unterschriften exportieren
+        reject: Candidacy ablehnen
+        title: Candidacyn bearbeiten
+        update: Aktualiséieren
+      events:
+        approve_membership_request:
+          email_intro: "%{author_nickname} hat Ihre Anfrage fürs Promoter-Komittee der Candidacy %{resource_title} akzeptiert."
+          email_outro: 'Sie haben diese Benachrichtigung erhalten, weil Sie sich bei dieser Candidacy beworben haben: %{resource_title}'
+          email_subject: "%{author_nickname} hat Ihre Anfrage fürs Promoter-Komittee akzeptiert"
+          notification_title: <a href="%{author_profile_url}">%{author_nickname}</a> hat Ihre Anfrage fürs Promoter-Komittee der Candidacy <a href="%{resource_url}">%{resource_title}</a> akzeptiert.
+        create_candidacy_event:
+          email_intro: "%{author_name} %{author_nickname}, dem du folgst, hat eine neue Candidacy erstellt, sehen Sie es sich an und reden Sie mit:"
+          email_outro: Du hues dës Noriicht kritt, well s'du dem %{author_nickname} nogees. Falls du esou Noriichten net méi wëlls kréien, géi op den Link uewen.
+          email_subject: Neue Candidacy von %{author_nickname}
+          notification_title: Die Candidacy <a href="%{resource_path}">%{resource_title}</a> wurde von <a href="%{author_path}">%{author_name} %{author_nickname}</a> erstellt.
+        endorse_candidacy_event:
+          email_intro: "%{author_name} %{author_nickname}, dem Sie folgen, hat die folgende Candidacy unterstützt, vielleicht möchten Sie mitreden:"
+          email_outro: Du hues dës Noriicht kritt, well s'du dem %{author_nickname} nogees. Falls du esou Noriichten net méi wëlls kréien, géi op den Link uewen.
+          email_subject: Candidacy wurde von %{author_nickname} unterstützt
+          notification_title: Die Candidacy <a href="%{resource_path}">%{resource_title}</a> wurde von <a href="%{author_path}">%{author_name} %{author_nickname}</a> unterstützt.
+        revoke_membership_request:
+          email_intro: "%{author_nickname} hat Ihre Anfrage fürs Promoter-Komittee der Candidacy %{resource_title} abgelehnt."
+          email_outro: 'Sie haben diese Benachrichtigung erhalten, weil Sie sich bei dieser Candidacy beworben haben: %{resource_title}.'
+          email_subject: "%{author_nickname} hat Ihre Anfrage fürs Promoter-Komittee abgelehnt"
+          notification_title: <a href="%{author_profile_url}">%{author_nickname}</a> hat Ihre Anfrage für das Promoter-Komittee der Candidacy <a href="%{resource_url}">%{resource_title}</a> abgelehnt.
+        spawn_committee_request_event:
+          email_intro: "%{applicant_nickname} hat sich fürs Promoter-Komittee Ihrer Candidacy %{resource_title} beworben. Um die Anfrage zu akzeptieren oder abzulehnen, besuchen Sie das Bearbeitungsformular Ihrer Candidacy."
+          email_outro: 'Sie haben diese Benachrichtigung erhalten, weil Sie der Autor der Candidacy %{resource_title} sind'
+          email_subject: "%{applicant_nickname} möchte Ihrer Candidacy beitreten"
+          notification_title: <a href="%{applicant_profile_url}">%{applicant_nickname}</a> hat sich für das Promoter-Komittee Ihrer Candidacy <a href="%{resource_url}">%{resource_title}</a> beworben. Um anzunehmen oder abzulehnen, klicken Sie <a href="%{resource_url}/edit">hier</a>.
+      candidacy_signatures:
+        fill_personal_data:
+          continue: Fortsetzen
+        finish:
+          back_to_candidacy: Zurück zur Candidacy
+        sms_code:
+          continue: Code überprüfen und fortfahren
+          help: Überprüfen Sie die an Ihrem Telefon empfangene SMS
+        sms_phone_number:
+          continue: Senden Sie mir eine SMS
+      candidacy_votes:
+        create:
+          error: Beim Signieren der Candidacy sind Fehler aufgetreten.
+        personal_data:
+          invalid: Persönliche Daten stimmen nicht mit den zur Autorisierung angegebenen Daten überein.
+        sms_phone:
+          invalid: Die Telefonnummer ist ungültig oder muss noch autorisiert werden. Bitte überprüfen Sie Ihre Berechtigungen.
+      candidacies:
+        author_list:
+          hidden_authors_count:
+            one: und 1 weitere Person
+            other: und %{count} weitere Leute
+        committee_members:
+          approve: Genehmigen
+          revoke: Widerrufen
+          title: Ausschussmitglieder
+        count:
+          title:
+            one: "%{count} Candidacy"
+            other: "%{count} Candidacyn"
+        filters:
+          any: Irgendein
+          area: Bereich
+          author: Autor
+          myself: Meine Candidacyn
+          scope: Umfang
+          state: Zustand
+          type: Art
+        index_header:
+          new_candidacy: Neue Candidacy
+        candidacies:
+          closed_candidacies_warning: Derzeit gibt es keine offenen Candidacyn, aber hier finden Sie alle abgeschlossenen Candidacyn aufgelistet.
+          no_candidacies_warning: Keine Candidacyn entsprechen Ihren Suchkriterien.
+        interactions:
+          comments_count:
+            count:
+              one: Kommentar
+              other: Bemerkungen
+        orders:
+          label: 'Candidacyn sortieren nach:'
+        print:
+          city: Uertschaft
+      modal:
+        not_authorized:
+          authorizations_page: Autorisierungen anzeigen
+          explanation: Sie müssen überprüft werden, um eine neue Candidacy zu schaffen.
+          title: Autorisierung erforderlich
+      show:
+        badge_name:
+          accepted: Ausreichend Unterschriften
+          created: Erstellt
+          discarded: Verworfen
+          rejected: Ungenügend Unterschriften
+          validating: Technische Validierung
+      states:
+        accepted: Akzeptiert
+        expired: Abgelaufen
+      unavailable_scope: Nicht verfügbarer Umfang
+    menu:
+      candidacies: Candidacyn
+    resources:
+      candidacy:
+        actions:
+          comment: Kommentar
+      candidacies_type:
+        actions:
+          title: Aktionen
+  layouts:
+    decidim:
+      candidacy_creation_header:
+        fill_data: Erstellen
+        finish: Fertig
+        promotal_committee: Promoter-Komitee
+        select_candidacy_type: Wählen
+      candidacy_signature_creation_header:
+        fill_personal_data: Ergänzen Sie Ihre Daten
+        finish: Fertig
+        sms_code: SMS-Code-Bestätigung
+        sms_phone_number: Handynummer
+        title: Zeichen %{candidacy_title}
+      candidacies:
+        no_candidacies_yet:
+          no_candidacies_yet: Keine Candidacyn bisher!

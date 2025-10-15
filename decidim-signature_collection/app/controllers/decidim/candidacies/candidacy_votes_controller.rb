@@ -1,0 +1,50 @@
+# frozen_string_literal: true
+
+module Decidim
+  module Candidacies
+    # Exposes the candidacy vote resource so users can vote candidacies.
+    class CandidacyVotesController < Decidim::Candidacies::ApplicationController
+      include Decidim::Candidacies::NeedsCandidacy
+      include Decidim::FormFactory
+
+      before_action :authenticate_user!
+
+      helper CandidacyHelper
+
+      # POST /candidacies/:candidacy_id/candidacy_vote
+      def create
+        enforce_permission_to :vote, :candidacy, candidacy: current_candidacy
+
+        @form = form(Decidim::Candidacies::VoteForm).from_params(
+          candidacy: current_candidacy,
+          signer: current_user
+        )
+
+        VoteCandidacy.call(@form) do
+          on(:ok) do
+            current_candidacy.reload
+            render :update_buttons_and_counters
+          end
+
+          on(:invalid) do
+            render json: {
+              error: I18n.t("candidacy_votes.create.error", scope: "decidim.candidacies")
+            }, status: :unprocessable_entity
+          end
+        end
+      end
+
+      # DELETE /candidacies/:candidacy_id/candidacy_vote
+      def destroy
+        enforce_permission_to :unvote, :candidacy, candidacy: current_candidacy
+
+        UnvoteCandidacy.call(current_candidacy, current_user) do
+          on(:ok) do
+            current_candidacy.reload
+            render :update_buttons_and_counters
+          end
+        end
+      end
+    end
+  end
+end

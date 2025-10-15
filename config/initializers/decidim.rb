@@ -470,6 +470,25 @@ if Decidim.module_installed? :initiatives
   end
 end
 
+if Decidim.module_installed? :signature_collection
+  Decidim::Candidacies.configure do |config|
+    unless Rails.application.secrets.dig(:decidim, :candidacies, :creation_enabled) == "auto"
+      config.creation_enabled = Rails.application.secrets.dig(:decidim, :candidacies, :creation_enabled).present?
+    end
+    config.minimum_committee_members = Rails.application.secrets.dig(:decidim, :candidacies, :minimum_committee_members).presence || 0
+    config.default_signature_time_period_length = Rails.application.secrets.dig(:decidim, :candidacies, :default_signature_time_period_length).presence || 120
+    config.default_components = Rails.application.secrets.dig(:decidim, :candidacies, :default_components)
+    config.first_notification_percentage = Rails.application.secrets.dig(:decidim, :candidacies, :first_notification_percentage).presence || 33
+    config.second_notification_percentage = Rails.application.secrets.dig(:decidim, :candidacies, :second_notification_percentage).presence || 66
+    config.stats_cache_expiration_time = Rails.application.secrets.dig(:decidim, :candidacies, :stats_cache_expiration_time).to_i.minutes
+    config.max_time_in_validating_state = Rails.application.secrets.dig(:decidim, :candidacies, :max_time_in_validating_state).to_i.days
+    unless Rails.application.secrets.dig(:decidim, :candidacies, :print_enabled) == "auto"
+      config.print_enabled = Rails.application.secrets.dig(:decidim, :candidacies, :print_enabled).present?
+    end
+    config.do_not_require_authorization = Rails.application.secrets.dig(:decidim, :candidacies, :do_not_require_authorization).present?
+  end
+end
+
 Rails.application.config.i18n.available_locales = Decidim.available_locales
 Rails.application.config.i18n.default_locale = Decidim.default_locale
 

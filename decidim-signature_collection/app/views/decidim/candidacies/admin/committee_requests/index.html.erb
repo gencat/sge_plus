@@ -1,0 +1,60 @@
+<% add_decidim_page_title(t(".title")) %>
+<div class="card" id="committee_members">
+  <div class="item_show__header">
+    <h1 class="item_show__header-title">
+      <%= t ".title" %>
+    </h1>
+  </div>
+
+  <div class="card-section p-4">
+    <div class="row column">
+      <%= t ".invite_to_committee_help" %>
+    </div>
+
+    <div class="row column">
+      <div data-committee_link>
+        <%= decidim_candidacies.new_candidacy_committee_request_url(current_candidacy) %>
+        <%= icon_link_to "clipboard-line", "#", t(".invite_to_committee_help"), class: "card--list__data__icon invite-users-link" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="table-scroll mt-4">
+  <table class="table-list">
+    <thead>
+    <tr>
+      <th><%= t "user", scope: "activemodel.attributes.candidacies_committee_member" %></th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+      <% if current_candidacy.committee_members.empty? %>
+      <tr>
+        <td><%= t ".no_members_yet" %></td>
+        <td></td>
+      </tr>
+      <% end %>
+
+      <% current_candidacy.committee_members.each do |request| %>
+        <tr data-id="<%= request.id %>">
+          <td>
+            <%= link_to request.user.name, "mailto:#{request.user.email}" %>
+          </td>
+          <td class="table-list__actions">
+            <% if allowed_to? :approve, :candidacy_committee_member, request: request %>
+              <%= icon_link_to "check-line", approve_candidacy_committee_request_path(current_candidacy, request), t(".approve"), class: "action-icon--check" %>
+            <% end %>
+
+            <% if allowed_to? :revoke, :candidacy_committee_member, request: request %>
+              <%= icon_link_to "delete-bin-line", revoke_candidacy_committee_request_path(current_candidacy, request), t(".revoke"), class: "action-icon--remove", method: :delete, data: { confirm: t(".confirm_revoke") } %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%= append_stylesheet_pack_tag "decidim_candidacies_admin" %>
+<%= append_javascript_pack_tag "decidim_candidacies_admin" %>
