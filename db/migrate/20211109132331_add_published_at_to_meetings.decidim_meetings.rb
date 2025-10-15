@@ -4,6 +4,7 @@
 # This file has been modified by `decidim upgrade:migrations` task on 2025-10-15 08:46:24 UTC
 class AddPublishedAtToMeetings < ActiveRecord::Migration[5.2]
   def change
-    add_column :decidim_meetings_meetings, :published_at, :datetime, index: true
+    add_column :decidim_meetings_meetings, :published_at, :datetime
+    add_index :decidim_meetings_meetings, :published_at
   end
 end

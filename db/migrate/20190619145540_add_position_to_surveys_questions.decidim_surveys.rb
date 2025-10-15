@@ -4,6 +4,7 @@
 # This file has been modified by `decidim upgrade:migrations` task on 2025-10-15 08:46:25 UTC
 class AddPositionToSurveysQuestions < ActiveRecord::Migration[5.0]
   def change
-    add_column :decidim_surveys_survey_questions, :position, :integer, index: true
+    add_column :decidim_surveys_survey_questions, :position, :integer
+    add_index :decidim_surveys_survey_questions, :position
   end
 end

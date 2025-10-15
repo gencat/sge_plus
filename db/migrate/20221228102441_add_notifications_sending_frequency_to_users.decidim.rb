@@ -4,6 +4,7 @@
 # This file has been modified by `decidim upgrade:migrations` task on 2025-10-15 08:46:24 UTC
 class AddNotificationsSendingFrequencyToUsers < ActiveRecord::Migration[6.0]
   def change
-    add_column :decidim_users, :notifications_sending_frequency, :string, default: "daily", index: true
+    add_column :decidim_users, :notifications_sending_frequency, :string, default: "daily"
+    add_index :decidim_users, :notifications_sending_frequency
   end
 end

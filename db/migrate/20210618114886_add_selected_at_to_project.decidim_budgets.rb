@@ -4,6 +4,7 @@
 # This file has been modified by `decidim upgrade:migrations` task on 2025-10-15 08:46:24 UTC
 class AddSelectedAtToProject < ActiveRecord::Migration[5.2]
   def change
-    add_column :decidim_budgets_projects, :selected_at, :date, index: true
+    add_column :decidim_budgets_projects, :selected_at, :date
+    add_index :decidim_budgets_projects, :selected_at
   end
 end

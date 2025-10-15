@@ -4,7 +4,8 @@
 # This file has been modified by `decidim upgrade:migrations` task on 2025-10-15 08:46:24 UTC
 class AddCommentableCounterCacheToResults < ActiveRecord::Migration[5.2]
   def change
-    add_column :decidim_accountability_results, :comments_count, :integer, null: false, default: 0, index: true
+    add_column :decidim_accountability_results, :comments_count, :integer, null: false, default: 0
+    add_index :decidim_accountability_results, :comments_count
     Decidim::Accountability::Result.reset_column_information
     Decidim::Accountability::Result.unscoped.find_each(&:update_comments_count)
   end

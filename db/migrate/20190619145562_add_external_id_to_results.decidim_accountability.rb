@@ -4,6 +4,7 @@
 # This file has been modified by `decidim upgrade:migrations` task on 2025-10-15 08:46:24 UTC
 class AddExternalIdToResults < ActiveRecord::Migration[5.1]
   def change
-    add_column :decidim_accountability_results, :external_id, :string, index: true
+    add_column :decidim_accountability_results, :external_id, :string
+    add_index :decidim_accountability_results, :external_id
   end
 end

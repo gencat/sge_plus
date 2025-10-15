@@ -4,7 +4,8 @@
 # This file has been modified by `decidim upgrade:migrations` task on 2025-10-15 08:46:24 UTC
 class AddCommentableCounterCacheToDebates < ActiveRecord::Migration[5.2]
   def change
-    add_column :decidim_debates_debates, :comments_count, :integer, null: false, default: 0, index: true
+    add_column :decidim_debates_debates, :comments_count, :integer, null: false, default: 0
+    add_index :decidim_debates_debates, :comments_count
     Decidim::Debates::Debate.reset_column_information
 
     # rubocop:disable Rails/SkipsModelValidations
