@@ -166,39 +166,38 @@ es:
       show:
         candidacies: Exportar las iniciativas
     events:
-      candidacies:
-        admin:
-          candidacy_sent_to_technical_validation:
-            email_intro: La iniciativa "%{resource_title}" ha sido enviada a validación técnica. Compruébalo a través del <a href="%{admin_candidacy_url}"> panel de administración</a>
-            email_outro: Has recibido esta notificación porque administras la plataforma.
-            email_subject: La iniciativa %{resource_title} ha solicitado validación técnica.
-            notification_title: La iniciativa "%{resource_title}" ha sido enviada a validación técnica. Compruébalo a través del <a href="%{admin_candidacy_path}"> panel de administración</a>
-        candidacy_extended:
-          email_intro: '¡El plazo de finalización de la iniciativa %{resource_title} se ha ampliado!'
-          email_outro: Has recibido esta notificación porque está siguiendo la iniciactiva "%{resource_title}". Puedes dejar de recibir notificaciones siguiendo el enlace anterior.
-          email_subject: '¡Ampliado el términio de recogida de firmas para esta iniciativa!'
-          notification_title: El plazo de recogida de firmas para la iniciativa <a href="%{resource_path}">%{resource_title}</a> se ha ampliado.
+      admin:
         candidacy_sent_to_technical_validation:
-          email_intro: La iniciativa "%{resource_title}" ha sido enviada a la validación técnica. Compruébala en <a href="%{admin_candidacy_url}">el panel de administración</a>
+          email_intro: La iniciativa "%{resource_title}" ha sido enviada a validación técnica. Compruébalo a través del <a href="%{admin_candidacy_url}"> panel de administración</a>
           email_outro: Has recibido esta notificación porque administras la plataforma.
-          email_subject: La iniciativa "%{resource_title}" fue enviada a validación técnica.
-          notification_title: La iniciativa "%{resource_title}" ha sido enviada a validación técnica. Compruébalo en <a href="%{admin_candidacy_path}">el panel de administración</a>
-        milestone_completed:
-          affected_user:
-            email_intro: '¡Tu iniciativa %{resource_title} ha conseguido el %{percentage}% de las firmas necesarias!'
-            email_outro: Has recibido esta notificación porque promueves la iniciativa "%{resource_title}".
-            email_subject: '¡Nuevo hito completado!'
-            notification_title: Tu iniciativa <a href="%{resource_path}">%{resource_title}</a> ha conseguido el %{percentage}% de firmas.
-          follower:
-            email_intro: '¡La iniciativa %{resource_title} ha logrado el %{percentage}% de firmas!'
-            email_outro: Has recibido esta notificación porque estás siguiendo la iniciativa "%{resource_title}". Puedes dejar de recibir notificaciones siguiendo el enlace anterior.
-            email_subject: '¡Nuevo hito completado!'
-            notification_title: La iniciativa <a href="%{resource_path}">%{resource_title}</a> ha logrado el %{percentage}% de las firmas.
-        support_threshold_reached:
-          email_intro: La iniciativa %{resource_title} ha alcanzado el umbral de firmas
-          email_outro: Has recibido esta notificación porque administras la plataforma.
-          email_subject: Umbral de firmas alcanzado
-          notification_title: La iniciativa <a href="%{resource_path}">%{resource_title}</a> ha alcanzado el umbral de firmas
+          email_subject: La iniciativa %{resource_title} ha solicitado validación técnica.
+          notification_title: La iniciativa "%{resource_title}" ha sido enviada a validación técnica. Compruébalo a través del <a href="%{admin_candidacy_path}"> panel de administración</a>
+      candidacy_extended:
+        email_intro: '¡El plazo de finalización de la iniciativa %{resource_title} se ha ampliado!'
+        email_outro: Has recibido esta notificación porque está siguiendo la iniciactiva "%{resource_title}". Puedes dejar de recibir notificaciones siguiendo el enlace anterior.
+        email_subject: '¡Ampliado el términio de recogida de firmas para esta iniciativa!'
+        notification_title: El plazo de recogida de firmas para la iniciativa <a href="%{resource_path}">%{resource_title}</a> se ha ampliado.
+      candidacy_sent_to_technical_validation:
+        email_intro: La iniciativa "%{resource_title}" ha sido enviada a la validación técnica. Compruébala en <a href="%{admin_candidacy_url}">el panel de administración</a>
+        email_outro: Has recibido esta notificación porque administras la plataforma.
+        email_subject: La iniciativa "%{resource_title}" fue enviada a validación técnica.
+        notification_title: La iniciativa "%{resource_title}" ha sido enviada a validación técnica. Compruébalo en <a href="%{admin_candidacy_path}">el panel de administración</a>
+      milestone_completed:
+        affected_user:
+          email_intro: '¡Tu iniciativa %{resource_title} ha conseguido el %{percentage}% de las firmas necesarias!'
+          email_outro: Has recibido esta notificación porque promueves la iniciativa "%{resource_title}".
+          email_subject: '¡Nuevo hito completado!'
+          notification_title: Tu iniciativa <a href="%{resource_path}">%{resource_title}</a> ha conseguido el %{percentage}% de firmas.
+        follower:
+          email_intro: '¡La iniciativa %{resource_title} ha logrado el %{percentage}% de firmas!'
+          email_outro: Has recibido esta notificación porque estás siguiendo la iniciativa "%{resource_title}". Puedes dejar de recibir notificaciones siguiendo el enlace anterior.
+          email_subject: '¡Nuevo hito completado!'
+          notification_title: La iniciativa <a href="%{resource_path}">%{resource_title}</a> ha logrado el %{percentage}% de las firmas.
+      support_threshold_reached:
+        email_intro: La iniciativa %{resource_title} ha alcanzado el umbral de firmas
+        email_outro: Has recibido esta notificación porque administras la plataforma.
+        email_subject: Umbral de firmas alcanzado
+        notification_title: La iniciativa <a href="%{resource_path}">%{resource_title}</a> ha alcanzado el umbral de firmas
     gamification:
       badges:
         candidacies:
@@ -218,7 +217,7 @@ es:
           contextual: "<p>Una <strong>iniciativa</strong> es una propuesta que puede impulsar cualquier persona por iniciativa propia (independientemente del resto de canales o espacios de participación) mediante la recogida de firmas (digitales) para que la organización lleve a cabo una acción específica (modificar un reglamento, iniciar un proyecto, cambiar el nombre de un departamento o una calle, etc.).</p> <p>Las personas promotoras de una iniciativa pueden definir los objetivos de la misma, recoger apoyos, debatir, difundirla y definir puntos de encuentro donde se puedan recoger firmas de los asistentes o debates abiertos a otras participantes.</p> <p>Ejemplos: Una iniciativa puede recoger firmas para convocar una consulta entre todas las personas de una organización, o para crear o convocar una asamblea, o para iniciar un proceso de aumento de presupuesto para un territorio o ámbito de la organización. Durante el proceso de recogida de firmas se pueden sumar más personas a esta demanda y lograr llevarla adelante en la organización.</p>\n"
           page: "<p>Una <strong>iniciativa</strong> es una propuesta que puede impulsar cualquier persona por iniciativa propia (independientemente del resto de canales o espacios de participación) mediante la recogida de firmas (digitales) para que la organización lleve a cabo una acción específica (modificar un reglamento, iniciar un proyecto, cambiar el nombre de un departamento o una calle, etc.).</p> <p>Las personas promotoras de una iniciativa pueden definir los objetivos de la misma, recoger apoyos, debatir, difundirla y definir puntos de encuentro donde se puedan recoger firmas de los asistentes o debates abiertos a otras participantes.</p> <p>Ejemplos: Una iniciativa puede recoger firmas para convocar una consulta entre todas las personas de una organización, o para crear o convocar una asamblea, o para iniciar un proceso de aumento de presupuesto para un territorio o ámbito de la organización. Durante el proceso de recogida de firmas se pueden sumar más personas a esta demanda y lograr llevarla adelante en la organización.</p>\n"
           title: '¿Qué son las iniciativas?'
-    candidacies:
+    signature_collection:
       actions:
         answer: Responder
       admin:

@@ -3,12 +3,12 @@
 require "spec_helper"
 
 describe "Admin manages candidacies" do
-  STATES = Decidim::Candidacy.states.keys.map(&:to_sym)
+  STATES = Decidim::SignatureCollection::Candidacy.states.keys.map(&:to_sym)
 
   let(:organization) { create(:organization) }
   let(:user) { create(:user, :confirmed, :admin, organization:) }
-  let(:model_name) { Decidim::Candidacy.model_name }
-  let(:resource_controller) { Decidim::Candidacies::Admin::CandidacysController }
+  let(:model_name) { Decidim::SignatureCollection::Candidacy.model_name }
+  let(:resource_controller) { Decidim::SignatureCollection::Admin::CandidaciesController }
   let(:type1) { create(:candidacies_type, organization:) }
   let(:type2) { create(:candidacies_type, organization:) }
   let(:scoped_type1) { create(:candidacies_type_scope, type: type1) }
@@ -21,27 +21,27 @@ describe "Admin manages candidacies" do
   end
 
   def candidacy_with_state(state)
-    Decidim::Candidacy.find_by(state:)
+    Decidim::SignatureCollection::Candidacy.find_by(state:)
   end
 
   def candidacy_without_state(state)
-    Decidim::Candidacy.where.not(state:).sample
+    Decidim::SignatureCollection::Candidacy.where.not(state:).sample
   end
 
   def candidacy_with_type(type)
-    Decidim::Candidacy.join(:scoped_type).find_by(decidim_candidacies_types_id: type)
+    Decidim::SignatureCollection::Candidacy.join(:scoped_type).find_by(decidim_candidacies_types_id: type)
   end
 
   def candidacy_without_type(type)
-    Decidim::Candidacy.join(:scoped_type).where.not(decidim_candidacies_types_id: type).sample
+    Decidim::SignatureCollection::Candidacy.join(:scoped_type).where.not(decidim_candidacies_types_id: type).sample
   end
 
   def candidacy_with_area(area)
-    Decidim::Candidacy.find_by(decidim_area_id: area)
+    Decidim::SignatureCollection::Candidacy.find_by(decidim_area_id: area)
   end
 
   def candidacy_without_area(area)
-    Decidim::Candidacy.where.not(decidim_area_id: area).sample
+    Decidim::SignatureCollection::Candidacy.where.not(decidim_area_id: area).sample
   end
 
   include_context "with filterable context"
@@ -68,7 +68,7 @@ describe "Admin manages candidacies" do
       end
     end
 
-    Decidim::CandidacysTypeScope.all.each do |scoped_type|
+    Decidim::SignatureCollection::CandidaciesTypeScope.all.each do |scoped_type|
       type = scoped_type.type
       i18n_type = type.title[I18n.locale.to_s]
 

@@ -166,39 +166,38 @@ en:
       show:
         candidacies: Candidacies export
     events:
-      candidacies:
-        admin:
-          candidacy_sent_to_technical_validation:
-            email_intro: The candidacy "%{resource_title}" has been sent to technical validation. Check it out at <a href="%{admin_candidacy_url}">the admin panel</a>
-            email_outro: You have received this notification because you are an admin of the platform.
-            email_subject: Candidacy "%{resource_title}" was sent to technical validation.
-            notification_title: The candidacy "%{resource_title}" has been sent to technical validation. Check it out at <a href="%{admin_candidacy_path}">the admin panel</a>
-        candidacy_extended:
-          email_intro: The signatures end date for the candidacy %{resource_title} have been extended!
-          email_outro: You have received this notification because you are following %{resource_title}. You can stop receiving notifications following the previous link.
-          email_subject: Candidacy signatures end date extended!
-          notification_title: The signatures end date for the <a href="%{resource_path}">%{resource_title}</a> candidacy have been extended.
+      admin:
         candidacy_sent_to_technical_validation:
           email_intro: The candidacy "%{resource_title}" has been sent to technical validation. Check it out at <a href="%{admin_candidacy_url}">the admin panel</a>
           email_outro: You have received this notification because you are an admin of the platform.
           email_subject: Candidacy "%{resource_title}" was sent to technical validation.
           notification_title: The candidacy "%{resource_title}" has been sent to technical validation. Check it out at <a href="%{admin_candidacy_path}">the admin panel</a>
-        milestone_completed:
-          affected_user:
-            email_intro: Your candidacy %{resource_title} has achieved the %{percentage}% of signatures!
-            email_outro: You have received this notification because you are the author of the candidacy %{resource_title}.
-            email_subject: New milestone completed!
-            notification_title: Your <a href="%{resource_path}">%{resource_title}</a> candidacy has achieved the %{percentage}% of signatures.
-          follower:
-            email_intro: The candidacy %{resource_title} has achieved the %{percentage}% of signatures!
-            email_outro: You have received this notification because you are following %{resource_title}. You can stop receiving notifications following the previous link.
-            email_subject: New milestone completed!
-            notification_title: The <a href="%{resource_path}">%{resource_title}</a> candidacy has achieved the %{percentage}% of signatures.
-        support_threshold_reached:
-          email_intro: The candidacy %{resource_title} has reached the signatures threshold
-          email_outro: You have received this notification because you are an admin of the platform.
-          email_subject: Signatures threshold reached
-          notification_title: The <a href="%{resource_path}">%{resource_title}</a> candidacy has reached the signatures threshold
+      candidacy_extended:
+        email_intro: The signatures end date for the candidacy %{resource_title} have been extended!
+        email_outro: You have received this notification because you are following %{resource_title}. You can stop receiving notifications following the previous link.
+        email_subject: Candidacy signatures end date extended!
+        notification_title: The signatures end date for the <a href="%{resource_path}">%{resource_title}</a> candidacy have been extended.
+      candidacy_sent_to_technical_validation:
+        email_intro: The candidacy "%{resource_title}" has been sent to technical validation. Check it out at <a href="%{admin_candidacy_url}">the admin panel</a>
+        email_outro: You have received this notification because you are an admin of the platform.
+        email_subject: Candidacy "%{resource_title}" was sent to technical validation.
+        notification_title: The candidacy "%{resource_title}" has been sent to technical validation. Check it out at <a href="%{admin_candidacy_path}">the admin panel</a>
+      milestone_completed:
+        affected_user:
+          email_intro: Your candidacy %{resource_title} has achieved the %{percentage}% of signatures!
+          email_outro: You have received this notification because you are the author of the candidacy %{resource_title}.
+          email_subject: New milestone completed!
+          notification_title: Your <a href="%{resource_path}">%{resource_title}</a> candidacy has achieved the %{percentage}% of signatures.
+        follower:
+          email_intro: The candidacy %{resource_title} has achieved the %{percentage}% of signatures!
+          email_outro: You have received this notification because you are following %{resource_title}. You can stop receiving notifications following the previous link.
+          email_subject: New milestone completed!
+          notification_title: The <a href="%{resource_path}">%{resource_title}</a> candidacy has achieved the %{percentage}% of signatures.
+      support_threshold_reached:
+        email_intro: The candidacy %{resource_title} has reached the signatures threshold
+        email_outro: You have received this notification because you are an admin of the platform.
+        email_subject: Signatures threshold reached
+        notification_title: The <a href="%{resource_path}">%{resource_title}</a> candidacy has reached the signatures threshold
     gamification:
       badges:
         candidacies:
@@ -218,7 +217,7 @@ en:
           contextual: "<p>An <strong>candidacy</strong> is a proposal that can be promoted by anyone on their own candidacy (independently of other channels or participation spaces) through the collection of (digital) signatures for the organization to carry out a specific action (modify a regulation, initiate a project, change the name of a department or a street, etc.).</p> <p>The promoters of an candidacy can define its objectives, gather support, debate, disseminate it and define meeting points where signatures can be collected from the attendees or debates open to other participants.</p> <p>Examples: An candidacy can collect signatures to convene a consultation among all the people of an organization, or to create or convene an assembly, or to initiate a process of budget increase for a territory or area of the organization. During the process of collecting signatures, more people can add to this demand and carry it forward in the organization.</p>\n"
           page: "<p>An <strong>candidacy</strong> is a proposal that can be promoted by anyone on their own candidacy (independently of other channels or participation spaces) through the collection of (digital) signatures for the organization to carry out a specific action (modify a regulation, initiate a project, change the name of a department or a street, etc.).</p> <p>The promoters of an candidacy can define its objectives, gather support, debate, disseminate it and define meeting points where signatures can be collected from the attendees or debates open to other participants.</p> <p>Examples: An candidacy can collect signatures to convene a consultation among all the people of an organization, or to create or convene an assembly, or to initiate a process of budget increase for a territory or area of the organization. During the process of collecting signatures, more people can add to this demand and carry it forward in the organization.</p>\n"
           title: What are candidacies?
-    candidacies:
+    signature_collection:
       actions:
         answer: Answer
       admin:

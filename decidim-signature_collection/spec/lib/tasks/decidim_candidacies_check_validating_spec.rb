@@ -3,7 +3,7 @@
 require "spec_helper"
 
 describe "decidim_candidacies:check_validating", type: :task do
-  let(:threshold) { Time.current - Decidim::Candidacies.max_time_in_validating_state }
+  let(:threshold) { Time.current - Decidim::SignatureCollection.max_time_in_validating_state }
 
   it "preloads the Rails environment" do
     expect(task.prerequisites).to include "environment"

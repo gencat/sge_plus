@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-class AddReferenceToInitiatives < ActiveRecord::Migration[5.2]
-  class Initiative < ApplicationRecord
-    self.table_name = :decidim_initiatives
+class AddReferenceToCandidacies < ActiveRecord::Migration[5.2]
+  class Candidacy < ApplicationRecord
+    self.table_name = :decidim_signature_collection_candidacies
 
     belongs_to :organization,
                foreign_key: "decidim_organization_id",
@@ -13,11 +13,11 @@ class AddReferenceToInitiatives < ActiveRecord::Migration[5.2]
   end
 
   def change
-    add_column :decidim_initiatives, :reference, :string
+    add_column :decidim_signature_collection_candidacies, :reference, :string
 
     reversible do |dir|
       dir.up do
-        Initiative.find_each(&:touch)
+        Candidacy.find_each(&:touch)
       end
     end
   end

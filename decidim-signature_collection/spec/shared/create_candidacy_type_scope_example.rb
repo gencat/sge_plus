@@ -35,7 +35,7 @@ shared_examples "create an candidacy type scope" do
       it "does not create an candidacy type scope" do
         expect do
           command.call
-        end.not_to change(Decidim::CandidacysTypeScope, :count)
+        end.not_to change(Decidim::SignatureCollection::CandidaciesTypeScope, :count)
       end
     end
 
@@ -47,7 +47,7 @@ shared_examples "create an candidacy type scope" do
       it "creates a new candidacy type scope" do
         expect do
           command.call
-        end.to change(Decidim::CandidacysTypeScope, :count).by(1)
+        end.to change(Decidim::SignatureCollection::CandidaciesTypeScope, :count).by(1)
       end
     end
   end

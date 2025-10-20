@@ -3,7 +3,7 @@
 require "spec_helper"
 
 module Decidim
-  module Candidacies
+  module SignatureCollection
     describe VoteForm do
       subject { form }
 

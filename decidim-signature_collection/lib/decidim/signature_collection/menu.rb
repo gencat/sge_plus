@@ -1,44 +1,44 @@
 # frozen_string_literal: true
 
 module Decidim
-  module Candidacies
+  module SignatureCollection
     class Menu
       def self.register_menu!
         Decidim.menu :menu do |menu|
-          menu.add_item :candidacies,
+          menu.add_item :signature_collection_candidacies,
                         I18n.t("menu.candidacies", scope: "decidim"),
                         decidim_candidacies.candidacies_path,
                         position: 2.4,
                         active: %r{^/(candidacies|create_candidacy)},
-                        if: Decidim::CandidacysType.joins(:scopes).where(organization: current_organization).any?
+                        if: Decidim::SignatureCollection::CandidaciesType.joins(:scopes).where(organization: current_organization).any?
         end
       end
 
       def self.register_mobile_menu!
         Decidim.menu :mobile_menu do |menu|
-          menu.add_item :candidacies,
+          menu.add_item :signature_collection_candidacies,
                         I18n.t("menu.candidacies", scope: "decidim"),
                         decidim_candidacies.candidacies_path,
                         position: 2.4,
                         active: %r{^/(candidacies|create_candidacy)},
-                        if: !Decidim::CandidacysType.joins(:scopes).where(organization: current_organization).all.empty?
+                        if: !Decidim::SignatureCollection::CandidaciesType.joins(:scopes).where(organization: current_organization).all.empty?
         end
       end
 
       def self.register_home_content_block_menu!
         Decidim.menu :home_content_block_menu do |menu|
-          menu.add_item :candidacies,
+          menu.add_item :signature_collection_candidacies,
                         I18n.t("menu.candidacies", scope: "decidim"),
                         decidim_candidacies.candidacies_path,
                         position: 30,
                         active: :inclusive,
-                        if: Decidim::CandidacysType.joins(:scopes).where(organization: current_organization).any?
+                        if: Decidim::SignatureCollection::CandidaciesType.joins(:scopes).where(organization: current_organization).any?
         end
       end
 
       def self.register_admin_menu_modules!
         Decidim.menu :admin_menu_modules do |menu|
-          menu.add_item :candidacies,
+          menu.add_item :signature_collection_candidacies,
                         I18n.t("menu.candidacies", scope: "decidim.admin"),
                         decidim_admin_candidacies.candidacies_path,
                         icon_name: "lightbulb-flash-line",
@@ -47,7 +47,7 @@ module Decidim
                                 is_active_link?(decidim_admin_candidacies.candidacies_types_path) ||
                                 is_active_link?(
                                   decidim_admin_candidacies.edit_candidacies_setting_path(
-                                    Decidim::CandidacysSettings.find_or_create_by!(organization: current_organization)
+                                    Decidim::SignatureCollection::CandidaciesSettings.find_or_create_by!(organization: current_organization)
                                   )
                                 ),
                         if: allowed_to?(:enter, :space_area, space_name: :candidacies)
@@ -93,7 +93,7 @@ module Decidim
                         decidim_admin_candidacies.components_path(current_participatory_space),
                         icon_name: "tools-line",
                         active: is_active_link?(decidim_admin_candidacies.components_path(current_participatory_space),
-                                                ["decidim/candidacies/admin/components", %w(index new edit)]),
+                                                ["decidim/signature_collection/admin/components", %w(index new edit)]),
                         if: allowed_to?(:read, :component, candidacy: current_participatory_space),
                         submenu: { target_menu: :admin_candidacies_components_menu }
           menu.add_item :candidacy_attachments,
@@ -133,7 +133,7 @@ module Decidim
 
       def self.register_admin_candidacies_menu!
         Decidim.menu :admin_candidacies_menu do |menu|
-          menu.add_item :candidacies,
+          menu.add_item :signature_collection_candidacies,
                         I18n.t("menu.candidacies", scope: "decidim.admin"),
                         decidim_admin_candidacies.candidacies_path,
                         position: 1,
@@ -141,7 +141,7 @@ module Decidim
                         active: is_active_link?(decidim_admin_candidacies.candidacies_path),
                         if: allowed_to?(:index, :candidacy)
 
-          menu.add_item :candidacies_types,
+          menu.add_item :signature_collection_candidacies_types,
                         I18n.t("menu.candidacies_types", scope: "decidim.admin"),
                         decidim_admin_candidacies.candidacies_types_path,
                         position: 2,
@@ -149,10 +149,10 @@ module Decidim
                         active: is_active_link?(decidim_admin_candidacies.candidacies_types_path),
                         if: allowed_to?(:manage, :candidacy_type)
 
-          menu.add_item :candidacies_settings,
+          menu.add_item :signature_collection_candidacies_settings,
                         I18n.t("menu.candidacies_settings", scope: "decidim.admin"),
                         decidim_admin_candidacies.edit_candidacies_setting_path(
-                          Decidim::CandidacysSettings.find_or_create_by!(
+                          Decidim::SignatureCollection::CandidaciesSettings.find_or_create_by!(
                             organization: current_organization
                           )
                         ),
@@ -160,7 +160,7 @@ module Decidim
                         icon_name: "tools-line",
                         active: is_active_link?(
                           decidim_admin_candidacies.edit_candidacies_setting_path(
-                            Decidim::CandidacysSettings.find_or_create_by!(organization: current_organization)
+                            Decidim::SignatureCollection::CandidaciesSettings.find_or_create_by!(organization: current_organization)
                           )
                         ),
                         if: allowed_to?(:update, :candidacies_settings)

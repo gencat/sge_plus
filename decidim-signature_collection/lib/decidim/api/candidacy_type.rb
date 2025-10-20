@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 module Decidim
-  module Candidacies
+  module SignatureCollection
     # This type represents a Candidacy.
     class CandidacyType < Decidim::Api::Types::BaseObject
       implements Decidim::Core::ParticipatorySpaceInterface
       implements Decidim::Core::ScopableInterface
       implements Decidim::Core::AttachableInterface
-      implements Decidim::Candidacies::CandidacyTypeInterface
+      implements Decidim::SignatureCollection::CandidacyTypeInterface
       implements Decidim::Core::TimestampsInterface
 
       description "A candidacy"
@@ -22,7 +22,7 @@ module Decidim
             description: "The number of votes in this candidacy",
             deprecation_reason: "candidacyVotesCount has been collapsed in onlineVotes parameter",
             null: true, method: :online_votes_count
-      field :committee_members, [Decidim::Candidacies::CandidacyCommitteeMemberType, { null: true }], "The committee members list", null: true
+      field :committee_members, [Decidim::SignatureCollection::CandidacyCommitteeMemberType, { null: true }], "The committee members list", null: true
       field :description, Decidim::Core::TranslatedFieldType, "The description of this candidacy.", null: true
       field :hashtag, GraphQL::Types::String, "The hashtag for this candidacy", null: true
       field :offline_votes, GraphQL::Types::Int, "The number of offline votes in this candidacy", method: :offline_votes_count, null: true

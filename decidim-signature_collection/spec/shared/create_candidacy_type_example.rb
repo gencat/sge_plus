@@ -49,7 +49,7 @@ shared_examples "create an candidacy type" do
       it "does not create an candidacy type" do
         expect do
           command.call
-        end.not_to change(Decidim::CandidacysType, :count)
+        end.not_to change(Decidim::SignatureCollection::CandidaciesType, :count)
       end
     end
 
@@ -61,13 +61,13 @@ shared_examples "create an candidacy type" do
       it "creates a new candidacy type" do
         expect do
           command.call
-        end.to change(Decidim::CandidacysType, :count).by(1)
+        end.to change(Decidim::SignatureCollection::CandidaciesType, :count).by(1)
       end
 
       it "traces the action", versioning: true do
         expect(Decidim.traceability)
           .to receive(:perform_action!)
-          .with(:create, Decidim::CandidacysType, user, {})
+          .with(:create, Decidim::SignatureCollection::CandidaciesType, user, {})
           .and_call_original
 
         expect { command.call }.to change(Decidim::ActionLog, :count)

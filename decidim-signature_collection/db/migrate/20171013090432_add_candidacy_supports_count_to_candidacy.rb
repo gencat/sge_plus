@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
-class AddInitiativeSupportsCountToInitiative < ActiveRecord::Migration[5.1]
-  class Initiative < ApplicationRecord
-    self.table_name = :decidim_initiatives
+class AddCandidacySupportsCountToCandidacy < ActiveRecord::Migration[5.1]
+  class Candidacy < ApplicationRecord
+    self.table_name = :decidim_signature_collection_candidacies
   end
 
   def change
-    add_column :decidim_initiatives, :initiative_supports_count, :integer, null: false, default: 0
+    add_column :decidim_signature_collection_candidacies, :candidacy_supports_count, :integer, null: false, default: 0
 
     reversible do |change|
       change.up do
-        Initiative.find_each do |initiative|
-          initiative.initiative_supports_count = initiative.votes.supports.count
-          initiative.save
+        Candidacy.find_each do |candidacy|
+          candidacy.candidacy_supports_count = candidacy.votes.supports.count
+          candidacy.save
         end
       end
     end

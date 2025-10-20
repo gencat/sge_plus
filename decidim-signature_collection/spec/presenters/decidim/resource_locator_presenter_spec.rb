@@ -5,8 +5,8 @@ require "spec_helper"
 module Decidim
   describe ResourceLocatorPresenter, type: :helper do
     it_behaves_like "generates routes without query strings on slug" do
-      let(:route_fragment) { "candidacies/#{participatory_space.slug}" }
-      let(:admin_route_fragment) { "candidacies/#{participatory_space.slug}" }
+      let(:route_fragment) { "signature_collection/#{participatory_space.slug}" }
+      let(:admin_route_fragment) { "signature_collection/#{participatory_space.slug}" }
       let(:factory_name) { :candidacy }
     end
   end

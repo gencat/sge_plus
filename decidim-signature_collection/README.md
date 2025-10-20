@@ -1,10 +1,10 @@
-# Decidim::Candidacies
+# Decidim::SignatureCollection
 
-Candidacies is the place on Decidim's where participants can promote an candidacy. Unlike
-participatory processes that must be created by an administrator, candidacies can be
-created by any user of the platform.
+SignatureCollection is the place on Decidim's where participants can promote a candidacy. Unlike participatory processes that must be created by an administrator, candidacies can be created by any user of the platform.
 
-An candidacy will contain attachments and comments from other users as well.
+This module is based on `decidim-initiatives` and uses many of its code base but includes some adaptations to fit the signature collection process.
+
+A candidacy will contain attachments and comments from other users as well.
 
 Prior to be published an candidacy must be technically validated. All the validation
 process and communication between the platform administrators and the sponsorship
@@ -51,7 +51,7 @@ This is the case if you want to enable the creation of candidacies even when no 
 Just use the following line:
 
 ```ruby
-Decidim::Candidacies.do_not_require_authorization = true
+Decidim::SignatureCollection.do_not_require_authorization = true
 ```
 
 All the settings and their default values which can be overridden can be found in the file [`lib/decidim/candidacies.rb`](https://github.com/decidim/decidim/blob/develop/decidim-candidacies/lib/decidim/candidacies.rb).
@@ -59,13 +59,13 @@ All the settings and their default values which can be overridden can be found i
 For example, you can also change the minimum number of required committee members to 1 (default is 2) by adding this line:
 
 ```ruby
-Decidim::Candidacies.minimum_committee_members = 1
+Decidim::SignatureCollection::Candicacy.minimum_committee_members = 1
 ```
 
 Or change the number of days given to gather signatures to 365 (default is 120) with:
 
 ```ruby
-Decidim::Candidacies.default_signature_time_period_length = 365
+Decidim::SignatureCollection::Candicacy.default_signature_time_period_length = 365
 ```
 
 ## Rake tasks
@@ -78,7 +78,7 @@ creating them by hand.
 ### decidim_candidacies:check_validating
 
 This task move all candidacies in validation phase without changes for the amount of
-time defined in __Decidim::Candidacies::max_time_in_validating_state__. These candidacies
+time defined in __Decidim::SignatureCollection::Candicacy.max_time_in_validating_state__. These candidacies
 will be moved to __discarded__ state.
 
 ### decidim_candidacies:check_published
@@ -93,7 +93,7 @@ after the presential supports have been registered into the system.
 ### decidim_candidacies:notify_progress
 
 This task sends notification mails when candidacies reaches the support percentages defined in
-__Decidim::Candidacies.first_notification_percentage__ and __Decidim::Candidacies.second_notification_percentage__.
+__Decidim::SignatureCollection::Candicacy.first_notification_percentage__ and __Decidim::SignatureCollection::Candicacy.second_notification_percentage__.
 
 Author, members of the promoter committee and followers will receive it.
 

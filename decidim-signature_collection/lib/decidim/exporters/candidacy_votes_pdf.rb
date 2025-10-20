@@ -108,7 +108,7 @@ module Decidim
       end
 
       def scope(model)
-        return I18n.t("decidim.candidacies.unavailable_scope") if model.scope.blank?
+        return I18n.t("decidim.signature_collection.unavailable_scope") if model.scope.blank?
 
         translated_attribute(model.scope.name)
       end
@@ -148,7 +148,7 @@ module Decidim
       end
 
       def encryptor
-        @encryptor ||= Decidim::Candidacies::DataEncryptor.new(secret: "personal user metadata")
+        @encryptor ||= Decidim::SignatureCollection::DataEncryptor.new(secret: "personal user metadata")
       end
 
       def truncate(text, length = 50)

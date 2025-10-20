@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Decidim
-  module Candidacies
+  module SignatureCollection
     # Current locale related functions
     module CurrentLocale
       # PUBLIC: Returns the current locale as a String

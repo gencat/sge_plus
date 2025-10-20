@@ -3,7 +3,7 @@
 require "hexapdf"
 
 module Decidim
-  module Candidacies
+  module SignatureCollection
     class ApplicationFormPDF
       include Decidim::OrganizationHelper
       def initialize(candidacy)
@@ -52,18 +52,18 @@ module Decidim
 
       def add_author_box
         cells = [
-          [{ content: layout.text(I18n.t("author_title", scope: "decidim.candidacies.candidacies.print"), style: :title), col_span: 3 }],
-          [{ content: layout.text(I18n.t("id_number", scope: "decidim.candidacies.candidacies.print"), style: :td), col_span: 3, padding: [5, 5, 20, 5] }],
-          [{ content: layout.text(I18n.t("full_name", scope: "decidim.candidacies.candidacies.print"), style: :td), col_span: 3, padding: [5, 5, 20, 5] }],
-          [{ content: layout.text(I18n.t("address", scope: "decidim.candidacies.candidacies.print"), style: :td), col_span: 3, padding: [5, 5, 20, 5] }],
+          [{ content: layout.text(I18n.t("author_title", scope: "decidim.signature_collection.candidacies.print"), style: :title), col_span: 3 }],
+          [{ content: layout.text(I18n.t("id_number", scope: "decidim.signature_collection.candidacies.print"), style: :td), col_span: 3, padding: [5, 5, 20, 5] }],
+          [{ content: layout.text(I18n.t("full_name", scope: "decidim.signature_collection.candidacies.print"), style: :td), col_span: 3, padding: [5, 5, 20, 5] }],
+          [{ content: layout.text(I18n.t("address", scope: "decidim.signature_collection.candidacies.print"), style: :td), col_span: 3, padding: [5, 5, 20, 5] }],
           [
-            { content: layout.text(I18n.t("city", scope: "decidim.candidacies.candidacies.print"), style: :td), padding: [5, 5, 20, 5] },
-            { content: layout.text(I18n.t("province", scope: "decidim.candidacies.candidacies.print"), style: :td), padding: [5, 5, 20, 5] },
-            { content: layout.text(I18n.t("postal_code", scope: "decidim.candidacies.candidacies.print"), style: :td), padding: [5, 5, 20, 5] }
+            { content: layout.text(I18n.t("city", scope: "decidim.signature_collection.candidacies.print"), style: :td), padding: [5, 5, 20, 5] },
+            { content: layout.text(I18n.t("province", scope: "decidim.signature_collection.candidacies.print"), style: :td), padding: [5, 5, 20, 5] },
+            { content: layout.text(I18n.t("postal_code", scope: "decidim.signature_collection.candidacies.print"), style: :td), padding: [5, 5, 20, 5] }
           ],
           [
-            { content: layout.text(I18n.t("phone_number", scope: "decidim.candidacies.candidacies.print"), style: :td), padding: [5, 5, 20, 5] },
-            { content: layout.text(I18n.t("email", scope: "decidim.candidacies.candidacies.print"), style: :td), col_span: 2, padding: [5, 5, 20, 5] }
+            { content: layout.text(I18n.t("phone_number", scope: "decidim.signature_collection.candidacies.print"), style: :td), padding: [5, 5, 20, 5] },
+            { content: layout.text(I18n.t("email", scope: "decidim.signature_collection.candidacies.print"), style: :td), col_span: 2, padding: [5, 5, 20, 5] }
           ]
         ]
         composer.table(cells, cell_style: { border: { width: 1 } }, style: { margin: [10, 0] })
@@ -71,15 +71,15 @@ module Decidim
 
       def add_signature_box
         cells = [
-          layout.text(I18n.t("place_date", scope: "decidim.candidacies.candidacies.print"), style: :title),
-          layout.text(I18n.t("signature", scope: "decidim.candidacies.candidacies.print"), style: :title)
+          layout.text(I18n.t("place_date", scope: "decidim.signature_collection.candidacies.print"), style: :title),
+          layout.text(I18n.t("signature", scope: "decidim.signature_collection.candidacies.print"), style: :title)
         ]
         composer.table([cells], cell_style: { border: { width: 0 } }, style: { margin: [10, 0] })
       end
 
       def add_attachments_box
         cells = [
-          [{ content: layout.text(I18n.t("candidacy.attachments", scope: "decidim.candidacies.candidacies.print"), style: :title), col_span: 10 }]
+          [{ content: layout.text(I18n.t("candidacy.attachments", scope: "decidim.signature_collection.candidacies.print"), style: :title), col_span: 10 }]
         ]
 
         6.times do
@@ -95,11 +95,11 @@ module Decidim
 
       def add_promoter_box
         cells = [
-          [{ content: layout.text(I18n.t("members_header", scope: "decidim.candidacies.candidacies.print"), style: :title), col_span: 3 }],
+          [{ content: layout.text(I18n.t("members_header", scope: "decidim.signature_collection.candidacies.print"), style: :title), col_span: 3 }],
           [
-            { content: layout.text(I18n.t("full_name", scope: "decidim.candidacies.candidacies.print"), style: :td), padding: [5, 5, 20, 5] },
-            { content: layout.text(I18n.t("id_number", scope: "decidim.candidacies.candidacies.print"), style: :td), padding: [5, 5, 20, 5] },
-            { content: layout.text(I18n.t("address", scope: "decidim.candidacies.candidacies.print"), style: :td), padding: [5, 5, 20, 5] }
+            { content: layout.text(I18n.t("full_name", scope: "decidim.signature_collection.candidacies.print"), style: :td), padding: [5, 5, 20, 5] },
+            { content: layout.text(I18n.t("id_number", scope: "decidim.signature_collection.candidacies.print"), style: :td), padding: [5, 5, 20, 5] },
+            { content: layout.text(I18n.t("address", scope: "decidim.signature_collection.candidacies.print"), style: :td), padding: [5, 5, 20, 5] }
           ]
         ]
 
@@ -115,24 +115,24 @@ module Decidim
       end
 
       def add_legal_box
-        composer.text(I18n.t("legal_text", scope: "decidim.candidacies.candidacies.print"), style: {
+        composer.text(I18n.t("legal_text", scope: "decidim.signature_collection.candidacies.print"), style: {
                         font:, font_size: 10, margin: [100, 0]
                       })
       end
 
       def add_candidacy_metadata_box
-        composer.text(I18n.t("candidacy.type", scope: "decidim.candidacies.candidacies.print"), style: :text)
+        composer.text(I18n.t("candidacy.type", scope: "decidim.signature_collection.candidacies.print"), style: :text)
         composer.text(translated_attribute(candidacy.type.title), style: :td)
-        composer.text(I18n.t("candidacy.title", scope: "decidim.candidacies.candidacies.print"), style: :text)
+        composer.text(I18n.t("candidacy.title", scope: "decidim.signature_collection.candidacies.print"), style: :text)
         composer.text(translated_attribute(candidacy.title), style: :td)
-        composer.text(I18n.t("candidacy.description", scope: "decidim.candidacies.candidacies.print"), style: :text)
+        composer.text(I18n.t("candidacy.description", scope: "decidim.signature_collection.candidacies.print"), style: :text)
         composer.text(translated_attribute(candidacy.description), style: :td)
       end
 
       def add_organization_data_box
         composer.text(organization_name(candidacy.organization), style: :h1)
         cells = [
-          layout.text(I18n.t("general_title", scope: "decidim.candidacies.candidacies.print"), style: :title)
+          layout.text(I18n.t("general_title", scope: "decidim.signature_collection.candidacies.print"), style: :title)
         ]
         composer.table([cells], cell_style: { border: { width: 1 } })
       end

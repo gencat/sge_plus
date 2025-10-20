@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 module Decidim
-  module Candidacies
+  module SignatureCollection
     # This module contains all the domain logic associated to Decidim's
-    # Candidacies component admin panel.
+    # SignatureCollection component admin panel.
     module Admin
     end
   end

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-class UpdateInitiativeScopedType < ActiveRecord::Migration[5.1]
-  class InitiativesTypeScope < ApplicationRecord
-    self.table_name = :decidim_initiatives_type_scopes
+class UpdateCandidacyScopedType < ActiveRecord::Migration[5.1]
+  class CandidaciesTypeScope < ApplicationRecord
+    self.table_name = :decidim_signature_collection_candidacies_type_scopes
   end
 
   class Scope < ApplicationRecord
@@ -29,11 +29,11 @@ class UpdateInitiativeScopedType < ActiveRecord::Migration[5.1]
     end
   end
 
-  class Initiative < ApplicationRecord
-    self.table_name = :decidim_initiatives
+  class Candidacy < ApplicationRecord
+    self.table_name = :decidim_signature_collection_candidacies
 
     belongs_to :scoped_type,
-               class_name: "InitiativesTypeScope"
+               class_name: "CandidaciesTypeScope"
 
     belongs_to :organization,
                foreign_key: "decidim_organization_id",
@@ -41,13 +41,13 @@ class UpdateInitiativeScopedType < ActiveRecord::Migration[5.1]
   end
 
   def up
-    Initiative.find_each do |initiative|
-      initiative.scoped_type = InitiativesTypeScope.find_by(
-        decidim_initiatives_types_id: initiative.type_id,
-        decidim_scopes_id: initiative.decidim_scope_id || initiative.organization.top_scopes.first
+    Candidacy.find_each do |candidacy|
+      candidacy.scoped_type = CandidaciesTypeScope.find_by(
+        decidim_signature_collection_candidacies_type_id: candidacy.type_id,
+        decidim_scopes_id: candidacy.decidim_scope_id || candidacy.organization.top_scopes.first
       )
 
-      initiative.save!
+      candidacy.save!
     end
   end
 

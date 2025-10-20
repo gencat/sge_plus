@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-class CreateDecidimInitiativesSettings < ActiveRecord::Migration[5.2]
+class CreateDecidimCandidaciesSettings < ActiveRecord::Migration[5.2]
   def change
-    create_table :decidim_initiatives_settings do |t|
-      t.string :initiatives_order, default: "random"
-      t.references :decidim_organization, foreign_key: true, index: true
+    create_table :decidim_signature_collection_candidacies_settings do |t|
+      t.string :candidacies_order, default: "random"
+      t.references :decidim_organization, foreign_key: true, index: { name: "index_sig_coll_candidacies_settings_on_org_id" }
     end
   end
 end

@@ -8,7 +8,7 @@ describe "Explore versions", versioning: true do
   let(:user) { create(:user, :admin, :confirmed, organization:) }
 
   let(:form) do
-    Decidim::Candidacies::Admin::CandidacyForm.from_params(
+    Decidim::SignatureCollection::Admin::CandidacyForm.from_params(
       title: { en: "A reasonable candidacy title" },
       description: { en: "A reasonable candidacy description" },
       signature_start_date: candidacy.signature_start_date,
@@ -20,7 +20,7 @@ describe "Explore versions", versioning: true do
       candidacy:
     )
   end
-  let(:command) { Decidim::Candidacies::Admin::UpdateCandidacy.new(form, candidacy) }
+  let(:command) { Decidim::SignatureCollection::Admin::UpdateCandidacy.new(form, candidacy) }
   let(:candidacy_path) { decidim_candidacies.candidacy_path(candidacy) }
 
   before do

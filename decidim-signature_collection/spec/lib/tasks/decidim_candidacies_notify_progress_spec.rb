@@ -23,7 +23,7 @@ describe "decidim_candidacies:notify_progress", type: :task do
     end
 
     it "do not invokes the mailer" do
-      expect(Decidim::Candidacies::CandidacysMailer).not_to receive(:notify_progress)
+      expect(Decidim::SignatureCollection::CandidaciesMailer).not_to receive(:notify_progress)
       task.execute
     end
   end
@@ -32,7 +32,7 @@ describe "decidim_candidacies:notify_progress", type: :task do
     let(:candidacy) do
       candidacy = create(:candidacy)
 
-      votes_needed = (candidacy.supports_required * (Decidim::Candidacies.first_notification_percentage / 100.0)) + 1
+      votes_needed = (candidacy.supports_required * (Decidim::SignatureCollection.first_notification_percentage / 100.0)) + 1
       candidacy.online_votes["total"] = votes_needed
       candidacy.save!
 
@@ -46,8 +46,8 @@ describe "decidim_candidacies:notify_progress", type: :task do
     end
 
     it "updates notification time" do
-      expect(candidacy.percentage).to be >= Decidim::Candidacies.first_notification_percentage
-      expect(candidacy.percentage).to be < Decidim::Candidacies.second_notification_percentage
+      expect(candidacy.percentage).to be >= Decidim::SignatureCollection.first_notification_percentage
+      expect(candidacy.percentage).to be < Decidim::SignatureCollection.second_notification_percentage
 
       task.execute
 
@@ -57,10 +57,10 @@ describe "decidim_candidacies:notify_progress", type: :task do
     end
 
     it "invokes the mailer" do
-      expect(candidacy.percentage).to be >= Decidim::Candidacies.first_notification_percentage
-      expect(candidacy.percentage).to be < Decidim::Candidacies.second_notification_percentage
+      expect(candidacy.percentage).to be >= Decidim::SignatureCollection.first_notification_percentage
+      expect(candidacy.percentage).to be < Decidim::SignatureCollection.second_notification_percentage
 
-      expect(Decidim::Candidacies::CandidacysMailer).to receive(:notify_progress)
+      expect(Decidim::SignatureCollection::CandidaciesMailer).to receive(:notify_progress)
         .at_least(:once)
         .and_return(message_delivery)
       task.execute
@@ -71,7 +71,7 @@ describe "decidim_candidacies:notify_progress", type: :task do
     let(:candidacy) do
       candidacy = create(:candidacy, first_progress_notification_at: Time.current)
 
-      votes_needed = (candidacy.supports_required * (Decidim::Candidacies.second_notification_percentage / 100.0)) + 1
+      votes_needed = (candidacy.supports_required * (Decidim::SignatureCollection.second_notification_percentage / 100.0)) + 1
 
       candidacy.online_votes["total"] = votes_needed
       candidacy.save!
@@ -86,7 +86,7 @@ describe "decidim_candidacies:notify_progress", type: :task do
     end
 
     it "updates notification time" do
-      expect(candidacy.percentage).to be >= Decidim::Candidacies.second_notification_percentage
+      expect(candidacy.percentage).to be >= Decidim::SignatureCollection.second_notification_percentage
 
       task.execute
 
@@ -95,8 +95,8 @@ describe "decidim_candidacies:notify_progress", type: :task do
     end
 
     it "invokes the mailer" do
-      expect(candidacy.percentage).to be >= Decidim::Candidacies.second_notification_percentage
-      expect(Decidim::Candidacies::CandidacysMailer).to receive(:notify_progress)
+      expect(candidacy.percentage).to be >= Decidim::SignatureCollection.second_notification_percentage
+      expect(Decidim::SignatureCollection::CandidaciesMailer).to receive(:notify_progress)
         .at_least(:once)
         .and_return(message_delivery)
       task.execute
@@ -111,7 +111,7 @@ describe "decidim_candidacies:notify_progress", type: :task do
     end
 
     it "do not invokes the mailer" do
-      expect(Decidim::Candidacies::CandidacysMailer).not_to receive(:notify_progress)
+      expect(Decidim::SignatureCollection::CandidaciesMailer).not_to receive(:notify_progress)
       task.execute
     end
   end

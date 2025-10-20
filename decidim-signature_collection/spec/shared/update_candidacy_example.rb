@@ -84,7 +84,7 @@ shared_examples "update an candidacy" do
 
         it "creates an attachment for the proposal" do
           expect { command.call }.to change(Decidim::Attachment, :count).by(1)
-          last_candidacy = Decidim::Candidacy.last
+          last_candidacy = Decidim::SignatureCollection::Candidacy.last
           last_attachment = Decidim::Attachment.last
           expect(last_attachment.attached_to).to eq(last_candidacy)
         end

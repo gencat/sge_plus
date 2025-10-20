@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-class AddScopedTypeToInitiative < ActiveRecord::Migration[5.1]
+class AddScopedTypeToCandidacy < ActiveRecord::Migration[5.1]
   def change
-    add_column :decidim_initiatives,
-               :scoped_type_id, :integer, index: true
+    add_column :decidim_signature_collection_candidacies,
+               :scoped_type_id, :integer, index: { name: "idx_signaturecollect_candidacies_on_scoped_type_id" }
   end
 end

@@ -24,7 +24,7 @@ describe "Candidacy" do
     let(:attached_to) { candidacy }
 
     before do
-      allow(Decidim::Candidacies).to receive(:print_enabled).and_return(true)
+      allow(Decidim::SignatureCollection).to receive(:print_enabled).and_return(true)
     end
 
     it_behaves_like "editable content for admins" do

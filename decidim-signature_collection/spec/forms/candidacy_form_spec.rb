@@ -3,7 +3,7 @@
 require "spec_helper"
 
 module Decidim
-  module Candidacies
+  module SignatureCollection
     describe CandidacyForm do
       subject { described_class.from_params(attributes).with_context(context) }
 

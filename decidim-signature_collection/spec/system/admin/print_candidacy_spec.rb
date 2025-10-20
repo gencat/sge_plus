@@ -8,7 +8,7 @@ describe "User prints the candidacy" do
       include_context "when admins candidacy"
 
       before do
-        allow(Decidim::Candidacies).to receive(:print_enabled).and_return(print_enabled)
+        allow(Decidim::SignatureCollection).to receive(:print_enabled).and_return(print_enabled)
         switch_to_host(organization.host)
         visit decidim_candidacies.print_candidacy_path(candidacy)
       end
@@ -36,7 +36,7 @@ describe "User prints the candidacy" do
       let(:user) { create(:user, :confirmed, organization:) }
 
       before do
-        allow(Decidim::Candidacies).to receive(:print_enabled).and_return(print_enabled)
+        allow(Decidim::SignatureCollection).to receive(:print_enabled).and_return(print_enabled)
         switch_to_host(organization.host)
         login_as user, scope: :user
         visit decidim_candidacies.print_candidacy_path(candidacy)
@@ -65,7 +65,7 @@ describe "User prints the candidacy" do
       let(:user) { author }
 
       before do
-        allow(Decidim::Candidacies).to receive(:print_enabled).and_return(print_enabled)
+        allow(Decidim::SignatureCollection).to receive(:print_enabled).and_return(print_enabled)
 
         switch_to_host(organization.host)
         login_as user, scope: :user
@@ -96,7 +96,7 @@ describe "User prints the candidacy" do
       let!(:candidacies_committee_member) { create(:candidacies_committee_member, candidacy:, user:) }
 
       before do
-        allow(Decidim::Candidacies).to receive(:print_enabled).and_return(print_enabled)
+        allow(Decidim::SignatureCollection).to receive(:print_enabled).and_return(print_enabled)
 
         switch_to_host(organization.host)
         login_as user, scope: :user
@@ -126,7 +126,7 @@ describe "User prints the candidacy" do
       include_context "when admins candidacy"
 
       before do
-        allow(Decidim::Candidacies).to receive(:print_enabled).and_return(print_enabled)
+        allow(Decidim::SignatureCollection).to receive(:print_enabled).and_return(print_enabled)
 
         switch_to_host(organization.host)
         login_as user, scope: :user

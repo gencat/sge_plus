@@ -4,7 +4,7 @@ require "decidim/faker/localized"
 require "decidim/dev"
 
 FactoryBot.define do
-  factory :candidacies_type, class: "Decidim::CandidacysType" do
+  factory :candidacies_type, class: "Decidim::SignatureCollection::CandidaciesType" do
     transient do
       skip_injection { false }
     end
@@ -102,7 +102,7 @@ FactoryBot.define do
     end
   end
 
-  factory :candidacies_type_scope, class: "Decidim::CandidacysTypeScope" do
+  factory :candidacies_type_scope, class: "Decidim::SignatureCollection::CandidaciesTypeScope" do
     transient do
       skip_injection { false }
     end
@@ -116,7 +116,7 @@ FactoryBot.define do
     end
   end
 
-  factory :candidacy, class: "Decidim::Candidacy" do
+  factory :candidacy, class: "Decidim::SignatureCollection::Candidacy" do
     transient do
       skip_injection { false }
     end
@@ -249,7 +249,7 @@ FactoryBot.define do
     end
   end
 
-  factory :candidacy_user_vote, class: "Decidim::CandidacysVote" do
+  factory :candidacy_user_vote, class: "Decidim::SignatureCollection::CandidaciesVote" do
     transient do
       skip_injection { false }
     end
@@ -262,7 +262,7 @@ FactoryBot.define do
     end
   end
 
-  factory :organization_user_vote, class: "Decidim::CandidacysVote" do
+  factory :organization_user_vote, class: "Decidim::SignatureCollection::CandidaciesVote" do
     transient do
       skip_injection { false }
     end
@@ -274,7 +274,7 @@ FactoryBot.define do
     end
   end
 
-  factory :candidacies_committee_member, class: "Decidim::CandidacysCommitteeMember" do
+  factory :candidacies_committee_member, class: "Decidim::SignatureCollection::CandidaciesCommitteeMember" do
     transient do
       skip_injection { false }
     end
@@ -295,7 +295,7 @@ FactoryBot.define do
     end
   end
 
-  factory :candidacies_settings, class: "Decidim::CandidacysSettings" do
+  factory :candidacies_settings, class: "Decidim::SignatureCollection::CandidaciesSettings" do
     transient do
       skip_injection { false }
     end

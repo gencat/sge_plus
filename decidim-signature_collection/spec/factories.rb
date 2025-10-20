@@ -3,4 +3,4 @@
 require "decidim/core/test/factories"
 require "decidim/comments/test/factories"
 require "decidim/meetings/test/factories"
-require "decidim/candidacies/test/factories"
+require "decidim/signature_collection/test/factories"

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require "rails_helper"
+require "spec_helper"
 
 module Decidim
-  module Candidacies
+  module SignatureCollection
     module Admin
       describe CandidacyTypeForm do
         subject { described_class.from_params(attributes).with_context(context) }

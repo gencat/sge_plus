@@ -90,12 +90,10 @@ jobs:
       - name: Create empty application.yml
         run: touch config/application.yml
 
-      - name: Generate signature_collection test_app
+      - name: Generate signature_collection test app
         run: |
           cd decidim-signature_collection
-          bundle exec rake test_app
-          cd spec/decidim_dummy_app/
-          RAILS_ENV=test bundle exec rails db:migrate
+          bin/rails decidim:generate_external_test_app
 
       - name: Run RSpec
         uses: nick-fields/retry@v3

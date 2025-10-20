@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-module Decidim::Candidacies
+module Decidim::SignatureCollection
   describe DownloadYourDataCandidacySerializer do
     subject { described_class.new(candidacy) }
 

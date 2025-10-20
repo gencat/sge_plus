@@ -3,13 +3,13 @@
 require "rails"
 require "active_support/all"
 require "decidim/core"
-require "decidim/candidacies/menu"
+require "decidim/signature_collection/menu"
 
 module Decidim
-  module Candidacies
+  module SignatureCollection
     # Decidim's Assemblies Rails Admin Engine.
     class AdminEngine < ::Rails::Engine
-      isolate_namespace Decidim::Candidacies::Admin
+      isolate_namespace Decidim::SignatureCollection::Admin
 
       paths["db/migrate"] = nil
       paths["lib/tasks"] = nil
@@ -97,18 +97,18 @@ module Decidim
         end
       end
 
-      initializer "decidim_candidacies_admin.mount_routes" do |_app|
+      initializer "decidim_signature_collection_admin.mount_routes" do |_app|
         Decidim::Core::Engine.routes do
-          mount Decidim::Candidacies::AdminEngine, at: "/admin", as: "decidim_admin_candidacies"
+          mount Decidim::SignatureCollection::AdminEngine, at: "/admin", as: "decidim_admin_candidacies"
         end
       end
 
-      initializer "decidim_candidacies_admin.menu" do
-        Decidim::Candidacies::Menu.register_admin_menu_modules!
-        Decidim::Candidacies::Menu.register_admin_candidacies_components_menu!
-        Decidim::Candidacies::Menu.register_admin_candidacy_menu!
-        Decidim::Candidacies::Menu.register_admin_candidacy_actions_menu!
-        Decidim::Candidacies::Menu.register_admin_candidacies_menu!
+      initializer "decidim_signature_collection_admin.menu" do
+        Decidim::SignatureCollection::Menu.register_admin_menu_modules!
+        Decidim::SignatureCollection::Menu.register_admin_candidacies_components_menu!
+        Decidim::SignatureCollection::Menu.register_admin_candidacy_menu!
+        Decidim::SignatureCollection::Menu.register_admin_candidacy_actions_menu!
+        Decidim::SignatureCollection::Menu.register_admin_candidacies_menu!
       end
     end
   end

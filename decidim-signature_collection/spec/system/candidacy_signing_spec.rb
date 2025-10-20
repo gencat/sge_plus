@@ -11,7 +11,7 @@ describe "Candidacy signing" do
   let(:authorizations) { %w(dummy_authorization_handler another_dummy_authorization_handler) }
 
   before do
-    allow(Decidim::Candidacies)
+    allow(Decidim::SignatureCollection)
       .to receive(:do_not_require_authorization)
       .and_return(true)
     switch_to_host(organization.host)

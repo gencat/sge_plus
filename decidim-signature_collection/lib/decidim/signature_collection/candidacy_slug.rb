@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Decidim
-  module Candidacies
+  module SignatureCollection
     module CandidacySlug
       def slug_from_id(id)
         "i-#{id}"

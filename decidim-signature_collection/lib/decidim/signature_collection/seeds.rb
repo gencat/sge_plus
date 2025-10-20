@@ -4,7 +4,7 @@ require "decidim/components/namer"
 require "decidim/seeds"
 
 module Decidim
-  module Candidacies
+  module SignatureCollection
     class Seeds < Decidim::Seeds
       def call
         create_content_block!
@@ -17,9 +17,9 @@ module Decidim
           end
         end
 
-        Decidim::Candidacy.states.keys.each do |state|
-          Decidim::Candidacy.skip_callback(:save, :after, :notify_state_change, raise: false)
-          Decidim::Candidacy.skip_callback(:create, :after, :notify_creation, raise: false)
+        Decidim::SignatureCollection::Candidacy.states.keys.each do |state|
+          Decidim::SignatureCollection::Candidacy.skip_callback(:save, :after, :notify_state_change, raise: false)
+          Decidim::SignatureCollection::Candidacy.skip_callback(:create, :after, :notify_creation, raise: false)
 
           candidacy = create_candidacy!(state:)
 
@@ -29,7 +29,7 @@ module Decidim
 
           create_attachment(attached_to: candidacy, filename: "city.jpeg")
 
-          Decidim::Candidacies.default_components.each do |component_name|
+          Decidim::SignatureCollection.default_components.each do |component_name|
             create_component!(candidacy:, component_name:)
           end
         end
@@ -46,7 +46,7 @@ module Decidim
       end
 
       def create_candidacy_type!
-        Decidim::CandidacysType.create!(
+        Decidim::SignatureCollection::CandidaciesType.create!(
           title: Decidim::Faker::Localized.sentence(word_count: 5),
           description: Decidim::Faker::Localized.sentence(word_count: 25),
           organization:,
@@ -56,7 +56,7 @@ module Decidim
 
       def create_candidacy_type_scope!(scope:, type:)
         n = rand(3)
-        Decidim::CandidacysTypeScope.create(
+        Decidim::SignatureCollection::CandidaciesTypeScope.create(
           type:,
           scope:,
           supports_required: (n + 1) * 1000
@@ -69,7 +69,7 @@ module Decidim
         params = {
           title: Decidim::Faker::Localized.sentence(word_count: 3),
           description: Decidim::Faker::Localized.sentence(word_count: 25),
-          scoped_type: Decidim::CandidacysTypeScope.all.sample,
+          scoped_type: Decidim::SignatureCollection::CandidaciesTypeScope.all.sample,
           state:,
           signature_type: "online",
           signature_start_date: Date.current - 7.days,
@@ -81,11 +81,11 @@ module Decidim
 
         candidacy = Decidim.traceability.perform_action!(
           "publish",
-          Decidim::Candidacy,
+          Decidim::SignatureCollection::Candidacy,
           organization.users.first,
           visibility: "all"
         ) do
-          Decidim::Candidacy.create!(params)
+          Decidim::SignatureCollection::Candidacy.create!(params)
         end
         candidacy.add_to_index_as_search_resource
 

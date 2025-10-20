@@ -4,7 +4,7 @@ require "spec_helper"
 require "decidim/api/test/type_context"
 
 module Decidim
-  module Candidacies
+  module SignatureCollection
     describe CandidacyType, type: :graphql do
       include_context "with a graphql class type"
 
@@ -144,10 +144,10 @@ module Decidim
       end
 
       describe "CandidacySupportsCount" do
-        let(:query) { "{ CandidacySupportsCount }" }
+        let(:query) { "{ candidacySupportsCount }" }
 
         it "has an CandidacySupportsCount" do
-          expect(response).to include("CandidacySupportsCount" => model.supports_count)
+          expect(response).to include("candidacySupportsCount" => model.supports_count)
         end
       end
     end

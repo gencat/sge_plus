@@ -4,7 +4,7 @@ require "spec_helper"
 require "decidim/api/test/type_context"
 
 module Decidim
-  module Candidacies
+  module SignatureCollection
     describe CandidacyApiType, type: :graphql do
       include_context "with a graphql class type"
 

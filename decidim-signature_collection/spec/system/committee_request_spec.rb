@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe "Decidim::Candidacies::CommitteeRequestController" do
+describe "Decidim::SignatureCollection::CommitteeRequestController" do
   let(:organization) { create(:organization) }
   let(:candidacy) { create(:candidacy, :created, organization:) }
 

@@ -1,34 +1,34 @@
 # frozen_string_literal: true
 
 class AllowMultipleOfflineVotes < ActiveRecord::Migration[5.2]
-  class InitiativesTypeScope < ApplicationRecord
-    self.table_name = :decidim_initiatives_type_scopes
+  class CandidaciesTypeScope < ApplicationRecord
+    self.table_name = :decidim_signature_collection_candidacies_type_scopes
   end
 
-  class Initiative < ApplicationRecord
-    self.table_name = :decidim_initiatives
-    belongs_to :scoped_type, class_name: "InitiativesTypeScope"
+  class Candidacy < ApplicationRecord
+    self.table_name = :decidim_signature_collection_candidacies
+    belongs_to :scoped_type, class_name: "CandidaciesTypeScope"
   end
 
   def change
-    rename_column :decidim_initiatives, :offline_votes, :old_offline_votes
-    add_column :decidim_initiatives, :offline_votes, :jsonb, default: {}
+    rename_column :decidim_signature_collection_candidacies, :offline_votes, :old_offline_votes
+    add_column :decidim_signature_collection_candidacies, :offline_votes, :jsonb, default: {}
 
-    Initiative.reset_column_information
+    Candidacy.reset_column_information
 
-    Initiative.includes(:scoped_type).find_each do |initiative|
-      scope_key = initiative.scoped_type.decidim_scopes_id || "global"
+    Candidacy.includes(:scoped_type).find_each do |candidacy|
+      scope_key = candidacy.scoped_type.decidim_scopes_id || "global"
 
       offline_votes = {
-        scope_key => initiative.old_offline_votes.to_i,
-        "total" => initiative.old_offline_votes.to_i
+        scope_key => candidacy.old_offline_votes.to_i,
+        "total" => candidacy.old_offline_votes.to_i
       }
 
       # rubocop:disable Rails/SkipsModelValidations
-      initiative.update_column(:offline_votes, offline_votes)
+      candidacy.update_column(:offline_votes, offline_votes)
       # rubocop:enable Rails/SkipsModelValidations
     end
 
-    remove_column :decidim_initiatives, :old_offline_votes
+    remove_column :decidim_signature_collection_candidacies, :old_offline_votes
   end
 end

@@ -39,7 +39,7 @@ describe "Candidacy" do
     switch_to_host(organization.host)
     login_as(authorized_user, scope: :user) if authorized_user && login
     visit decidim_candidacies.candidacies_path
-    allow(Decidim::Candidacies.config).to receive(:do_not_require_authorization).and_return(do_not_require_authorization)
+    allow(Decidim::SignatureCollection.config).to receive(:do_not_require_authorization).and_return(do_not_require_authorization)
   end
 
   context "when user visits the candidacies wizard and is not logged in" do
@@ -58,7 +58,7 @@ describe "Candidacy" do
         :finish
       ].each do |step|
         it "redirects to the login page when landing on #{step}" do
-          expect(Decidim::CandidacysType.count).to eq(1)
+          expect(Decidim::SignatureCollection::CandidaciesType.count).to eq(1)
           visit decidim_candidacies.create_candidacy_path(step)
           expect(page).to have_current_path("/users/sign_in")
         end
@@ -73,7 +73,7 @@ describe "Candidacy" do
         :finish
       ].each do |step|
         it "redirects to the login page when landing on #{step}" do
-          expect(Decidim::CandidacysType.count).to eq(2)
+          expect(Decidim::SignatureCollection::CandidaciesType.count).to eq(2)
           visit decidim_candidacies.create_candidacy_path(step)
           expect(page).to have_current_path("/users/sign_in")
         end
@@ -96,7 +96,7 @@ describe "Candidacy" do
         :finish
       ].each do |step|
         it "redirects to the previous_form page when landing on #{step}" do
-          expect(Decidim::CandidacysType.count).to eq(1)
+          expect(Decidim::SignatureCollection::CandidaciesType.count).to eq(1)
           visit decidim_candidacies.create_candidacy_path(step)
           expect(page).to have_current_path(decidim_candidacies.create_candidacy_path(:fill_data))
         end
@@ -110,7 +110,7 @@ describe "Candidacy" do
         :finish
       ].each do |step|
         it "redirects to the select_candidacy_type page when landing on #{step}" do
-          expect(Decidim::CandidacysType.count).to eq(2)
+          expect(Decidim::SignatureCollection::CandidaciesType.count).to eq(2)
           visit decidim_candidacies.create_candidacy_path(step)
           expect(page).to have_current_path(decidim_candidacies.create_candidacy_path(:select_candidacy_type))
         end
@@ -133,7 +133,7 @@ describe "Candidacy" do
 
         context "and creation require a verification" do
           before do
-            allow(Decidim::Candidacies.config).to receive(:do_not_require_authorization).and_return(false)
+            allow(Decidim::SignatureCollection.config).to receive(:do_not_require_authorization).and_return(false)
             visit decidim_candidacies.candidacies_path
           end
 
@@ -216,7 +216,7 @@ describe "Candidacy" do
 
         context "and creation require a verification" do
           before do
-            allow(Decidim::Candidacies.config).to receive(:do_not_require_authorization).and_return(false)
+            allow(Decidim::SignatureCollection.config).to receive(:do_not_require_authorization).and_return(false)
           end
 
           context "and they are verified" do
@@ -320,7 +320,7 @@ describe "Candidacy" do
 
         context "and creation require a verification" do
           before do
-            allow(Decidim::Candidacies.config).to receive(:do_not_require_authorization).and_return(false)
+            allow(Decidim::SignatureCollection.config).to receive(:do_not_require_authorization).and_return(false)
           end
 
           context "and they are verified" do
@@ -405,7 +405,7 @@ describe "Candidacy" do
 
         context "and creation require a verification" do
           before do
-            allow(Decidim::Candidacies.config).to receive(:do_not_require_authorization).and_return(false)
+            allow(Decidim::SignatureCollection.config).to receive(:do_not_require_authorization).and_return(false)
           end
 
           context "and they are verified" do
@@ -772,10 +772,10 @@ describe "Candidacy" do
         end
 
         it "shows the user group as author" do
-          expect(Decidim::Candidacy.where(decidim_user_group_id: user_group.id).count).to eq(0)
+          expect(Decidim::SignatureCollection::Candidacy.where(decidim_user_group_id: user_group.id).count).to eq(0)
           select(user_group.name, from: "Author")
           find_button("Continue").click
-          expect(Decidim::Candidacy.where(decidim_user_group_id: user_group.id).count).to eq(1)
+          expect(Decidim::SignatureCollection::Candidacy.where(decidim_user_group_id: user_group.id).count).to eq(1)
         end
       end
 
@@ -797,8 +797,8 @@ describe "Candidacy" do
         end
 
         it "saves the attachments" do
-          expect(Decidim::Candidacy.last.documents.count).to eq(1)
-          expect(Decidim::Candidacy.last.photos.count).to eq(1)
+          expect(Decidim::SignatureCollection::Candidacy.last.documents.count).to eq(1)
+          expect(Decidim::SignatureCollection::Candidacy.last.photos.count).to eq(1)
         end
 
         it "shows the page component" do

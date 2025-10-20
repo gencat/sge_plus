@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-class MoveSignatureTypeToInitativeType < ActiveRecord::Migration[5.2]
-  class InitiativesType < ApplicationRecord
-    self.table_name = :decidim_initiatives_types
+class MoveSignatureTypeToCandidacyType < ActiveRecord::Migration[5.2]
+  class CandidaciesType < ApplicationRecord
+    self.table_name = :decidim_signature_collection_candidacies_types
   end
 
   def change
-    if !ActiveRecord::Base.connection.table_exists?("decidim_initiatives_types")
-      Rails.logger.info "Skipping migration since there is no InitiativesType table"
+    if !ActiveRecord::Base.connection.table_exists?("decidim_signature_collection_candidacies_types")
+      Rails.logger.info "Skipping migration since there is no CandidaciesType table"
       return
-    elsif InitiativesType.count.positive?
+    elsif CandidaciesType.count.positive?
       raise "You need to edit this migration to continue"
     end
 
@@ -18,11 +18,11 @@ class MoveSignatureTypeToInitativeType < ActiveRecord::Migration[5.2]
     # allowed
     # face_to_face_voting_allowed = true
 
-    add_column :decidim_initiatives_types, :signature_type, :integer, null: false, default: 0
+    add_column :decidim_signature_collection_candidacies_types, :signature_type, :integer, null: false, default: 0
 
-    InitiativesType.reset_column_information
+    CandidaciesType.reset_column_information
 
-    InitiativesType.find_each do |type|
+    CandidaciesType.find_each do |type|
       type.signature_type = if type.online_signature_enabled && face_to_face_voting_allowed
                               :any
                             elsif type.online_signature_enabled && !face_to_face_voting_allowed
@@ -33,6 +33,6 @@ class MoveSignatureTypeToInitativeType < ActiveRecord::Migration[5.2]
       type.save!
     end
 
-    remove_column :decidim_initiatives_types, :online_signature_enabled
+    remove_column :decidim_signature_collection_candidacies_types, :online_signature_enabled
   end
 end

@@ -3,9 +3,9 @@
 require "spec_helper"
 
 module Decidim
-  module Candidacies
+  module SignatureCollection
     module Admin
-      describe CandidacysSettingsForm do
+      describe CandidaciesSettingsForm do
         subject { described_class.from_params(attributes).with_context(current_organization: organization) }
 
         let(:organization) { create(:organization) }

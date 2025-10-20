@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-class CreateInitiativeDescriptionIndex < ActiveRecord::Migration[5.1]
+class CreateCandidacyDescriptionIndex < ActiveRecord::Migration[5.1]
   def up
-    execute "CREATE INDEX decidim_initiatives_description_search ON decidim_initiatives(md5(description::text))"
+    execute "CREATE INDEX decidim_candidacies_description_search ON decidim_signature_collection_candidacies(md5(description::text))"
   end
 
   def down
-    execute "DROP INDEX decidim_initiatives_description_search"
+    execute "DROP INDEX decidim_candidacies_description_search"
   end
 end

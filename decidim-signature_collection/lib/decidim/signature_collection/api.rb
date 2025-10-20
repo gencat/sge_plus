@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Decidim
-  module Candidacies
+  module SignatureCollection
     autoload :CandidacyTypeInterface, "decidim/api/candidacy_type_interface"
     autoload :CandidacyType, "decidim/api/candidacy_type"
     autoload :CandidacyApiType, "decidim/api/candidacy_api_type"

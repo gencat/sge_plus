@@ -3,17 +3,17 @@
 require "rails"
 require "active_support/all"
 require "decidim/core"
-require "decidim/candidacies/content_blocks/registry_manager"
-require "decidim/candidacies/current_locale"
-require "decidim/candidacies/candidacy_slug"
-require "decidim/candidacies/menu"
-require "decidim/candidacies/query_extensions"
+require "decidim/signature_collection/content_blocks/registry_manager"
+require "decidim/signature_collection/current_locale"
+require "decidim/signature_collection/candidacy_slug"
+require "decidim/signature_collection/menu"
+require "decidim/signature_collection/query_extensions"
 
 module Decidim
-  module Candidacies
-    # Decidim"s Candidacies Rails Engine.
+  module SignatureCollection
+    # Decidim's SignatureCollection Rails Engine.
     class Engine < ::Rails::Engine
-      isolate_namespace Decidim::Candidacies
+      isolate_namespace Decidim::SignatureCollection
 
       routes do
         get "/candidacy_types/search", to: "candidacy_types#search", as: :candidacy_types_search
@@ -32,12 +32,12 @@ module Decidim
         end
 
         get "candidacies/:candidacy_id", to: redirect { |params, _request|
-          candidacy = Decidim::Candidacy.find(params[:candidacy_id])
+          candidacy = Decidim::SignatureCollection::Candidacy.find(params[:candidacy_id])
           candidacy ? "/candidacies/#{candidacy.slug}" : "/404"
         }, constraints: { candidacy_id: /[0-9]+/ }
 
         get "/candidacies/:candidacy_id/f/:component_id", to: redirect { |params, _request|
-          candidacy = Decidim::Candidacy.find(params[:candidacy_id])
+          candidacy = Decidim::SignatureCollection::Candidacy.find(params[:candidacy_id])
           candidacy ? "/candidacies/#{candidacy.slug}/f/#{params[:component_id]}" : "/404"
         }, constraints: { candidacy_id: /[0-9]+/ }
 
@@ -86,36 +86,36 @@ module Decidim
         end
       end
 
-      initializer "decidim_candidacies.mount_routes" do
+      initializer "decidim_signature_collection.mount_routes" do
         Decidim::Core::Engine.routes do
-          mount Decidim::Candidacies::Engine, at: "/", as: "decidim_candidacies"
+          mount Decidim::SignatureCollection::Engine, at: "/", as: "decidim_candidacies"
         end
       end
 
-      initializer "decidim_candidacies.register_icons" do
-        Decidim.icons.register(name: "Decidim::Candidacy", icon: "lightbulb-flash-line", description: "Candidacy", category: "activity", engine: :candidacies)
-        Decidim.icons.register(name: "apps-line", icon: "apps-line", category: "system", description: "", engine: :candidacies)
-        Decidim.icons.register(name: "printer-line", icon: "printer-line", category: "system", description: "", engine: :candidacies)
-        Decidim.icons.register(name: "forbid-line", icon: "forbid-line", category: "system", description: "", engine: :candidacies)
+      initializer "decidim_signature_collection.register_icons" do
+        Decidim.icons.register(name: "Decidim::SignatureCollection::Candidacy", icon: "lightbulb-flash-line", description: "Candidacy", category: "activity", engine: :signature_collection)
+        Decidim.icons.register(name: "apps-line", icon: "apps-line", category: "system", description: "", engine: :signature_collection)
+        Decidim.icons.register(name: "printer-line", icon: "printer-line", category: "system", description: "", engine: :signature_collection)
+        Decidim.icons.register(name: "forbid-line", icon: "forbid-line", category: "system", description: "", engine: :signature_collection)
       end
 
-      initializer "decidim_candidacies.content_blocks" do
-        Decidim::Candidacies::ContentBlocks::RegistryManager.register!
+      initializer "decidim_signature_collection.content_blocks" do
+        Decidim::SignatureCollection::ContentBlocks::RegistryManager.register!
       end
 
-      initializer "decidim_candidacies.add_cells_view_paths" do
-        Cell::ViewModel.view_paths << File.expand_path("#{Decidim::Candidacies::Engine.root}/app/cells")
-        Cell::ViewModel.view_paths << File.expand_path("#{Decidim::Candidacies::Engine.root}/app/views") # for partials
+      initializer "decidim_signature_collection.add_cells_view_paths" do
+        Cell::ViewModel.view_paths << File.expand_path("#{Decidim::SignatureCollection::Engine.root}/app/cells")
+        Cell::ViewModel.view_paths << File.expand_path("#{Decidim::SignatureCollection::Engine.root}/app/views") # for partials
       end
 
-      initializer "decidim_candidacies.menu" do
-        Decidim::Candidacies::Menu.register_menu!
-        Decidim::Candidacies::Menu.register_mobile_menu!
-        Decidim::Candidacies::Menu.register_home_content_block_menu!
+      initializer "decidim_signature_collection.menu" do
+        Decidim::SignatureCollection::Menu.register_menu!
+        Decidim::SignatureCollection::Menu.register_mobile_menu!
+        Decidim::SignatureCollection::Menu.register_home_content_block_menu!
       end
 
-      initializer "decidim_candidacies.badges" do
-        Decidim::Gamification.register_badge(:candidacies) do |badge|
+      initializer "decidim_signature_collection.badges" do
+        Decidim::Gamification.register_badge(:signature_collection) do |badge|
           badge.levels = [1, 5, 15, 30, 50]
 
           badge.valid_for = [:user, :user_group]
@@ -123,12 +123,12 @@ module Decidim
           badge.reset = lambda { |model|
             case model
             when User
-              Decidim::Candidacy.where(
+              Decidim::SignatureCollection::Candidacy.where(
                 author: model,
                 user_group: nil
               ).published.count
             when UserGroup
-              Decidim::Candidacy.where(
+              Decidim::SignatureCollection::Candidacy.where(
                 user_group: model
               ).published.count
             end
@@ -136,15 +136,15 @@ module Decidim
         end
       end
 
-      initializer "decidim_candidacies.query_extensions" do
+      initializer "decidim_signature_collection.query_extensions" do
         Decidim::Api::QueryType.include QueryExtensions
       end
 
-      initializer "decidim_candidacies.webpacker.assets_path" do
+      initializer "decidim_signature_collection.webpacker.assets_path" do
         Decidim.register_assets_path File.expand_path("app/packs", root)
       end
 
-      initializer "decidim_candidacies.preview_mailer" do
+      initializer "decidim_signature_collection.preview_mailer" do
         # Load in mailer previews for apps to use in development.
         # We need to make sure we call `Preview.all` before requiring our
         # previews, otherwise any previews the app attempts to add need to be
@@ -158,11 +158,11 @@ module Decidim
         end
       end
 
-      initializer "decidim_candidacies.authorization_transfer" do
+      initializer "decidim_signature_collection.authorization_transfer" do
         config.to_prepare do
-          Decidim::AuthorizationTransfer.register(:candidacies) do |transfer|
-            transfer.move_records(Decidim::Candidacy, :decidim_author_id)
-            transfer.move_records(Decidim::CandidacysVote, :decidim_author_id)
+          Decidim::AuthorizationTransfer.register(:signature_collection) do |transfer|
+            transfer.move_records(Decidim::SignatureCollection::Candidacy, :decidim_author_id)
+            transfer.move_records(Decidim::SignatureCollection::CandidaciesVote, :decidim_author_id)
           end
         end
       end

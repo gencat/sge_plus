@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class EnablePgTrgmExtensionForInitiatives < ActiveRecord::Migration[5.1]
+class EnablePgTrgmExtensionForCandidacies < ActiveRecord::Migration[5.1]
   def change
     return if extension_enabled?("pg_trgm")
 

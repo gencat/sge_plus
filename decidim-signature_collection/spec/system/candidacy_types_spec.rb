@@ -54,7 +54,7 @@ describe "Candidacies" do
       end
 
       before do
-        allow(Decidim::Candidacies).to receive(:print_enabled).and_return(true)
+        allow(Decidim::SignatureCollection).to receive(:print_enabled).and_return(true)
       end
 
       it_behaves_like "shows contextual help" do

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Decidim
-  module Candidacies
+  module SignatureCollection
     class CandidacyApiType < Decidim::Api::Types::BaseObject
       implements Decidim::Core::TimestampsInterface
 
@@ -9,7 +9,7 @@ module Decidim
       description "An candidacy type"
 
       field :banner_image, GraphQL::Types::String, "Banner image", null: true
-      field :candidacies, [Decidim::Candidacies::CandidacyType, { null: true }], "The candidacies that have this type", null: false
+      field :candidacies, [Decidim::SignatureCollection::CandidacyType, { null: true }], "The candidacies that have this type", null: false
       field :collect_user_extra_fields, GraphQL::Types::Boolean, "Collect participant personal data on signature", null: true
       field :description, Decidim::Core::TranslatedFieldType, "This is the candidacy type description", null: true
       field :extra_fields_legal_information, GraphQL::Types::String, "Legal information about the collection of personal data", null: true

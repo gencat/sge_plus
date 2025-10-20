@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "rails_helper"
+require "spec_helper"
 
 describe "Candidacies creation setting" do
   let(:organization) { create(:organization) }
@@ -28,14 +28,14 @@ describe "Candidacies creation setting" do
   end
 
   it "does not show the New candidacy button when creation is disabled" do
-    Decidim::CandidacysSettings.find_or_create_by!(organization: organization, creation_enabled: false)
+    Decidim::SignatureCollection::CandidaciesSettings.find_or_create_by!(organization: organization, creation_enabled: false)
     visit decidim_candidacies.candidacies_path
 
     expect(page).to have_no_content("New candidacy")
   end
 
   it "shows the New candidacy button when creation is enabled" do
-    Decidim::CandidacysSettings.find_or_create_by!(organization: organization, creation_enabled: true)
+    Decidim::SignatureCollection::CandidaciesSettings.find_or_create_by!(organization: organization, creation_enabled: true)
     visit decidim_candidacies.candidacies_path
 
     expect(page).to have_content("New candidacy")

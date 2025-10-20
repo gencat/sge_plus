@@ -1,0 +1,28 @@
+<% add_decidim_page_title(component_name) %>
+<%= append_javascript_pack_tag "decidim_signature_collection_candidacies" %>
+<%= append_stylesheet_pack_tag "decidim_signature_collection_candidacies", media: "all" %>
+
+<%
+edit_link(
+  decidim_admin_candidacies.candidacies_path,
+  :read,
+  :candidacy
+)
+%>
+
+<% content_for :aside do %>
+  <h1 class="title-decorator"><%= component_name %></h1>
+  <%= render partial: "new_candidacy_button" %>
+
+  <%= render layout: "decidim/shared/filters", locals: { filter_sections: , search_variable: :search_text_cont, skip_to_id: "candidacies" } do %>
+    <%= hidden_field_tag :order, order, id: nil, class: "order_filter" %>
+  <% end %>
+<% end %>
+
+<%= render layout: "layouts/decidim/shared/layout_two_col" do %>
+  <%= participatory_space_floating_help %>
+
+  <section id="candidacies" class="layout-main__section layout-main__heading">
+    <%= render partial: "candidacies" %>
+  </section>
+<% end %>

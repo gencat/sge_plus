@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Decidim
-  module Candidacies
+  module SignatureCollection
     # This type represents an candidacy committee member.
     class CandidacyCommitteeMemberType < Decidim::Api::Types::BaseObject
       implements Decidim::Core::TimestampsInterface

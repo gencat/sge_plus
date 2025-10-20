@@ -1,0 +1,31 @@
+<% add_decidim_meta_tags({
+                           image_url: resolve_meta_image_url(current_candidacy),
+                           description: translated_attribute(current_candidacy.description),
+                           title: translated_attribute(current_candidacy.title),
+                           url: candidacy_url(current_candidacy.id)
+                         }) %>
+
+<% provide :meta_image_url, current_candidacy.type.attached_uploader(:banner_image).url %>
+
+<%= render layout: "layouts/decidim/shared/layout_center" do %>
+  <div class="text-center py-10">
+    <h2 class="title-decorator inline-block text-left"><%= translated_attribute(current_candidacy.title) %></h2>
+  </div>
+
+  <%= cell "decidim/coauthorships", OpenStruct.new(identities: current_candidacy.committee_members.excluding_author.approved.map(&:user).reject(&:deleted?).prepend(current_candidacy.author) ) %>
+
+  <div class="form__wrapper">
+
+    <span class="text-gray-2"><%= l current_candidacy.published_at || current_candidacy.created_at, format: :decidim_short %></span>
+
+    <div class="editor-content">
+      <%= decidim_sanitize_editor translated_attribute(current_candidacy.description) %>
+    </div>
+
+    <%= cell("decidim/announcement", t("decidim.signature_collection.committee_requests.new.help_text"), callout_class: "secondary") %>
+
+    <div class="form__wrapper-block">
+      <%= logged_link_to t("continue", scope: "decidim.signature_collection.committee_requests.new"), spawn_candidacy_committee_requests_path(current_candidacy), class: "button button__sm md:button__lg button__secondary", data: current_user.blank? ? { dialog_open: "loginModal" } : {} %>
+    </div>
+  </div>
+<% end %>

@@ -44,7 +44,7 @@ shared_examples "create an candidacy" do
       it "does not create an candidacy" do
         expect do
           command.call
-        end.not_to change(Decidim::Candidacy, :count)
+        end.not_to change(Decidim::SignatureCollection::Candidacy, :count)
       end
     end
 
@@ -56,26 +56,26 @@ shared_examples "create an candidacy" do
       it "creates a new candidacy" do
         expect do
           command.call
-        end.to change(Decidim::Candidacy, :count).by(1)
+        end.to change(Decidim::SignatureCollection::Candidacy, :count).by(1)
       end
 
       it "sets the author" do
         command.call
-        candidacy = Decidim::Candidacy.last
+        candidacy = Decidim::SignatureCollection::Candidacy.last
 
         expect(candidacy.author).to eq(current_user)
       end
 
       it "Default state is created" do
         command.call
-        candidacy = Decidim::Candidacy.last
+        candidacy = Decidim::SignatureCollection::Candidacy.last
 
         expect(candidacy).to be_created
       end
 
       it "Title and description are stored with its locale" do
         command.call
-        candidacy = Decidim::Candidacy.last
+        candidacy = Decidim::SignatureCollection::Candidacy.last
 
         expect(candidacy.title.keys).not_to be_empty
         expect(candidacy.description.keys).not_to be_empty
@@ -83,7 +83,7 @@ shared_examples "create an candidacy" do
 
       it "Voting interval is not set yet" do
         command.call
-        candidacy = Decidim::Candidacy.last
+        candidacy = Decidim::SignatureCollection::Candidacy.last
 
         expect(candidacy).not_to have_signature_interval_defined
       end
@@ -98,7 +98,7 @@ shared_examples "create an candidacy" do
 
       it "adds the author as committee member in accepted state" do
         command.call
-        candidacy = Decidim::Candidacy.last
+        candidacy = Decidim::SignatureCollection::Candidacy.last
 
         expect(candidacy.committee_members.accepted.where(user: current_user)).to exist
       end
@@ -106,7 +106,7 @@ shared_examples "create an candidacy" do
       context "when the candidacy type does not enable custom signature end date" do
         it "does not set the signature end date" do
           command.call
-          candidacy = Decidim::Candidacy.last
+          candidacy = Decidim::SignatureCollection::Candidacy.last
 
           expect(candidacy.signature_end_date).to be_nil
         end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class FixUserGroupsIdsOnInitiatives < ActiveRecord::Migration[5.2]
+class FixUserGroupsIdsOnCandidacies < ActiveRecord::Migration[5.2]
   class UserGroup < ApplicationRecord
     self.table_name = :decidim_users
     self.inheritance_column = nil # disable the default inheritance
@@ -8,12 +8,12 @@ class FixUserGroupsIdsOnInitiatives < ActiveRecord::Migration[5.2]
     default_scope { where(type: "Decidim::UserGroup") }
   end
 
-  class Initiative < ApplicationRecord
-    self.table_name = :decidim_initiatives
+  class Candidacy < ApplicationRecord
+    self.table_name = :decidim_signature_collection_candidacies
   end
 
-  class InitiativesVote < ApplicationRecord
-    self.table_name = :decidim_initiatives_votes
+  class CandidaciesVote < ApplicationRecord
+    self.table_name = :decidim_signature_collection_candidacies_votes
   end
 
   # rubocop:disable Rails/SkipsModelValidations
@@ -22,10 +22,10 @@ class FixUserGroupsIdsOnInitiatives < ActiveRecord::Migration[5.2]
       old_id = group.extended_data["old_user_group_id"]
       next unless old_id
 
-      Initiative
+      Candidacy
         .where(decidim_user_group_id: old_id)
         .update_all(decidim_user_group_id: group.id)
-      InitiativesVote
+      CandidaciesVote
         .where(decidim_user_group_id: old_id)
         .update_all(decidim_user_group_id: group.id)
     end
