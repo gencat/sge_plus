@@ -2,6 +2,6 @@
   <%= render layout:"layouts/decidim/shared/layout_center", locals: { main_enabled: false } do %>
     <%= render partial: "layouts/decidim/candidacy_signature_creation_header" %>
     <%= yield %>
-    <%= append_javascript_pack_tag "decidim_signature_collection_candidacies" %>
+    <%= append_javascript_pack_tag "decidim_signature_collection" %>
   <% end %>
 <% end %>
