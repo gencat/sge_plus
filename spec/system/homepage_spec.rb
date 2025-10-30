@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 describe "Homepage" do
-  include Decidim::SanitizeHelper
-
   let!(:organization) do
     create(
       :organization,
@@ -15,8 +13,8 @@ describe "Homepage" do
   end
   let!(:hero) do
     create(:content_block, organization: organization, scope_name: :homepage, manifest_name: :hero, settings: {
-             "welcome_text_ca" => "Benvinguda a SGE+"
-           })
+            "welcome_text_ca" => "Benvinguda a SGE+"
+          })
   end
   let!(:sub_hero) do
     create(:content_block, organization: organization, scope_name: :homepage, manifest_name: :sub_hero)
