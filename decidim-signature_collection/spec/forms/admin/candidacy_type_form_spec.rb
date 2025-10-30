@@ -40,26 +40,10 @@ module Decidim
           it { is_expected.to be_valid }
         end
 
-        context "when minimum_committee_members is blank" do
-          let(:minimum_committee_members) { " " }
-
-          it "is 2" do
-            expect(subject.minimum_committee_members).to eq(2)
-          end
-        end
-
         context "when title is missing" do
           let(:title) { nil }
 
           it { is_expected.to be_invalid }
-        end
-
-        context "when the promoting committee is not enabled" do
-          let(:promoting_committee_enabled) { false }
-
-          it "sets 0 as minimum committee members" do
-            expect(subject.minimum_committee_members).to eq(2)
-          end
         end
 
         context "when comments are disabled" do

@@ -26,7 +26,7 @@ shared_examples "create an candidacy" do
         scope_id: scoped_type.scope.id,
         decidim_user_group_id: nil,
         add_documents: uploaded_files,
-        documents: current_files
+        documents: current_files,
       }
     end
 

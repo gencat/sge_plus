@@ -388,7 +388,7 @@ describe Decidim::SignatureCollection::Admin::Permissions do
         let(:action_name) { :print }
 
         before do
-          allow(Decidim::SignatureCollection::Candidacies).to receive(:print_enabled).and_return(print_enabled)
+          allow(Decidim::SignatureCollection).to receive(:print_enabled).and_return(print_enabled)
         end
 
         context "when print is disabled" do

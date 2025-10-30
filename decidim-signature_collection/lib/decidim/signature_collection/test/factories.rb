@@ -11,24 +11,19 @@ FactoryBot.define do
     title { generate_localized_title(:candidacies_type_title, skip_injection:) }
     description { generate_localized_description(:candidacies_type_description, skip_injection:) }
     organization
-    # Keep banner_image after organization
-    banner_image do
-      ActiveStorage::Blob.create_and_upload!(
-        io: File.open(Decidim::Dev.test_file("city2.jpeg", "image/jpeg")),
-        filename: "city2.jpeg",
-        content_type: "image/jpeg"
-      ).signed_id
-    end
     signature_type { :online }
     attachments_enabled { true }
     undo_online_signatures_enabled { true }
     custom_signature_end_date_enabled { false }
     area_enabled { false }
     promoting_committee_enabled { true }
-    minimum_committee_members { 3 }
+    minimum_committee_members { 0 }
     child_scope_threshold_enabled { false }
     only_global_scope_enabled { false }
     comments_enabled { true }
+
+    signature_period_start { DateTime.now }
+    signature_period_end { DateTime.now + 1.month }
 
     trait :with_comments_disabled do
       comments_enabled { false }

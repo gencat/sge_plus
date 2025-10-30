@@ -8,8 +8,6 @@ shared_examples "update an candidacy type" do
            :online_signature_enabled,
            :attachments_disabled,
            :undo_online_signatures_enabled,
-           :custom_signature_end_date_disabled,
-           :area_disabled,
            organization:)
   end
   let(:form) do
@@ -33,9 +31,6 @@ shared_examples "update an candidacy type" do
         custom_signature_end_date_enabled: true,
         area_enabled: true,
         comments_enabled: true,
-        promoting_committee_enabled: true,
-        minimum_committee_members: 7,
-        banner_image: Decidim::Dev.test_file("city2.jpeg", "image/jpeg"),
         collect_user_extra_fields: false,
         extra_fields_legal_information: Decidim::Faker::Localized.sentence(word_count: 25).except("machine_translations"),
         document_number_authorization_handler: "",
@@ -83,9 +78,7 @@ shared_examples "update an candidacy type" do
         expect(candidacy_type.signature_type).to eq(form_params[:signature_type])
         expect(candidacy_type.attachments_enabled).to eq(form_params[:attachments_enabled])
         expect(candidacy_type.undo_online_signatures_enabled).to eq(form_params[:undo_online_signatures_enabled])
-        expect(candidacy_type.custom_signature_end_date_enabled).to eq(form_params[:custom_signature_end_date_enabled])
         expect(candidacy_type.area_enabled).to eq(form_params[:area_enabled])
-        expect(candidacy_type.minimum_committee_members).to eq(form_params[:minimum_committee_members])
       end
 
       it "propagates signature type to created candidacies" do
