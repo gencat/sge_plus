@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe Decidim::SignatureCollection::Candidacies::ContentBlocks::HighlightedCandidaciesSettingsFormCell, type: :cell do
+describe Decidim::SignatureCollection::ContentBlocks::HighlightedCandidaciesSettingsFormCell, type: :cell do
   let(:cell) { described_class.new }
 
   describe "#max_results_label" do

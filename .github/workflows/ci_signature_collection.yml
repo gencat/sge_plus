@@ -93,7 +93,7 @@ jobs:
       - name: Generate signature_collection test app
         run: |
           cd decidim-signature_collection
-          bin/rails decidim:generate_external_test_app
+          bundle exec rake test_app
 
       - name: Run RSpec
         uses: nick-fields/retry@v3

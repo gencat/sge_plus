@@ -21,15 +21,12 @@ Gem::Specification.new do |s|
   s.summary = "Decidim signature collection module"
   s.description = "Module that helps groups collecting signatures mainly as candidacies for elections."
 
-  s.files = Dir.chdir(__dir__) do
-    `git ls-files -z`.split("\x0").select do |f|
-      (File.expand_path(f) == __FILE__) ||
-        f.start_with?(*%w(app/ config/ db/ lib/ Rakefile README.md))
-    end
-  end
+  s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
   s.add_dependency "decidim-admin", "~> #{Decidim::SignatureCollection.min_decidim_version}"
   s.add_dependency "decidim-comments", "~> #{Decidim::SignatureCollection.min_decidim_version}"
   s.add_dependency "decidim-core", "~> #{Decidim::SignatureCollection.min_decidim_version}"
   s.add_dependency "decidim-verifications", "~> #{Decidim::SignatureCollection.min_decidim_version}"
+
+  s.add_development_dependency "decidim-dev", "~> #{Decidim::SignatureCollection.min_decidim_version}"
 end
