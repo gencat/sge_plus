@@ -16,8 +16,7 @@ gem "decidim-signature_collection", path: "./decidim-signature_collection"
 
 gem "decidim-cdtb", "~> 0.5.5"
 
-gem "bootsnap", "~> 1.3"
-
+gem "bootsnap", "~> 1.7"
 gem "puma", ">= 6.3.1"
 
 # https://github.com/hlascelles/figjam
