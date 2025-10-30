@@ -93,7 +93,8 @@ module Decidim
       end
 
       initializer "decidim_signature_collection.register_icons" do
-        Decidim.icons.register(name: "Decidim::SignatureCollection::Candidacy", icon: "lightbulb-flash-line", description: "Candidacy", category: "activity", engine: :signature_collection)
+        Decidim.icons.register(name: "Decidim::SignatureCollection::Candidacy", icon: "lightbulb-flash-line", description: "Candidacy", category: "activity",
+                               engine: :signature_collection)
         Decidim.icons.register(name: "apps-line", icon: "apps-line", category: "system", description: "", engine: :signature_collection)
         Decidim.icons.register(name: "printer-line", icon: "printer-line", category: "system", description: "", engine: :signature_collection)
         Decidim.icons.register(name: "forbid-line", icon: "forbid-line", category: "system", description: "", engine: :signature_collection)

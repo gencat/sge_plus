@@ -95,7 +95,8 @@ module Decidim
         end
 
         def current_candidacy_type_scope
-          @current_candidacy_type_scope ||= CandidaciesTypeScope.joins(:type).where(decidim_signature_collection_candidacies_types: { organization: current_organization }).find(params[:id])
+          @current_candidacy_type_scope ||= CandidaciesTypeScope.joins(:type)
+                                                                .where(decidim_signature_collection_candidacies_types: { organization: current_organization }).find(params[:id])
         end
 
         def current_candidacy_type

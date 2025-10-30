@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe Decidim::SignatureCollection::ContentBlocks::HighlightedCandidaciesCell, type: :cell do
+describe Decidim::SignatureCollection::Candidacies::ContentBlocks::HighlightedCandidaciesCell, type: :cell do
   subject { cell(content_block.cell, content_block).call }
 
   let(:organization) { create(:organization) }
