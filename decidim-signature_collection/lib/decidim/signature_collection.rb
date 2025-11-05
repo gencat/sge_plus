@@ -32,7 +32,7 @@ module Decidim
 
     # Components enabled for a new candidacy
     config_accessor :default_components do
-      [:pages, :meetings, :blogs]
+      []
     end
 
     # Notifies when the given percentage of supports is reached for an
