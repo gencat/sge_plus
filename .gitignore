@@ -57,6 +57,7 @@ yarn-debug.log*
 tailwind.config.js
 
 spec/decidim_dummy_app/
+decidim-signature_collection/spec/decidim_dummy_app/
 
 .rspec
 .rspec-failures

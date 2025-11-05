@@ -1,0 +1,73 @@
+<% add_decidim_page_title(t("title", scope: "decidim.signature_collection.edit")) %>
+
+<%= render layout:"layouts/decidim/shared/layout_center" do %>
+  <div class="text-center py-10">
+    <h1 class="title-decorator inline-block text-left"><%= t("title", scope: "decidim.signature_collection.edit") %></h1>
+  </div>
+
+  <%= decidim_form_for @form, html: { class: "form__wrapper edit_candidacy" } do |f| %>
+    <%= render partial: "form", object: f %>
+
+    <div class="form__wrapper-block flex-col-reverse md:flex-row justify-between">
+      <%= link_to :back, class: "button button__sm md:button__lg button__text-secondary" do %>
+        <%= icon "arrow-left-line", class: "fill-current" %>
+        <%= t("back", scope: "decidim.signature_collection.edit") %>
+      <% end %>
+      <%= f.submit t("update", scope: "decidim.signature_collection.edit"), class: "button button__sm md:button__lg button__secondary" if allowed_to? :update, :candidacy, candidacy: current_candidacy %>
+
+      <% if allowed_to? :publish, :candidacy, candidacy: current_candidacy %>
+        <%= link_to t("actions.publish", scope: "decidim.admin"),
+                    publish_candidacy_path(current_candidacy),
+                    method: :post,
+                    class: "button button__sm md:button__lg button__secondary",
+                    data: { confirm: t("confirm", scope: "decidim.signature_collection.edit") } %>
+      <% end %>
+
+      <% if allowed_to? :unpublish, :candidacy, candidacy: current_candidacy %>
+        <%= link_to t("actions.unpublish", scope: "decidim.admin"),
+                    unpublish_candidacy_path(current_candidacy),
+                    method: :delete,
+                    class: "button button__sm md:button__lg button__secondary",
+                    data: { confirm: t("confirm", scope: "decidim.signature_collection.edit") } %>
+      <% end %>
+
+      <% if allowed_to? :accept, :candidacy, candidacy: current_candidacy %>
+          <%= link_to t("accept", scope: "decidim.signature_collection.edit"),
+                      accept_candidacy_path(current_candidacy),
+                      method: :post,
+                      class: "button button__sm md:button__lg button__secondary",
+                      data: { confirm: t("confirm", scope: "decidim.signature_collection.edit") } %>
+      <% end %>
+
+      <% if allowed_to? :reject, :candidacy, candidacy: current_candidacy %>
+          <%= link_to t("reject", scope: "decidim.signature_collection.edit"),
+                      reject_candidacy_path(current_candidacy),
+                      method: :delete,
+                      class: "button button__sm md:button__lg button__secondary",
+                      data: { confirm: t("confirm", scope: "decidim.signature_collection.edit") } %>
+      <% end %>
+
+      <% if allowed_to? :discard, :candidacy, candidacy: current_candidacy %>
+        <%= link_to t("discard", scope: "decidim.signature_collection.edit"),
+                    discard_candidacy_path(current_candidacy),
+                    method: :delete,
+                    class: "button button__sm md:button__lg button__secondary",
+                    data: { confirm: t("confirm", scope: "decidim.signature_collection.edit") } %>
+      <% end %>
+
+      <% if allowed_to? :export_votes, :candidacy, candidacy: current_candidacy %>
+        <%= link_to t("export_votes", scope: "decidim.signature_collection.edit"),
+                    export_votes_candidacy_path(current_candidacy, format: :csv),
+                    class: "button button__sm md:button__lg button__secondary",
+                    data: { confirm: t("confirm", scope: "decidim.signature_collection.edit") } %>
+      <% end %>
+
+      <% if allowed_to? :export_pdf_signatures, :candidacy, candidacy: current_candidacy %>
+        <%= link_to t("export_pdf_signatures", scope: "decidim.signature_collection.edit"),
+                    export_pdf_signatures_candidacy_path(current_candidacy, format: :pdf),
+                    class: "button button__sm md:button__lg button__secondary",
+                    data: { confirm: t("confirm", scope: "decidim.signature_collection.edit") } %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

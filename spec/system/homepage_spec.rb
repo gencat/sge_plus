@@ -3,8 +3,6 @@
 require "rails_helper"
 
 describe "Homepage" do
-  include Decidim::SanitizeHelper
-
   let!(:organization) do
     create(
       :organization,

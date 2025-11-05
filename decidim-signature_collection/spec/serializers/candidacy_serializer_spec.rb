@@ -1,0 +1,110 @@
+# frozen_string_literal: true
+
+require "spec_helper"
+
+module Decidim::SignatureCollection
+  describe CandidacySerializer do
+    subject { described_class.new(candidacy) }
+
+    let(:candidacy) { create(:candidacy, :with_area) }
+    let(:serialized) { subject.serialize }
+
+    describe "#serialize" do
+      it "includes the reference" do
+        expect(serialized).to include(reference: candidacy.reference)
+      end
+
+      it "includes the title" do
+        expect(serialized).to include(title: candidacy.title)
+      end
+
+      it "includes the description" do
+        expect(serialized).to include(description: candidacy.description)
+      end
+
+      it "includes the state" do
+        expect(serialized).to include(state: candidacy.state)
+      end
+
+      it "includes the created_at timestamp" do
+        expect(serialized).to include(created_at: candidacy.created_at)
+      end
+
+      it "includes the published_at timestamp" do
+        expect(serialized).to include(published_at: candidacy.published_at)
+      end
+
+      it "includes the signature_start_date" do
+        expect(serialized).to include(signature_start_date: candidacy.signature_start_date)
+      end
+
+      it "includes the signature_end_date" do
+        expect(serialized).to include(signature_end_date: candidacy.signature_end_date)
+      end
+
+      it "includes the signature_type" do
+        expect(serialized).to include(signature_type: candidacy.signature_type)
+      end
+
+      it "includes the number of signatures (supports)" do
+        expect(serialized).to include(signatures: candidacy.supports_count)
+      end
+
+      it "includes the answer" do
+        expect(serialized).to include(answer: candidacy.answer)
+      end
+
+      it "includes the answered_at" do
+        expect(serialized).to include(answered_at: candidacy.answered_at)
+      end
+
+      it "includes the answer_url" do
+        expect(serialized).to include(answer_url: candidacy.answer_url)
+      end
+
+      it "includes the hashtag" do
+        expect(serialized).to include(hashtag: candidacy.hashtag)
+      end
+
+      it "includes the first_progress_notification_at timestamp" do
+        expect(serialized).to include(first_progress_notification_at: candidacy.first_progress_notification_at)
+      end
+
+      it "includes the second_progress_notification_at timestamp" do
+        expect(serialized).to include(second_progress_notification_at: candidacy.second_progress_notification_at)
+      end
+
+      it "includes the scope id" do
+        expect(serialized[:scope]).to include(id: candidacy.scope.id)
+      end
+
+      it "includes the scope name" do
+        expect(serialized[:scope]).to include(name: candidacy.scope.name)
+      end
+
+      it "includes the type id" do
+        expect(serialized[:type]).to include(id: candidacy.type.id)
+      end
+
+      it "includes the type title" do
+        expect(serialized[:type]).to include(title: candidacy.type.title)
+      end
+
+      it "includes the authors' ids" do
+        expect(serialized[:authors]).to include(id: candidacy.author_users.map(&:id))
+      end
+
+      it "includes the authors' names" do
+        expect(serialized[:authors]).to include(name: candidacy.author_users.map(&:name))
+      end
+
+      it "includes the area id" do
+        expect(serialized[:area]).to include(id: candidacy.area.id)
+      end
+
+      it "includes the area name" do
+        expect(serialized[:area]).to include(name: candidacy.area.name)
+      end
+    end
+  end
+end

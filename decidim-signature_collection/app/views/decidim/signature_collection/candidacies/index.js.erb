@@ -1,0 +1,5 @@
+var $candidacies = $('#candidacies');
+var $orderFilterInput = $('.order_filter');
+
+$candidacies.html('<%= j(render partial: "candidacies") %>');
+$orderFilterInput.val('<%= order %>');

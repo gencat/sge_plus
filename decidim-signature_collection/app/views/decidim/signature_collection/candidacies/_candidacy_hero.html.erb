@@ -1,0 +1,13 @@
+<section style="background-image:url('<%= hero_background_path(current_candidacy) %>');">
+  <div class="candidacy__hero">
+    <div class="candidacy__hero-text">
+      <h1 class="h1 text-5xl">
+        <%= translated_attribute(current_participatory_space.title) %>
+      </h1>
+      <p class="candidacy__hero-slogan">
+        <%= render partial: "tags_type", locals: { resource: current_candidacy } %>
+      </p>
+      <%= render partial: "layouts/decidim/candidacy_header_steps", locals: { candidacy: current_participatory_space } %>
+    </div>
+  </div>
+</section>

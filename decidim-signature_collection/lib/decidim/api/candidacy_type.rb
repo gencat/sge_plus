@@ -1,0 +1,43 @@
+# frozen_string_literal: true
+
+module Decidim
+  module SignatureCollection
+    # This type represents a Candidacy.
+    class CandidacyType < Decidim::Api::Types::BaseObject
+      implements Decidim::Core::ParticipatorySpaceInterface
+      implements Decidim::Core::ScopableInterface
+      implements Decidim::Core::AttachableInterface
+      implements Decidim::SignatureCollection::CandidacyTypeInterface
+      implements Decidim::Core::TimestampsInterface
+
+      description "A candidacy"
+
+      field :author, Decidim::Core::AuthorInterface, "The candidacy author", null: false
+      field :candidacy_supports_count, GraphQL::Types::Int,
+            description: "The number of supports in this candidacy",
+            method: :online_votes_count,
+            deprecation_reason: "candidacySupportsCount has been collapsed in onlineVotes parameter",
+            null: true
+      field :candidacy_votes_count, GraphQL::Types::Int,
+            description: "The number of votes in this candidacy",
+            deprecation_reason: "candidacyVotesCount has been collapsed in onlineVotes parameter",
+            null: true, method: :online_votes_count
+      field :committee_members, [Decidim::SignatureCollection::CandidacyCommitteeMemberType, { null: true }], "The committee members list", null: true
+      field :description, Decidim::Core::TranslatedFieldType, "The description of this candidacy.", null: true
+      field :hashtag, GraphQL::Types::String, "The hashtag for this candidacy", null: true
+      field :offline_votes, GraphQL::Types::Int, "The number of offline votes in this candidacy", method: :offline_votes_count, null: true
+      field :online_votes, GraphQL::Types::Int, "The number of online votes in this candidacy", method: :online_votes_count, null: true
+      field :published_at, Decidim::Core::DateTimeType, "The time this candidacy was published", null: false
+      field :reference, GraphQL::Types::String, "Reference prefix for this candidacy", null: false
+      field :signature_end_date, Decidim::Core::DateType, "The signature end date", null: false
+      field :signature_start_date, Decidim::Core::DateType, "The signature start date", null: false
+      field :signature_type, GraphQL::Types::String, "Signature type of the candidacy", null: true
+      field :slug, GraphQL::Types::String, "The slug of the candidacy", null: false
+      field :state, GraphQL::Types::String, "Current status of the candidacy", null: true
+
+      def author
+        object.user_group || object.author
+      end
+    end
+  end
+end

@@ -1,0 +1,7 @@
+<% content_for :breadcrumb_context_menu do %>
+  <%= render partial: "layouts/decidim/admin/manage_candidacies" %>
+<% end %>
+
+<%= render "layouts/decidim/admin/application" do %>
+  <%= yield %>
+<% end %>

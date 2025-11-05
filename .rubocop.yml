@@ -1,6 +1,11 @@
 inherit_gem:
   decidim-dev: rubocop-decidim.yml
 
+AllCops:
+  Exclude:
+    - 'db/schema.rb'
+    - 'db/migrate/**/*.rb'
+
 Layout/SpaceAroundOperators:
   Enabled: false
 

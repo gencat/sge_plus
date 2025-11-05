@@ -10,11 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_10_09_072712) do
+ActiveRecord::Schema[7.0].define(version: 2025_10_23_072712) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "ltree"
   enable_extension "pg_trgm"
-  enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
   create_table "active_storage_attachments", force: :cascade do |t|
@@ -714,115 +713,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_09_072712) do
     t.text "reason"
     t.index ["decidim_admin_id"], name: "index_decidim_impersonation_logs_on_decidim_admin_id"
     t.index ["decidim_user_id"], name: "index_decidim_impersonation_logs_on_decidim_user_id"
-  end
-
-  create_table "decidim_initiatives", force: :cascade do |t|
-    t.jsonb "title", null: false
-    t.jsonb "description", null: false
-    t.integer "decidim_organization_id"
-    t.bigint "decidim_author_id", null: false
-    t.datetime "published_at", precision: nil
-    t.integer "state", default: 0, null: false
-    t.integer "signature_type", default: 0, null: false
-    t.date "signature_start_date"
-    t.date "signature_end_date"
-    t.jsonb "answer"
-    t.datetime "answered_at", precision: nil
-    t.string "answer_url"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.integer "decidim_user_group_id"
-    t.string "hashtag"
-    t.integer "scoped_type_id"
-    t.datetime "first_progress_notification_at", precision: nil
-    t.datetime "second_progress_notification_at", precision: nil
-    t.string "decidim_author_type", null: false
-    t.string "reference"
-    t.jsonb "online_votes", default: {}
-    t.jsonb "offline_votes", default: {}
-    t.bigint "decidim_area_id"
-    t.integer "comments_count", default: 0, null: false
-    t.integer "follows_count", default: 0, null: false
-    t.index "md5((description)::text)", name: "decidim_initiatives_description_search"
-    t.index ["answered_at"], name: "index_decidim_initiatives_on_answered_at"
-    t.index ["decidim_area_id"], name: "index_decidim_initiatives_on_decidim_area_id"
-    t.index ["decidim_author_id", "decidim_author_type"], name: "index_decidim_initiatives_on_decidim_author"
-    t.index ["decidim_organization_id"], name: "index_decidim_initiatives_on_decidim_organization_id"
-    t.index ["decidim_user_group_id"], name: "index_decidim_initiatives_on_decidim_user_group_id"
-    t.index ["published_at"], name: "index_decidim_initiatives_on_published_at"
-    t.index ["scoped_type_id"], name: "index_decidim_initiatives_on_scoped_type_id"
-    t.index ["title"], name: "decidim_initiatives_title_search"
-  end
-
-  create_table "decidim_initiatives_committee_members", force: :cascade do |t|
-    t.bigint "decidim_initiatives_id"
-    t.bigint "decidim_users_id"
-    t.integer "state", default: 0, null: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.index ["decidim_initiatives_id"], name: "index_decidim_committee_members_initiative"
-    t.index ["decidim_users_id"], name: "index_decidim_committee_members_user"
-    t.index ["state"], name: "index_decidim_initiatives_committee_members_on_state"
-  end
-
-  create_table "decidim_initiatives_settings", force: :cascade do |t|
-    t.string "initiatives_order", default: "random"
-    t.bigint "decidim_organization_id"
-    t.boolean "creation_enabled", default: true
-    t.index ["decidim_organization_id"], name: "index_decidim_initiatives_settings_on_decidim_organization_id"
-  end
-
-  create_table "decidim_initiatives_type_scopes", force: :cascade do |t|
-    t.bigint "decidim_initiatives_types_id"
-    t.bigint "decidim_scopes_id"
-    t.integer "supports_required", null: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.bigint "decidim_taxonomy_id"
-    t.index ["decidim_initiatives_types_id"], name: "idx_scoped_initiative_type_type"
-    t.index ["decidim_scopes_id"], name: "idx_scoped_initiative_type_scope"
-    t.index ["decidim_taxonomy_id"], name: "index_decidim_initiatives_type_scopes_on_decidim_taxonomy_id"
-  end
-
-  create_table "decidim_initiatives_types", force: :cascade do |t|
-    t.jsonb "title", null: false
-    t.jsonb "description", null: false
-    t.integer "decidim_organization_id"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.string "banner_image"
-    t.boolean "collect_user_extra_fields", default: false
-    t.jsonb "extra_fields_legal_information"
-    t.integer "minimum_committee_members"
-    t.boolean "validate_sms_code_on_votes", default: false
-    t.string "document_number_authorization_handler"
-    t.boolean "undo_online_signatures_enabled", default: true, null: false
-    t.boolean "promoting_committee_enabled", default: true, null: false
-    t.integer "signature_type", default: 0, null: false
-    t.boolean "child_scope_threshold_enabled", default: false, null: false
-    t.boolean "only_global_scope_enabled", default: false, null: false
-    t.boolean "custom_signature_end_date_enabled", default: false, null: false
-    t.boolean "attachments_enabled", default: false, null: false
-    t.boolean "area_enabled", default: false, null: false
-    t.boolean "comments_enabled", default: true, null: false
-    t.datetime "signature_period_start"
-    t.datetime "signature_period_end"
-    t.boolean "published", default: true
-    t.index ["decidim_organization_id"], name: "index_decidim_initiative_types_on_decidim_organization_id"
-  end
-
-  create_table "decidim_initiatives_votes", force: :cascade do |t|
-    t.bigint "decidim_initiative_id", null: false
-    t.bigint "decidim_author_id", null: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.text "encrypted_metadata"
-    t.string "timestamp"
-    t.string "hash_id"
-    t.integer "decidim_scope_id"
-    t.index ["decidim_author_id"], name: "index_decidim_initiatives_votes_on_decidim_author_id"
-    t.index ["decidim_initiative_id"], name: "index_decidim_initiatives_votes_on_decidim_initiative_id"
-    t.index ["hash_id"], name: "index_decidim_initiatives_votes_on_hash_id"
   end
 
   create_table "decidim_meetings_agenda_items", force: :cascade do |t|
@@ -1577,6 +1467,115 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_09_072712) do
     t.index ["target_type", "target_id"], name: "index_decidim_short_links_on_target"
   end
 
+  create_table "decidim_signature_collection_candidacies", force: :cascade do |t|
+    t.jsonb "title", null: false
+    t.jsonb "description", null: false
+    t.integer "decidim_organization_id"
+    t.bigint "decidim_author_id", null: false
+    t.datetime "published_at", precision: nil
+    t.integer "state", default: 0, null: false
+    t.integer "signature_type", default: 0, null: false
+    t.date "signature_start_date"
+    t.date "signature_end_date"
+    t.jsonb "answer"
+    t.datetime "answered_at", precision: nil
+    t.string "answer_url"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.integer "decidim_user_group_id"
+    t.string "hashtag"
+    t.integer "scoped_type_id"
+    t.datetime "first_progress_notification_at", precision: nil
+    t.datetime "second_progress_notification_at", precision: nil
+    t.string "decidim_author_type", null: false
+    t.string "reference"
+    t.jsonb "online_votes", default: {}
+    t.jsonb "offline_votes", default: {}
+    t.bigint "decidim_area_id"
+    t.integer "comments_count", default: 0, null: false
+    t.integer "follows_count", default: 0, null: false
+    t.index "md5((description)::text)", name: "decidim_candidacies_description_search"
+    t.index ["answered_at"], name: "idx_signaturecollect_candidacies_on_answered_at"
+    t.index ["decidim_area_id"], name: "idx_signaturecollect_candidacies_on_decidim_area_id"
+    t.index ["decidim_author_id", "decidim_author_type"], name: "index_decidim_candidacies_on_decidim_author"
+    t.index ["decidim_organization_id"], name: "index_decidim_candidacies_on_decidim_organization_id"
+    t.index ["decidim_user_group_id"], name: "idx_signaturecollect_candidacies_on_user_group_id"
+    t.index ["published_at"], name: "index_decidim_signature_collection_candidacies_on_published_at"
+    t.index ["scoped_type_id"], name: "idx_signaturecollect_candidacies_on_scoped_type_id"
+    t.index ["title"], name: "decidim_candidacies_title_search"
+  end
+
+  create_table "decidim_signature_collection_candidacies_committee_members", force: :cascade do |t|
+    t.bigint "decidim_signature_collection_candidacy_id"
+    t.bigint "decidim_users_id"
+    t.integer "state", default: 0, null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["decidim_signature_collection_candidacy_id"], name: "idx_decidim_committee_members_candidacy"
+    t.index ["decidim_users_id"], name: "idx_decidim_committee_members_user"
+    t.index ["state"], name: "idx_decidim_committee_members_name"
+  end
+
+  create_table "decidim_signature_collection_candidacies_settings", force: :cascade do |t|
+    t.string "candidacies_order", default: "random"
+    t.bigint "decidim_organization_id"
+    t.boolean "creation_enabled", default: true
+    t.index ["decidim_organization_id"], name: "index_sig_coll_candidacies_settings_on_org_id"
+  end
+
+  create_table "decidim_signature_collection_candidacies_type_scopes", force: :cascade do |t|
+    t.bigint "decidim_signature_collection_candidacies_type_id"
+    t.bigint "decidim_scopes_id"
+    t.integer "supports_required", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.bigint "decidim_taxonomy_id"
+    t.index ["decidim_scopes_id"], name: "idx_scoped_candidacy_type_scope"
+    t.index ["decidim_signature_collection_candidacies_type_id"], name: "idx_scoped_candidacy_type_type"
+    t.index ["decidim_taxonomy_id"], name: "index_candidacies_type_scopes_on_taxonomy_id"
+  end
+
+  create_table "decidim_signature_collection_candidacies_types", force: :cascade do |t|
+    t.jsonb "title", null: false
+    t.jsonb "description", null: false
+    t.integer "decidim_organization_id"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.string "banner_image"
+    t.boolean "collect_user_extra_fields", default: false
+    t.boolean "online_signature_enabled", default: true, null: false
+    t.jsonb "extra_fields_legal_information"
+    t.integer "minimum_committee_members"
+    t.boolean "validate_sms_code_on_votes", default: false
+    t.string "document_number_authorization_handler"
+    t.boolean "undo_online_signatures_enabled", default: true, null: false
+    t.boolean "promoting_committee_enabled", default: true, null: false
+    t.boolean "child_scope_threshold_enabled", default: false, null: false
+    t.boolean "only_global_scope_enabled", default: false, null: false
+    t.boolean "custom_signature_end_date_enabled", default: false, null: false
+    t.boolean "attachments_enabled", default: false, null: false
+    t.boolean "area_enabled", default: false, null: false
+    t.boolean "comments_enabled", default: true, null: false
+    t.datetime "signature_period_start"
+    t.datetime "signature_period_end"
+    t.boolean "published", default: true
+    t.index ["decidim_organization_id"], name: "index_decidim_candidacy_types_on_decidim_organization_id"
+  end
+
+  create_table "decidim_signature_collection_candidacies_votes", force: :cascade do |t|
+    t.bigint "decidim_signature_collection_candidacy_id", null: false
+    t.bigint "decidim_author_id", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.text "encrypted_metadata"
+    t.string "timestamp"
+    t.string "hash_id"
+    t.integer "decidim_scope_id"
+    t.index ["decidim_author_id"], name: "idx_signaturecollect_candidacies_votes_on_author_id"
+    t.index ["decidim_signature_collection_candidacy_id"], name: "idx_signaturecollect_candidacies_votes_on_candidacy_id"
+    t.index ["hash_id"], name: "idx_signaturecollect_candidacies_votes_on_hash_id"
+  end
+
   create_table "decidim_sortitions_sortitions", force: :cascade do |t|
     t.bigint "decidim_component_id"
     t.integer "decidim_proposals_component_id"
@@ -1932,7 +1931,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_09_072712) do
   add_foreign_key "decidim_editor_images", "decidim_organizations"
   add_foreign_key "decidim_editor_images", "decidim_users", column: "decidim_author_id"
   add_foreign_key "decidim_identities", "decidim_organizations"
-  add_foreign_key "decidim_initiatives_settings", "decidim_organizations"
   add_foreign_key "decidim_newsletters", "decidim_users", column: "author_id"
   add_foreign_key "decidim_participatory_process_steps", "decidim_participatory_processes"
   add_foreign_key "decidim_participatory_process_types", "decidim_organizations"
@@ -1948,6 +1946,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_09_072712) do
   add_foreign_key "decidim_scopes", "decidim_organizations"
   add_foreign_key "decidim_scopes", "decidim_scope_types", column: "scope_type_id"
   add_foreign_key "decidim_scopes", "decidim_scopes", column: "parent_id"
+  add_foreign_key "decidim_signature_collection_candidacies_settings", "decidim_organizations"
+  add_foreign_key "decidim_signature_collection_candidacies_type_scopes", "decidim_taxonomies"
   add_foreign_key "decidim_static_pages", "decidim_organizations"
   add_foreign_key "decidim_taxonomy_filter_items", "decidim_taxonomies", column: "taxonomy_item_id"
   add_foreign_key "decidim_taxonomy_filters", "decidim_taxonomies", column: "root_taxonomy_id"

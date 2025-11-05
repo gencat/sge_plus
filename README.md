@@ -12,7 +12,7 @@ nvm use 18.17.1
 npm install
 bin/rails db:create db:schema:load
 bin/rails db:seed
-bin/rails s
+bin/dev
 ```
 ## Testing
 
@@ -20,7 +20,7 @@ Run `bin/rake decidim:generate_external_test_app` to generate a dummy applicatio
 
 Require missing factories in `spec/factories.rb`
 
-Add `require "rails_helper"` to your specs and execute them from the root directory, i.e.:
+Add `require "spec_helper"` to your specs and execute them from the root directory, i.e.:
 
 ```bash
 bundle exec rspec --backtrace

@@ -1,0 +1,8 @@
+<% if candidacy.has_signature_interval_defined? %>
+  <div class="candidacies__card__grid-metadata-dates">
+    <div class="flex items-center text-center justify-center">
+      <%= icon "calendar-line", class: "fill-gray mr-1" %>
+      <%= format_date_range(candidacy.signature_start_date, candidacy.signature_end_date) %>
+    </div>
+  </div>
+<% end %>

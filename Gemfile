@@ -4,17 +4,19 @@ source "https://rubygems.org"
 
 ruby RUBY_VERSION
 
-gem "decidim", "0.30.1"
-# gem "decidim-ai", "0.30.1"
-# gem "decidim-conferences", "0.30.1"
-# gem "decidim-design", "0.30.1"
-gem "decidim-initiatives", path: "decidim-initiatives"
-# gem "decidim-templates", "0.30.1"
+DECIDIM_VERSION= "0.30.3"
+
+gem "decidim", DECIDIM_VERSION
+gem "decidim-core", DECIDIM_VERSION
+# gem "decidim-ai", DECIDIM_VERSION
+# gem "decidim-conferences", DECIDIM_VERSION
+# gem "decidim-design", DECIDIM_VERSION
+gem "decidim-signature_collection", path: "./decidim-signature_collection"
+# gem "decidim-templates", DECIDIM_VERSION
 
 gem "decidim-cdtb", "~> 0.5.5"
 
-gem "bootsnap", "~> 1.3"
-
+gem "bootsnap", "~> 1.7"
 gem "puma", ">= 6.3.1"
 
 # https://github.com/hlascelles/figjam
@@ -24,7 +26,7 @@ group :development, :test do
   gem "byebug", "~> 11.0", platform: :mri
 
   gem "brakeman", "~> 7.0"
-  gem "decidim-dev", "0.30.1"
+  gem "decidim-dev", DECIDIM_VERSION
   gem "net-imap", "~> 0.5.0"
   gem "net-pop", "~> 0.1.1"
 end

@@ -1,0 +1,47 @@
+<% add_decidim_page_title(t("new", scope: "decidim.signature_collection.create_candidacy.select_candidacy_type")) %>
+<% default_type = available_candidacy_types.first %>
+<% announcement_body = capture do %>
+  <%= t("select_candidacy_type_help", scope: "decidim.signature_collection.create_candidacy.select_candidacy_type") %>
+  <%= link_to t("more_information", scope: "decidim.signature_collection.create_candidacy.select_candidacy_type"), decidim.page_path("candidacies"), target: "_blank", class: "button button__sm button__text-secondary block text-left" %>
+<% end %>
+
+<%= cell("decidim/announcement", { body: announcement_body }, callout_class: "secondary") %>
+
+<div class="candidacies__selection">
+  <% candidacy_types_each do |type| %>
+    <% if allowed_to?(:create, :candidacy, { candidacy_type: type }) %>
+      <%= decidim_form_for(@form, url: select_candidacy_type_create_candidacy_index_path, method: :put, html: { id: "new_candidacy_#{type.id}", class: "form-defaults " }) do |f| %>
+        <%= f.hidden_field :type_id, value: type.id, id: "candidacy_type_id_#{type.id}" %>
+        <button class="card__highlight w-full">
+          <%= icon "lightbulb-flash-line", class: "verification__icon " %>
+          <div class="candidacies__selection__text">
+            <h2 class="h5 text-secondary"><%= translated_attribute(type.title) %></h2>
+            <span><%= decidim_sanitize_admin(translated_attribute(type.description)) %></span>
+          </div>
+          <%= icon "arrow-right-s-line", class: "fill-secondary candidacies__selection__icon" %>
+        </button>
+      <% end %>
+    <% else %>
+      <div class="card__highlight card__highlight-authorized">
+        <%= icon "lightbulb-flash-line", class: "verification__icon " %>
+        <div class="candidacies__selection__text">
+          <h2 class="h5 text-secondary"><%= translated_attribute(type.title) %></h2>
+          <span><%= decidim_sanitize_admin(translated_attribute(type.description)) %></span>
+          <%= action_authorized_link_to(
+                :create,
+                fill_data_create_candidacy_index_path(candidacy: { type_id: type.id }),
+                authorizations_modal_path: authorization_create_modal_candidacy_path(type),
+                permissions_holder: type,
+                class: "button button__sm button__secondary",
+                "data-dialog-open": "not-authorized-modal",
+                onclick: "event.preventDefault();"
+              ) do %>
+              <%= t("verification_required", scope: "decidim.signature_collection.create_candidacy.select_candidacy_type") %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+
+<%= render partial: "decidim/signature_collection/modal" %>
