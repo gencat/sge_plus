@@ -457,7 +457,6 @@ if Decidim.module_installed? :signature_collection
       config.creation_enabled = Rails.application.secrets.dig(:decidim, :signature_collection, :creation_enabled).present?
     end
     config.minimum_committee_members = Rails.application.secrets.dig(:decidim, :signature_collection, :minimum_committee_members).presence || 0
-    config.default_signature_time_period_length = Rails.application.secrets.dig(:decidim, :signature_collection, :default_signature_time_period_length).presence || 120
     config.default_components = Rails.application.secrets.dig(:decidim, :signature_collection, :default_components)
     config.first_notification_percentage = Rails.application.secrets.dig(:decidim, :signature_collection, :first_notification_percentage).presence || 33
     config.second_notification_percentage = Rails.application.secrets.dig(:decidim, :signature_collection, :second_notification_percentage).presence || 66
@@ -476,7 +475,6 @@ if Decidim.module_installed? :signature_collection
       config.creation_enabled = Rails.application.secrets.dig(:decidim, :candidacies, :creation_enabled).present?
     end
     config.minimum_committee_members = Rails.application.secrets.dig(:decidim, :candidacies, :minimum_committee_members).presence || 0
-    config.default_signature_time_period_length = Rails.application.secrets.dig(:decidim, :candidacies, :default_signature_time_period_length).presence || 120
     config.default_components = Rails.application.secrets.dig(:decidim, :candidacies, :default_components)
     config.first_notification_percentage = Rails.application.secrets.dig(:decidim, :candidacies, :first_notification_percentage).presence || 33
     config.second_notification_percentage = Rails.application.secrets.dig(:decidim, :candidacies, :second_notification_percentage).presence || 66

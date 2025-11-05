@@ -30,12 +30,6 @@ module Decidim
       0
     end
 
-    # Number of days available to collect supports after an candidacy has been
-    # published.
-    config_accessor :default_signature_time_period_length do
-      120
-    end
-
     # Components enabled for a new candidacy
     config_accessor :default_components do
       [:pages, :meetings, :blogs]
