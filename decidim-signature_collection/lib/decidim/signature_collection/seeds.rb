@@ -28,10 +28,6 @@ module Decidim
           Decidim::Comments::Seed.comments_for(candidacy)
 
           create_attachment(attached_to: candidacy, filename: "city.jpeg")
-
-          Decidim::SignatureCollection.default_components.each do |component_name|
-            create_component!(candidacy:, component_name:)
-          end
         end
       end
 

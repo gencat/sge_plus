@@ -5,7 +5,7 @@ module Decidim
     module Admin
       module CandidaciesHelper
         def export_dropdown(collection_ids = nil)
-          render partial: "decidim/signatures_collection/candidacies/admin/exports/dropdown", locals: { collection_ids: }
+          render partial: "decidim/signature_collection/admin/exports/dropdown", locals: { collection_ids: }
         end
 
         def export_dropdowns(query)

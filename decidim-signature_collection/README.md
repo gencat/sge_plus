@@ -62,12 +62,6 @@ For example, you can also change the minimum number of required committee member
 Decidim::SignatureCollection::Candicacy.minimum_committee_members = 1
 ```
 
-Or change the number of days given to gather signatures to 365 (default is 120) with:
-
-```ruby
-Decidim::SignatureCollection::Candicacy.default_signature_time_period_length = 365
-```
-
 ## Rake tasks
 
 This engine comes with three rake tasks that should be executed on daily basis. The best
