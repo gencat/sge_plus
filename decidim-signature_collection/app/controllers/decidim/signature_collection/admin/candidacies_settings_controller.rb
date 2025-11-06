@@ -6,7 +6,7 @@ module Decidim
       # Controller used to manage the candidacies settings for the current
       # organization.
       class CandidaciesSettingsController < Decidim::SignatureCollection::Admin::ApplicationController
-        layout "decidim/admin/signature_collection/candidacies"
+        layout "decidim/admin/candidacies"
 
         add_breadcrumb_item_from_menu :admin_candidacies_menu
 

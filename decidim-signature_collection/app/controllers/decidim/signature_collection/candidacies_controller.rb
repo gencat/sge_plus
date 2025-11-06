@@ -56,7 +56,7 @@ module Decidim
         enforce_permission_to :read, :candidacy, candidacy: current_candidacy
 
         if current_candidacy.type.published?
-          render layout: "decidim/signature_collection/candidacy_head"
+          render layout: "decidim/candidacy_head"
         else
           flash[:alert] = I18n.t("decidim.signature_collection.show.type_not_published")
           redirect_to candidacies_path

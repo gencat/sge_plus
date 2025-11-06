@@ -74,7 +74,7 @@ module Decidim
           create_attachments if process_attachments?
           create_gallery if process_gallery?
 
-          create_components_for(candidacy)
+          # create_components_for(candidacy)
           send_notification(candidacy)
           add_author_as_follower(candidacy)
           add_author_as_committee_member(candidacy)

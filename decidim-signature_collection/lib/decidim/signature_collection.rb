@@ -17,12 +17,6 @@ module Decidim
 
     include ActiveSupport::Configurable
 
-    # Public setting that defines whether creation is allowed to any validated
-    # user or not. Defaults to true.
-    config_accessor :creation_enabled do
-      true
-    end
-
     # Minimum number of committee members required to pass the candidacy to
     # technical validation phase. Only applies to candidacies created by
     # individuals.
