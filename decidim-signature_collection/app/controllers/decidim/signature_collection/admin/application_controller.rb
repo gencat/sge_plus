@@ -7,7 +7,7 @@ module Decidim
       class ApplicationController < Decidim::Admin::ApplicationController
         helper Decidim::SignatureCollection::ScopesHelper
 
-        layout "decidim/admin/signature_collection/candidacies"
+        layout "decidim/admin/candidacies"
 
         register_permissions(::Decidim::SignatureCollection::Admin::ApplicationController,
                              ::Decidim::SignatureCollection::Permissions,

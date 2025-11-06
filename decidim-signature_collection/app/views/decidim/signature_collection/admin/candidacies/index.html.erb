@@ -62,7 +62,7 @@
               <% end %>
 
               <% if allowed_to?(:answer, :candidacy, candidacy: candidacy) %>
-                <%= icon_link_to "chat-1-line", edit_candidacy_answer_path(candidacy.slug), t("actions.answer", scope: "decidim.candidacies"), class: "action-icon action-icon--answer" %>
+                <%= icon_link_to "chat-1-line", edit_candidacy_answer_path(candidacy.slug), t("actions.answer", scope: "decidim.signature_collection"), class: "action-icon action-icon--answer" %>
               <% else %>
                 <%= icon "chat-1-line", scope: "decidim.admin", class: "action-icon action-icon--disabled", role: "img", "aria-hidden": true %>
               <% end %>

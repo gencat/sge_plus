@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_10_23_072712) do
+ActiveRecord::Schema[7.0].define(version: 2025_11_03_144808) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "ltree"
   enable_extension "pg_trgm"
@@ -1543,13 +1543,13 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_23_072712) do
     t.datetime "updated_at", precision: nil, null: false
     t.string "banner_image"
     t.boolean "collect_user_extra_fields", default: false
-    t.boolean "online_signature_enabled", default: true, null: false
     t.jsonb "extra_fields_legal_information"
     t.integer "minimum_committee_members"
     t.boolean "validate_sms_code_on_votes", default: false
     t.string "document_number_authorization_handler"
     t.boolean "undo_online_signatures_enabled", default: true, null: false
     t.boolean "promoting_committee_enabled", default: true, null: false
+    t.integer "signature_type", default: 0, null: false
     t.boolean "child_scope_threshold_enabled", default: false, null: false
     t.boolean "only_global_scope_enabled", default: false, null: false
     t.boolean "custom_signature_end_date_enabled", default: false, null: false

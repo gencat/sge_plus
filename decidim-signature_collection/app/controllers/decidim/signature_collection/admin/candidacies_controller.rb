@@ -37,7 +37,7 @@ module Decidim
                   )
           @form.attachment = form_attachment_model
 
-          render layout: "decidim/admin/signature_collection/candidacy"
+          render layout: "decidim/admin/candidacy"
         end
 
         # PUT /admin/candidacies/:id

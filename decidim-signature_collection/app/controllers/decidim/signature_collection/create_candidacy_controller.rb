@@ -4,7 +4,7 @@ module Decidim
   module SignatureCollection
     # Controller in charge of managing the create candidacy wizard.
     class CreateCandidacyController < Decidim::SignatureCollection::ApplicationController
-      layout "layouts/decidim/signature_collection/candidacy_creation"
+      layout "layouts/decidim/candidacy_creation"
 
       include Decidim::FormFactory
       include CandidacyHelper
