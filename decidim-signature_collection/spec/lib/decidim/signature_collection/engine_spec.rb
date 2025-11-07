@@ -6,7 +6,7 @@ describe Decidim::SignatureCollection::Engine do
   it_behaves_like "clean engine"
 
   it "loads engine mailer previews" do
-    expect(ActionMailer::Preview.all).to include(Decidim::SignatureCollection::CandidaciesMailerPreview)
+    expect(ActionMailer::Preview.all).to include(Decidim::Candidacies::CandidaciesMailerPreview)
   end
 
   describe "decidim_signature_collection.authorization_transfer" do

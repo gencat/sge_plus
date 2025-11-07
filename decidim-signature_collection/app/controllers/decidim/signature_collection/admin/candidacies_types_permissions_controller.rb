@@ -11,7 +11,7 @@ module Decidim
         before_action :set_controller_breadcrumb
         add_breadcrumb_item_from_menu :admin_candidacies_menu
 
-        layout "decidim/admin/signature_collection/candidacies"
+        layout "decidim/admin/candidacies"
 
         register_permissions(::Decidim::SignatureCollection::Admin::CandidaciesTypesPermissionsController,
                              ::Decidim::SignatureCollection::Permissions,

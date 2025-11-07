@@ -18,7 +18,6 @@ module Decidim
 
         return permission_action unless user
 
-        create_candidacy?
         edit_public_candidacy?
         update_public_candidacy?
         print_candidacy?
@@ -66,13 +65,6 @@ module Decidim
         return false unless [:candidacy_type, :candidacy_type_scope, :candidacy_type_signature_types].include?(permission_action.subject)
 
         allow!
-      end
-
-      def create_candidacy?
-        return false unless permission_action.subject == :candidacy &&
-                            permission_action.action == :create
-
-        toggle_allow(creation_enabled?)
       end
 
       def edit_public_candidacy?

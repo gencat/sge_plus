@@ -6,12 +6,12 @@ Decidim.register_participatory_space(:candidacies) do |participatory_space|
 
   participatory_space.context(:public) do |context|
     context.engine = Decidim::SignatureCollection::Engine
-    context.layout = "layouts/decidim/signature_collection/candidacy"
+    context.layout = "layouts/decidim/candidacy"
   end
 
   participatory_space.context(:admin) do |context|
     context.engine = Decidim::SignatureCollection::AdminEngine
-    context.layout = "layouts/decidim/admin/signature_collection/candidacy"
+    context.layout = "layouts/decidim/admin/candidacy"
   end
 
   participatory_space.participatory_spaces do |organization|
@@ -20,7 +20,7 @@ Decidim.register_participatory_space(:candidacies) do |participatory_space|
 
   participatory_space.query_type = "Decidim::SignatureCollection::CandidacyType"
 
-  participatory_space.breadcrumb_cell = "decidim/signature_collection/candidacy_dropdown_metadata"
+  participatory_space.breadcrumb_cell = "decidim/candidacy_dropdown_metadata"
 
   participatory_space.register_resource(:candidacy) do |resource|
     resource.actions = %w(comment)
