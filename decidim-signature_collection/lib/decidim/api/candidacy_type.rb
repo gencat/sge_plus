@@ -24,7 +24,6 @@ module Decidim
             null: true, method: :online_votes_count
       field :committee_members, [Decidim::SignatureCollection::CandidacyCommitteeMemberType, { null: true }], "The committee members list", null: true
       field :description, Decidim::Core::TranslatedFieldType, "The description of this candidacy.", null: true
-      field :hashtag, GraphQL::Types::String, "The hashtag for this candidacy", null: true
       field :offline_votes, GraphQL::Types::Int, "The number of offline votes in this candidacy", method: :offline_votes_count, null: true
       field :online_votes, GraphQL::Types::Int, "The number of online votes in this candidacy", method: :online_votes_count, null: true
       field :published_at, Decidim::Core::DateTimeType, "The time this candidacy was published", null: false

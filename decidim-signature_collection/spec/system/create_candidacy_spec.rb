@@ -635,11 +635,6 @@ describe "Candidacy" do
             expect(find(:xpath, "//select[@id='candidacy_signature_type']", visible: :all).value).to eq(candidacy_type.signature_type)
           end
 
-          it "shows input for hashtag" do
-            expect(page).to have_content("Hashtag")
-            expect(find(:xpath, "//input[@id='candidacy_hashtag']", visible: :all).value).to eq("")
-          end
-
           context "when only one signature collection and scope are available" do
             let(:candidacy_type_scope2) { nil }
             let(:candidacy_type) { create(:candidacies_type, organization:, minimum_committee_members: candidacy_type_minimum_committee_members, signature_type: "offline") }

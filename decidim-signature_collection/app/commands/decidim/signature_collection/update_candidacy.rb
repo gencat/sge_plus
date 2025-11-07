@@ -77,7 +77,6 @@ module Decidim
         attrs = {
           title: { current_locale => form.title },
           description: { current_locale => form.description },
-          hashtag: form.hashtag,
           decidim_user_group_id: form.decidim_user_group_id
         }
 

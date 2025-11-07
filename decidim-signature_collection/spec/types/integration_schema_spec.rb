@@ -27,7 +27,6 @@ describe "Decidim::Api::QueryType" do
       "components" => [],
       "createdAt" => candidacy.created_at.to_time.iso8601,
       "description" => { "translation" => candidacy.description[locale] },
-      "hashtag" => candidacy.hashtag,
       "id" => candidacy.id.to_s,
       "offlineVotes" => candidacy.offline_votes_count,
       "onlineVotes" => candidacy.online_votes_count,
@@ -86,7 +85,6 @@ describe "Decidim::Api::QueryType" do
         description {
           translation(locale: "#{locale}")
         }
-        hashtag
         id
         candidacyType {
           bannerImage
@@ -189,7 +187,6 @@ describe "Decidim::Api::QueryType" do
         description {
           translation(locale: "en")
         }
-        hashtag
         id
         candidacyType {
           bannerImage

@@ -19,8 +19,6 @@
 
 <%= text_editor_for(form, :description, toolbar: :content, lines: 8, disabled: !allowed_to?(:update, :candidacy, candidacy: current_candidacy), value: translated_attribute(@form.description)) %>
 
-<%#= form.text_field :hashtag, disabled: !allowed_to?(:update, :candidacy, candidacy: current_candidacy) %>
-
 <% if @form.state_updatable? %>
   <%= form.select :state, Decidim::SignatureCollection::Candidacy.states.keys.map { |state| [I18n.t(state, scope: "decidim.signature_collection.admin_states"), state] }, {} %>
 <% end %>

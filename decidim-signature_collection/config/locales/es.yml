@@ -9,7 +9,6 @@ es:
         decidim_scope_id: Ámbito
         decidim_user_group_id: Autora
         description: Descripción
-        hashtag: Etiqueta (hashtag)
         offline_votes: Firmas presenciales
         offline_votes_for_scope: Firmas en persona para %{scope_name}
         scope_id: Ámbito
@@ -631,7 +630,6 @@ es:
           description: La descripción de la candidatura
           first_progress_notification_at: La fecha en la que se envió la primera notificación de progreso
           follows_count: El número de usuarias que siguen esta candidatura
-          hashtag: La etiqueta que utiliza la candidatura en Twitter/X
           offline_votes: El número de firmas que esta candidatura recogió presencialmente (en papel)
           online_votes: El número de firmas digitales que recogió esta candidatura (directamente a través de la plataforma)
           published_at: La fecha en la que se publicó esta candidatura

@@ -9,7 +9,6 @@ en:
         decidim_scope_id: Scope
         decidim_user_group_id: Author
         description: Description
-        hashtag: Hashtag
         offline_votes: In-person signatures
         offline_votes_for_scope: In-person signatures for %{scope_name}
         scope_id: Scope
@@ -631,7 +630,6 @@ en:
           description: The description of the candidacy
           first_progress_notification_at: The date when the first progress notification was sent
           follows_count: The number of users following this space
-          hashtag: The candidacy hashtag, used for Twitter/X
           offline_votes: The number of signatures that this inititative received outside of this platform
           online_votes: The number of signatures that this candidacy received online (directly through the platform)
           published_at: The date this space was published
