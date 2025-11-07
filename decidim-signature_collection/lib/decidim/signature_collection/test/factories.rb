@@ -22,8 +22,8 @@ FactoryBot.define do
     only_global_scope_enabled { false }
     comments_enabled { true }
 
-    signature_period_start { DateTime.now }
-    signature_period_end { DateTime.now + 1.month }
+    signature_period_start { Time.zone.now }
+    signature_period_end { 1.month.from_now }
 
     trait :with_comments_disabled do
       comments_enabled { false }

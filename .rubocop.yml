@@ -5,6 +5,7 @@ AllCops:
   Exclude:
     - 'db/schema.rb'
     - 'db/migrate/**/*.rb'
+    -  decidim-signature_collection/spec/decidim_dummy_app/**/*
 
 Layout/SpaceAroundOperators:
   Enabled: false

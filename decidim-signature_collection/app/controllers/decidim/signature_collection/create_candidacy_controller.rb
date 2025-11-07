@@ -87,8 +87,8 @@ module Decidim
       def ensure_user_can_create_candidacy
         @current_candidacies_settings ||= Decidim::SignatureCollection::CandidaciesSettings.find_or_create_by!(organization: current_organization)
 
-        @current_candidacies_settings.creation_enabled? && (
-          Decidim::UserGroups::ManageableUserGroups.for(current_user).verified.any?)
+        @current_candidacies_settings.creation_enabled? &&
+          Decidim::UserGroups::ManageableUserGroups.for(current_user).verified.any?
       end
 
       def candidacy_type_id
