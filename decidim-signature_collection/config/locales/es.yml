@@ -42,7 +42,9 @@ es:
         online_signature_enabled: Firma digital habilitada
         only_global_scope_enabled: Permitir sólo la creación de candidaturas de ámbito global
         promoting_committee_enabled: Habilitar el comité promotor
+        signature_period_start: Inicio del periodo de firmas
         signature_period_start_less_than: El inicio del periodo de firmas debe ser anterior a la fecha de fin
+        signature_period_end: Fin del periodo de firmas
         signature_period_end_greater_than: El fin del periodo de firmas debe ser posterior a la fecha de inicio
         signature_type: Tipo de firma
         title: Título

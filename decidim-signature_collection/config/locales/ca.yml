@@ -43,7 +43,9 @@ ca:
         only_global_scope_enabled: Permetre només la creació d'candidatures d'àmbit global
         promoting_committee_enabled: Habilita el comitè promotor
         signature_period_start_less_than: L'inici del període de signatures ha de ser anterior a la data de finalització
+        signature_period_start: Inici del període de signatures
         signature_period_end_greater_than: La fi del període de signatures ha de ser posterior a la data d'inici
+        signature_period_end: Fi del període de signatures
         signature_type: Tipus de signatura
         title: Títol
         undo_online_signatures_enabled: Permetre a les participants desfer les seves signatures digitals
