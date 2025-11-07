@@ -135,7 +135,7 @@ module Decidim
       scope :authored_by, lambda { |author|
         co_authoring_candidacy_ids = Decidim::SignatureCollection::CandidaciesCommitteeMember.where(
           decidim_users_id: author
-        ).pluck(:decidim_signature_collection_candidacies_id)
+        ).pluck(:decidim_signature_collection_candidacy_id)
 
         where(
           decidim_author_id: author,

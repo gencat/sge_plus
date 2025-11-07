@@ -4,19 +4,6 @@ module Decidim
   module SignatureCollection
     # Helper functions for candidacies views
     module CandidaciesHelper
-      # Items to display in the navigation of an candidacy
-      def candidacy_nav_items(participatory_space)
-        components = participatory_space.components.published.or(Decidim::Component.where(id: try(:current_component)))
-
-        components.map do |component|
-          {
-            name: decidim_escape_translated(component.name),
-            url: main_component_path(component),
-            active: is_active_link?(main_component_path(component), :inclusive)
-          }
-        end
-      end
-
       private
 
       # i18n-tasks-use t('decidim.signature_collection.candidacies.filters.state')
