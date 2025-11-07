@@ -68,14 +68,12 @@ describe "Edit candidacy" do
       expect(candidacy.reload.attachments.count).to eq(0)
 
       dynamically_attach_file(:candidacy_documents, Decidim::Dev.asset("Exampledocument.pdf"))
-      dynamically_attach_file(:candidacy_photos, Decidim::Dev.asset("avatar.jpg"))
 
       within "form.edit_candidacy" do
         click_on "Update"
       end
 
       expect(candidacy.reload.documents.count).to eq(1)
-      expect(candidacy.photos.count).to eq(1)
       expect(candidacy.attachments.count).to eq(2)
     end
 

@@ -157,7 +157,6 @@ describe Decidim::SignatureCollection::CandidaciesController do
           create(
             :candidacy,
             :created,
-            :with_photos,
             :with_documents,
             organization:
           )
@@ -167,7 +166,6 @@ describe Decidim::SignatureCollection::CandidaciesController do
           let(:invalid_attributes) do
             valid_attributes.merge(
               title: nil,
-              photos: created_candidacy.photos.map { |a| a.id.to_s },
               documents: created_candidacy.documents.map { |a| a.id.to_s }
             )
           end

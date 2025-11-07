@@ -278,7 +278,6 @@ en:
             documents: Documents
             edit: Edit
             new: New
-            photos: Photos
           publish:
             success: The candidacy has been successfully published.
           reject:

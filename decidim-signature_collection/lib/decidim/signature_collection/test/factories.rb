@@ -225,23 +225,6 @@ FactoryBot.define do
         end
       end
     end
-
-    trait :with_photos do
-      transient do
-        photos_number { 2 }
-      end
-
-      after :create do |candidacy, evaluator|
-        evaluator.photos_number.times do
-          candidacy.attachments << create(
-            :attachment,
-            :with_image,
-            attached_to: candidacy,
-            skip_injection: evaluator.skip_injection
-          )
-        end
-      end
-    end
   end
 
   factory :candidacy_user_vote, class: "Decidim::SignatureCollection::CandidaciesVote" do

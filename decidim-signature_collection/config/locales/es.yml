@@ -278,7 +278,6 @@ es:
             documents: Documentos
             edit: Editar
             new: Nueva
-            photos: Fotos
           publish:
             success: La candidatura se ha publicado correctamente.
           reject:

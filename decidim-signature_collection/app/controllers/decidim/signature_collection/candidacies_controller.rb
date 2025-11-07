@@ -176,14 +176,6 @@ module Decidim
       def items
         @items ||= [
           {
-            enabled: @current_candidacy.photos.present?,
-            id: "images",
-            text: t("decidim.application.photos.photos"),
-            icon: resource_type_icon_key("images"),
-            method: :cell,
-            args: ["decidim/images_panel", @current_candidacy]
-          },
-          {
             enabled: @current_candidacy.documents.present?,
             id: "documents",
             text: t("decidim.application.documents.documents"),

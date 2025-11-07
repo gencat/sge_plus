@@ -20,7 +20,6 @@ module Decidim
       attribute :attachment, AttachmentForm
       attribute :scope_id, Integer
 
-      attachments_attribute :photos
       attachments_attribute :documents
 
       validates :title, :description, presence: true

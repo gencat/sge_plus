@@ -50,13 +50,6 @@
                        button_class: "button button__lg button__transparent-secondary w-full",
                        button_edit_label: t("decidim.signature_collection.form.edit_attachments"),
                        help_text: t("attachment_legend", scope: "decidim.signature_collection.form") %>
-      <%= f.attachment :photos,
-                       multiple: true,
-                       label: t("decidim.signature_collection.form.add_image"),
-                       button_label: t("decidim.signature_collection.form.add_image"),
-                       button_class: "button button__lg button__transparent-secondary w-full",
-                       button_edit_label: t("decidim.signature_collection.form.edit_image"),
-                       help_text: t("image_legend", scope: "decidim.signature_collection.form") %>
     <% end %>
 
     <% if @form.state_updatable? %>

@@ -278,7 +278,6 @@ ca:
             documents: Documents
             edit: Edita
             new: Nou
-            photos: Fotografies
           publish:
             success: La candidatura s'ha publicat correctament.
           reject:

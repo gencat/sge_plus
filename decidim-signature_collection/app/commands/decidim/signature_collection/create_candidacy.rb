@@ -8,7 +8,6 @@ module Decidim
     class CreateCandidacy < Decidim::Command
       include CurrentLocale
       include ::Decidim::MultipleAttachmentsMethods
-      include ::Decidim::GalleryMethods
 
       delegate :current_user, to: :form
       # Public: Initializes the command.
@@ -30,11 +29,6 @@ module Decidim
         if process_attachments?
           build_attachments
           return broadcast(:invalid) if attachments_invalid?
-        end
-
-        if process_gallery?
-          build_gallery
-          return broadcast(:invalid) if gallery_invalid?
         end
 
         candidacy = create_candidacy
@@ -72,7 +66,6 @@ module Decidim
 
           @attached_to = candidacy
           create_attachments if process_attachments?
-          create_gallery if process_gallery?
 
           # create_components_for(candidacy)
           send_notification(candidacy)
