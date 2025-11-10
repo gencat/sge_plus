@@ -11,7 +11,7 @@ module Decidim
         add_breadcrumb_item_from_menu :admin_candidacy_actions_menu
 
         helper Decidim::SignatureCollection::CandidacyHelper
-        layout "decidim/admin/signature_collection/candidacies"
+        layout "decidim/admin/candidacies"
 
         # GET /admin/candidacies/:id/answer/edit
         def edit

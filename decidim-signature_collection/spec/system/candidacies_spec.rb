@@ -123,7 +123,7 @@ describe "Candidacies" do
       end
 
       context "when requesting the candidacies path and candidacies have attachments but the file is not present" do
-        let!(:base_candidacy) { create(:candidacy, :with_photos, organization:) }
+        let!(:base_candidacy) { create(:candidacy, :with_documents, organization:) }
 
         before do
           candidacy.attachments.each do |attachment|

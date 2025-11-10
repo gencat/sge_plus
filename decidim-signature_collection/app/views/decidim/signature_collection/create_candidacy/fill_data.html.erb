@@ -17,8 +17,6 @@
 
     <%= text_editor_for(f, :description, lines: 8, toolbar: :content, value: translated_attribute(f.object.description)) %>
 
-    <%= f.text_field :hashtag %>
-
     <% signature_type_options = signature_type_options(f.object) %>
     <% if signature_type_options.length == 1 %>
       <%= f.hidden_field :signature_type, value: signature_type_options.first.last %>
@@ -52,13 +50,6 @@
                        button_class: "button button__lg button__transparent-secondary w-full",
                        button_edit_label: t("decidim.signature_collection.form.edit_attachments"),
                        help_text: t("attachment_legend", scope: "decidim.signature_collection.form") %>
-      <%= f.attachment :photos,
-                       multiple: true,
-                       label: t("decidim.signature_collection.form.add_image"),
-                       button_label: t("decidim.signature_collection.form.add_image"),
-                       button_class: "button button__lg button__transparent-secondary w-full",
-                       button_edit_label: t("decidim.signature_collection.form.edit_image"),
-                       help_text: t("image_legend", scope: "decidim.signature_collection.form") %>
     <% end %>
 
     <% if @form.state_updatable? %>

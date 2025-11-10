@@ -26,7 +26,6 @@ shared_examples "update an candidacy" do
       signature_type: "any",
       type_id: candidacy.type.id,
       decidim_scope_id: candidacy.scope.id,
-      hashtag: "update_candidacy_example",
       offline_votes: { candidacy.scope.id.to_s => 1 },
       attachment: attachment_params
     }
@@ -64,7 +63,6 @@ shared_examples "update an candidacy" do
         expect(candidacy.title["en"]).to eq(form_params[:title][:en])
         expect(candidacy.description["en"]).to eq(form_params[:description][:en])
         expect(candidacy.type.id).to eq(form_params[:type_id])
-        expect(candidacy.hashtag).to eq(form_params[:hashtag])
       end
 
       context "when attachment is present" do

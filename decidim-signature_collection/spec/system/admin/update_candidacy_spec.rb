@@ -23,14 +23,6 @@ describe "User prints the candidacy" do
         visit decidim_admin_candidacies.candidacies_path
       end
 
-      it "Updates published candidacy data" do
-        page.find(".action-icon--edit").click
-        within ".edit_candidacy" do
-          fill_in :candidacy_hashtag, with: "#hashtag"
-        end
-        submit_and_validate
-      end
-
       it "updates the candidacy" do
         page.find(".action-icon--edit").click
 

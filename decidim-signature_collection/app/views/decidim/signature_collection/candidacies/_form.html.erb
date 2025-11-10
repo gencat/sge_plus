@@ -19,8 +19,6 @@
 
 <%= text_editor_for(form, :description, toolbar: :content, lines: 8, disabled: !allowed_to?(:update, :candidacy, candidacy: current_candidacy), value: translated_attribute(@form.description)) %>
 
-<%= form.text_field :hashtag, disabled: !allowed_to?(:update, :candidacy, candidacy: current_candidacy) %>
-
 <% if @form.state_updatable? %>
   <%= form.select :state, Decidim::SignatureCollection::Candidacy.states.keys.map { |state| [I18n.t(state, scope: "decidim.signature_collection.admin_states"), state] }, {} %>
 <% end %>
@@ -52,14 +50,6 @@
                       button_class: "button button__lg button__transparent-secondary w-full",
                       button_edit_label: t("decidim.signature_collection.form.edit_attachments"),
                       help_text: t("decidim.signature_collection.form.attachment_legend") %>
-
-  <%= form.attachment :photos,
-                      multiple: true,
-                      label: t("decidim.signature_collection.form.add_image"),
-                      button_label: t("decidim.signature_collection.form.add_image"),
-                      button_class: "button button__lg button__transparent-secondary w-full",
-                      button_edit_label: t("decidim.signature_collection.form.edit_image"),
-                      help_text: t("decidim.signature_collection.form.image_legend") %>
 <% end %>
 
 <% if current_candidacy.type.promoting_committee_enabled? %>

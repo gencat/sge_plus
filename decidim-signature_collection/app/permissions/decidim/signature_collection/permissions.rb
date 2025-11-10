@@ -18,7 +18,6 @@ module Decidim
 
         return permission_action unless user
 
-        create_candidacy?
         edit_public_candidacy?
         update_public_candidacy?
         print_candidacy?
@@ -68,13 +67,6 @@ module Decidim
         allow!
       end
 
-      def create_candidacy?
-        return false unless permission_action.subject == :candidacy &&
-                            permission_action.action == :create
-
-        toggle_allow(creation_enabled?)
-      end
-
       def edit_public_candidacy?
         return false unless permission_action.subject == :candidacy &&
                             permission_action.action == :edit
@@ -87,14 +79,6 @@ module Decidim
                             permission_action.action == :update
 
         toggle_allow(candidacy&.created? && authorship_or_admin?)
-      end
-
-      def creation_enabled?
-        Decidim::SignatureCollection.creation_enabled && (
-        Decidim::SignatureCollection.do_not_require_authorization ||
-          UserAuthorizations.for(user).any? ||
-          Decidim::UserGroups::ManageableUserGroups.for(user).verified.any?) &&
-          authorized?(:create, permissions_holder: candidacy_type)
       end
 
       def request_membership?
@@ -155,8 +139,7 @@ module Decidim
 
         can_unvote = candidacy.accepts_online_unvotes? &&
                      candidacy.organization&.id == user.organization&.id &&
-                     candidacy.votes.where(author: user).any? &&
-                     authorized?(:vote, resource: candidacy, permissions_holder: candidacy.type)
+                     candidacy.votes.where(author: user).any?
 
         toggle_allow(can_unvote)
       end
@@ -185,8 +168,7 @@ module Decidim
       def can_vote?
         candidacy.votes_enabled? &&
           candidacy.organization&.id == user.organization&.id &&
-          candidacy.votes.where(author: user).empty? &&
-          authorized?(:vote, resource: candidacy, permissions_holder: candidacy.type)
+          candidacy.votes.where(author: user).empty?
       end
 
       def can_user_support?(candidacy)

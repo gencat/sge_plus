@@ -45,10 +45,6 @@ edit_link(
       </section>
     <% end %>
 
-    <section class="layout-aside__section">
-      <%= cell("decidim/nav_links", candidacy_nav_items(current_candidacy)) %>
-    </section>
-
     <% if current_candidacy.type.promoting_committee_enabled? && current_user&.admin? %>
       <div class="layout-aside__section">
         <div class="candidacy__aside__element__committee">

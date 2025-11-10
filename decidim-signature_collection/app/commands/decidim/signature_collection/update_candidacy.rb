@@ -6,7 +6,6 @@ module Decidim
     # existing candidacy.
     class UpdateCandidacy < Decidim::Command
       include ::Decidim::MultipleAttachmentsMethods
-      include ::Decidim::GalleryMethods
       include CurrentLocale
       delegate :current_user, to: :form
 
@@ -34,11 +33,6 @@ module Decidim
           return broadcast(:invalid) if attachments_invalid?
         end
 
-        if process_gallery?
-          build_gallery
-          return broadcast(:invalid) if gallery_invalid?
-        end
-
         with_events(with_transaction: true) do
           @candidacy = Decidim.traceability.update!(
             candidacy,
@@ -49,7 +43,6 @@ module Decidim
           photo_cleanup!
           document_cleanup!
           create_attachments if process_attachments?
-          create_gallery if process_gallery?
         end
 
         broadcast(:ok, candidacy)
@@ -77,7 +70,6 @@ module Decidim
         attrs = {
           title: { current_locale => form.title },
           description: { current_locale => form.description },
-          hashtag: form.hashtag,
           decidim_user_group_id: form.decidim_user_group_id
         }
 

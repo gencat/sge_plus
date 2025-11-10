@@ -9,7 +9,6 @@ es:
         decidim_scope_id: Ámbito
         decidim_user_group_id: Autora
         description: Descripción
-        hashtag: Etiqueta (hashtag)
         offline_votes: Firmas presenciales
         offline_votes_for_scope: Firmas en persona para %{scope_name}
         scope_id: Ámbito
@@ -43,7 +42,9 @@ es:
         online_signature_enabled: Firma digital habilitada
         only_global_scope_enabled: Permitir sólo la creación de candidaturas de ámbito global
         promoting_committee_enabled: Habilitar el comité promotor
+        signature_period_start: Inicio del periodo de firmas
         signature_period_start_less_than: El inicio del periodo de firmas debe ser anterior a la fecha de fin
+        signature_period_end: Fin del periodo de firmas
         signature_period_end_greater_than: El fin del periodo de firmas debe ser posterior a la fecha de inicio
         signature_type: Tipo de firma
         title: Título
@@ -117,7 +118,7 @@ es:
         candidacies_settings: Configuración
         candidacies_submenu:
           info: Acerca de esta candidatura
-        candidacies_types: Tipos de Iniciativa
+        candidacies_types: Tipos de candidatura
         moderations: Moderaciones
       models:
         candidacies:
@@ -137,7 +138,7 @@ es:
           fields:
             created_at: Creado en
             published: Publicado
-            title: Tipos de Iniciativa
+            title: Tipos de candidatura
           name: Tipo de candidatura
         candidacies_votes:
           fields:
@@ -161,7 +162,7 @@ es:
           candidacies: Todas las candidaturas
       titles:
         candidacies: Candidaturas
-        candidacies_types: Tipos de Iniciativa
+        candidacies_types: Tipos de candidatura
     download_your_data:
       show:
         candidacies: Exportar las candidaturas
@@ -279,7 +280,6 @@ es:
             documents: Documentos
             edit: Editar
             new: Nueva
-            photos: Fotos
           publish:
             success: La candidatura se ha publicado correctamente.
           reject:
@@ -411,7 +411,7 @@ es:
           new: Crea una nueva candidatura
           select: Quiero promover esta candidatura
           select_candidacy_type_help: Las candidaturas son un medio por el que las participantes pueden intervenir para que la organización emprenda acciones en defensa del interés general. ¿Qué candidatura quieres lanzar?
-          verification_required: Verifica tu cuenta para impulsar la candidatura
+          select_candidacy_type: Impulsa la candidatura
         share_committee_link:
           invite_to_committee_help: Enlace para invitar a personas que formarán parte del Comisión Promotora.
       edit:
@@ -631,7 +631,6 @@ es:
           description: La descripción de la candidatura
           first_progress_notification_at: La fecha en la que se envió la primera notificación de progreso
           follows_count: El número de usuarias que siguen esta candidatura
-          hashtag: La etiqueta que utiliza la candidatura en Twitter/X
           offline_votes: El número de firmas que esta candidatura recogió presencialmente (en papel)
           online_votes: El número de firmas digitales que recogió esta candidatura (directamente a través de la plataforma)
           published_at: La fecha en la que se publicó esta candidatura

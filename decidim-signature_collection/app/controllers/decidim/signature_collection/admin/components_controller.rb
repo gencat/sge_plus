@@ -6,7 +6,7 @@ module Decidim
       # Controller that allows managing the Candidacy's Components in the
       # admin panel.
       class ComponentsController < Decidim::Admin::ComponentsController
-        layout "decidim/admin/signature_collection/candidacy"
+        layout "decidim/admin/candidacy"
 
         include NeedsCandidacy
         include Decidim::Admin::ParticipatorySpaceAdminBreadcrumb

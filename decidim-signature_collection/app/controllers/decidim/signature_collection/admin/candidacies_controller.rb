@@ -56,7 +56,7 @@ module Decidim
 
             on(:invalid) do
               flash.now[:alert] = I18n.t("candidacies.update.error", scope: "decidim.signature_collection.admin")
-              render :edit, layout: "decidim/admin/signature_collection/candidacy"
+              render :edit, layout: "decidim/admin/candidacy"
             end
           end
         end

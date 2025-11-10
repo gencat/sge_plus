@@ -10,10 +10,6 @@ module Decidim
       def decidim_candidacies
         Decidim::SignatureCollection::Engine.routes.url_helpers
       end
-
-      private
-
-      def nav_items_method = :candidacy_nav_items
     end
   end
 end

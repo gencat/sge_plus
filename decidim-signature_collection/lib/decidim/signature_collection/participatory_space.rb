@@ -6,12 +6,12 @@ Decidim.register_participatory_space(:candidacies) do |participatory_space|
 
   participatory_space.context(:public) do |context|
     context.engine = Decidim::SignatureCollection::Engine
-    context.layout = "layouts/decidim/signature_collection/candidacy"
+    context.layout = "layouts/decidim/candidacy"
   end
 
   participatory_space.context(:admin) do |context|
     context.engine = Decidim::SignatureCollection::AdminEngine
-    context.layout = "layouts/decidim/admin/signature_collection/candidacy"
+    context.layout = "layouts/decidim/admin/candidacy"
   end
 
   participatory_space.participatory_spaces do |organization|

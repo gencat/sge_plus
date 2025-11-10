@@ -56,7 +56,7 @@ module Decidim
         enforce_permission_to :read, :candidacy, candidacy: current_candidacy
 
         if current_candidacy.type.published?
-          render layout: "decidim/signature_collection/candidacy_head"
+          render layout: "decidim/candidacy_head"
         else
           flash[:alert] = I18n.t("decidim.signature_collection.show.type_not_published")
           redirect_to candidacies_path
@@ -175,14 +175,6 @@ module Decidim
 
       def items
         @items ||= [
-          {
-            enabled: @current_candidacy.photos.present?,
-            id: "images",
-            text: t("decidim.application.photos.photos"),
-            icon: resource_type_icon_key("images"),
-            method: :cell,
-            args: ["decidim/images_panel", @current_candidacy]
-          },
           {
             enabled: @current_candidacy.documents.present?,
             id: "documents",

@@ -12,7 +12,7 @@ module Decidim::SignatureCollection
     let(:cell_html) { my_cell.call }
     let(:state) { :open }
     let(:organization) { create(:organization) }
-    let!(:candidacy) { create(:candidacy, organization:, hashtag: "my_hashtag", state:) }
+    let!(:candidacy) { create(:candidacy, organization:, state:) }
     let(:user) { create(:user, organization: candidacy.organization) }
 
     before do

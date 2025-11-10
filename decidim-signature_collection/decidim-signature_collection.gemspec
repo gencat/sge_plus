@@ -27,6 +27,4 @@ Gem::Specification.new do |s|
   s.add_dependency "decidim-comments", "~> #{Decidim::SignatureCollection.min_decidim_version}"
   s.add_dependency "decidim-core", "~> #{Decidim::SignatureCollection.min_decidim_version}"
   s.add_dependency "decidim-verifications", "~> #{Decidim::SignatureCollection.min_decidim_version}"
-
-  s.add_development_dependency "decidim-dev", "~> #{Decidim::SignatureCollection.min_decidim_version}"
 end

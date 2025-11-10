@@ -22,8 +22,8 @@ FactoryBot.define do
     only_global_scope_enabled { false }
     comments_enabled { true }
 
-    signature_period_start { DateTime.now }
-    signature_period_end { DateTime.now + 1.month }
+    signature_period_start { Time.zone.now }
+    signature_period_end { 1.month.from_now }
 
     trait :with_comments_disabled do
       comments_enabled { false }
@@ -219,23 +219,6 @@ FactoryBot.define do
           candidacy.attachments << create(
             :attachment,
             :with_pdf,
-            attached_to: candidacy,
-            skip_injection: evaluator.skip_injection
-          )
-        end
-      end
-    end
-
-    trait :with_photos do
-      transient do
-        photos_number { 2 }
-      end
-
-      after :create do |candidacy, evaluator|
-        evaluator.photos_number.times do
-          candidacy.attachments << create(
-            :attachment,
-            :with_image,
             attached_to: candidacy,
             skip_injection: evaluator.skip_injection
           )

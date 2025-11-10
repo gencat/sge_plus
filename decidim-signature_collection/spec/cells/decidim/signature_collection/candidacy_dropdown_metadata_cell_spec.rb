@@ -10,10 +10,8 @@ module Decidim::SignatureCollection
 
     subject { cell("decidim/signature_collection/candidacy_dropdown_metadata", model).call }
 
-    let(:model) { create(:candidacy, hashtag:) }
-    let(:hashtag) { nil }
+    let(:model) { create(:candidacy) }
 
     include_examples "participatory space dropdown metadata cell"
-    include_examples "participatory space dropdown metadata cell hashtag"
   end
 end

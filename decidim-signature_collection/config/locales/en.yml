@@ -9,7 +9,6 @@ en:
         decidim_scope_id: Scope
         decidim_user_group_id: Author
         description: Description
-        hashtag: Hashtag
         offline_votes: In-person signatures
         offline_votes_for_scope: In-person signatures for %{scope_name}
         scope_id: Scope
@@ -43,7 +42,9 @@ en:
         online_signature_enabled: Online signature enabled
         only_global_scope_enabled: Only allow global scope candidacies creation
         promoting_committee_enabled: Enable promoting committee
+        signature_period_start: Signature period start
         signature_period_start_less_than: Signature period start must be before the end date
+        signature_period_end: Signature period end
         signature_period_end_greater_than: Signature period end must be after the start date
         signature_type: Signature type
         title: Title
@@ -279,7 +280,6 @@ en:
             documents: Documents
             edit: Edit
             new: New
-            photos: Photos
           publish:
             success: The candidacy has been successfully published.
           reject:
@@ -411,7 +411,7 @@ en:
           new: Create a new candidacy
           select: I want to promote this candidacy
           select_candidacy_type_help: Candidacies are a means by which the participants can intervene so that the organization can undertake actions in defence of the general interest. Which candidacy do you want to launch?
-          verification_required: Verify your account to promote this candidacy
+          verification_required: Promote this candidacy
         share_committee_link:
           invite_to_committee_help: Link to invite people that will be part of the promoter committee
       edit:
@@ -631,7 +631,6 @@ en:
           description: The description of the candidacy
           first_progress_notification_at: The date when the first progress notification was sent
           follows_count: The number of users following this space
-          hashtag: The candidacy hashtag, used for Twitter/X
           offline_votes: The number of signatures that this inititative received outside of this platform
           online_votes: The number of signatures that this candidacy received online (directly through the platform)
           published_at: The date this space was published
