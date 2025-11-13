@@ -412,6 +412,7 @@ en:
           new: Create a new candidacy
           select: I want to promote this candidacy
           select_candidacy_type_help: Candidacies are a means by which the participants can intervene so that the organization can undertake actions in defence of the general interest. Which candidacy do you want to launch?
+          select_candidacy_type: Promotes the candidacy
           verification_required: Promote this candidacy
         share_committee_link:
           invite_to_committee_help: Link to invite people that will be part of the promoter committee
