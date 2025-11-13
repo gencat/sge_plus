@@ -77,6 +77,51 @@ describe "Candidacy" do
         end
       end
 
+      context "when candidacy type has minimum signing age" do
+        let(:base_candidacy) do
+          create(:candidacy,
+                 organization:,
+                 state:,
+                 scoped_type:)
+        end
+
+        let(:scoped_type) do
+          create(:candidacies_type_scope,
+                 type: create(:candidacies_type,
+                              organization:,
+                              minimum_signing_age: 16))
+        end
+
+        it "displays minimum signing age" do
+          within ".candidacy__aside" do
+            expect(page).to have_content("Minimum signing age")
+            expect(page).to have_content("16")
+          end
+        end
+      end
+
+      context "when candidacy type has no minimum signing age" do
+        let(:base_candidacy) do
+          create(:candidacy,
+                 organization:,
+                 state:,
+                 scoped_type:)
+        end
+
+        let(:scoped_type) do
+          create(:candidacies_type_scope,
+                 type: create(:candidacies_type,
+                              organization:,
+                              minimum_signing_age: nil))
+        end
+
+        it "does not display minimum signing age section" do
+          within ".candidacy__aside" do
+            expect(page).to have_no_content("Minimum signing age")
+          end
+        end
+      end
+
       it_behaves_like "candidacy shows signatures"
 
       context "when candidacy state is rejected" do
