@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_11_03_144808) do
+ActiveRecord::Schema[7.0].define(version: 2025_11_13_082152) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "ltree"
   enable_extension "pg_trgm"
@@ -1559,6 +1559,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_11_03_144808) do
     t.datetime "signature_period_start"
     t.datetime "signature_period_end"
     t.boolean "published", default: true
+    t.integer "minimum_signing_age"
     t.index ["decidim_organization_id"], name: "index_decidim_candidacy_types_on_decidim_organization_id"
   end
 

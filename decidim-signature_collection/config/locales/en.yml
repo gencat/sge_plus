@@ -39,6 +39,7 @@ en:
         document_number_authorization_handler: Authorization to verify document number on signatures
         extra_fields_legal_information: Legal information about the collection of personal data
         minimum_committee_members: Minimum of committee members
+        minimum_signing_age: Minimum signing age
         online_signature_enabled: Online signature enabled
         only_global_scope_enabled: Only allow global scope candidacies creation
         promoting_committee_enabled: Enable promoting committee
