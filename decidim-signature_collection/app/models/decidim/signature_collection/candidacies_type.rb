@@ -60,6 +60,10 @@ module Decidim
       def signature_period_configured?
         signature_period_start.present? || signature_period_end.present?
       end
+
+      def minimum_signing_age?
+        minimum_signing_age.present?
+      end
     end
   end
 end

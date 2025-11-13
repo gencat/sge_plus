@@ -119,6 +119,19 @@ edit_link(
         </div>
       <% end %>
 
+      <% if current_candidacy.type.minimum_signing_age? %>
+        <div class="candidacy__aside__element__data">
+          <p class="candidacy__aside__element__data-title">
+          <%= t("minimum_signing_age", scope: "decidim.signature_collection.candidacies.show") %>
+          </p>
+          <span class="candidacy__aside__element__data-text">
+            <span class="text-sm font-normal text-gray-2 block">
+              <%= current_candidacy.type.minimum_signing_age %>
+            </span>
+          </span>
+        </div>
+      <% end %>
+
       <div class="candidacy__aside__element__data">
         <p class="candidacy__aside__element__data-title">
           <%= t("scope", scope: "decidim.signature_collection.candidacies.show") %>
