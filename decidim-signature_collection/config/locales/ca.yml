@@ -589,6 +589,8 @@ ca:
         promotal_committee_help: Recorda que has de convidar almenys a %{member_count} persones a la Comissió Promotora. Reenvia el següent enllaç per convidar-les
         status_change_body_for: 'La candidatura %{title} ha canviat el seu estat a: %{state}'
         status_change_for: La candidatura %{title} ha canviat el seu estat
+        validation_body: 'Si us plau, revisa la candidatura i realitza la validació tècnica necessària.'
+        validation_subject: "Tens una nova candidatura per revisar: '%{title}'"
       last_activity:
         new_candidacy: 'Nova candidatura:'
       modal:

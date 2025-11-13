@@ -44,6 +44,15 @@ module Decidim
 
             subject.call
           end
+
+          it "sends email notification to admins" do
+            expect(Decidim::SignatureCollection::CandidaciesMailer)
+              .to receive(:notify_admins_validation)
+              .with(candidacy, a_collection_containing_exactly(another_admin))
+              .and_call_original
+
+            expect { subject.call }.to have_enqueued_job(ActionMailer::MailDeliveryJob)
+          end
         end
       end
     end

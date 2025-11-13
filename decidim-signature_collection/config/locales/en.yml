@@ -589,6 +589,8 @@ en:
         promotal_committee_help: Remember that you must invite at least %{member_count} people to promoter committee. Forward the following link to invite people to the promoter committee
         status_change_body_for: 'The candidacy %{title} has changed its status to: %{state}'
         status_change_for: The candidacy %{title} has changed its status
+        validation_body: 'Please review the candidacy and make the necessary technical validation.'
+        validation_subject: "You have a new candidacy to review: '%{title}'"
       last_activity:
         new_candidacy: 'New candidacy:'
       modal:

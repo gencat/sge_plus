@@ -81,6 +81,50 @@ module Decidim
           expect(mail.body.encoded).to include(decidim_sanitize_translated(candidacy.title))
         end
       end
+
+      context "when notifies admins validation" do
+        let!(:admin1) { create(:user, :admin, organization:, email: "admin1@example.org") }
+        let!(:admin2) { create(:user, :admin, organization:, email: "admin2@example.org") }
+        let(:admins) { [admin1, admin2] }
+        let(:mail) { described_class.notify_admins_validation(candidacy, admins) }
+
+        it "renders the headers with candidacy title" do
+          expect(mail.subject).to eq("You have a new candidacy to review: '#{translated(candidacy.title)}'")
+        end
+
+        it "sends to all admin emails" do
+          expect(mail.to).to contain_exactly(admin1.email, admin2.email)
+        end
+
+        it "renders the body with candidacy title" do
+          expect(mail.body.encoded).to include(decidim_sanitize_translated(candidacy.title))
+        end
+
+        it "includes the validation instruction message" do
+          expect(mail.body.encoded).to include("Please review the candidacy and make the necessary technical validation")
+        end
+
+        it "includes a link to the candidacy" do
+          candidacy_url = router.candidacy_url(candidacy, host: organization.host)
+          expect(mail.body.encoded).to include(candidacy_url)
+        end
+
+        context "when admins is empty" do
+          let(:admins) { [] }
+
+          it "does not send the email" do
+            expect(mail.message).to be_a(ActionMailer::Base::NullMail)
+          end
+        end
+
+        context "when admins is nil" do
+          let(:admins) { nil }
+
+          it "does not send the email" do
+            expect(mail.message).to be_a(ActionMailer::Base::NullMail)
+          end
+        end
+      end
     end
   end
 end

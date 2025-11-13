@@ -589,6 +589,8 @@ es:
         promotal_committee_help: Recuerda que debes invitar al menos a %{member_count} personas a la Comisión Promotora. Reenvia el siguiente enlace para invitarlas.
         status_change_body_for: 'La candidatura %{title} ha cambiado su estado a: %{state}'
         status_change_for: La candidatura %{title} ha cambiado su estado
+        validation_body: 'Por favor, revise la candidatura y realice la validación técnica necesaria.'
+        validation_subject: "Tienes una nueva candidatura para revisar: '%{title}'"
       last_activity:
         new_candidacy: 'Nueva candidatura:'
       modal:

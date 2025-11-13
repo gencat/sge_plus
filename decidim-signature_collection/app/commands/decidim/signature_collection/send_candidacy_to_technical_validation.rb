@@ -51,6 +51,9 @@ module Decidim
         }
 
         Decidim::EventsManager.publish(**data)
+        Decidim::SignatureCollection::CandidaciesMailer
+          .notify_admins_validation(candidacy, affected_users)
+          .deliver_later
       end
     end
   end

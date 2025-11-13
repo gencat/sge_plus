@@ -73,6 +73,25 @@ module Decidim
           mail(to: "#{user.name} <#{user.email}>", subject: @subject)
         end
       end
+
+      def notify_admins_validation(candidacy, admins)
+        return if admins.blank?
+
+        @candidacy = candidacy
+        @organization = candidacy.organization
+        @link = candidacy_url(candidacy, host: @organization.host)
+
+        recipients = admins.pluck(:email)
+
+        with_user(candidacy.author) do
+          @subject = I18n.t(
+            "decidim.signature_collection.candidacies_mailer.validation_subject",
+            title: translated_attribute(candidacy.title)
+          )
+
+          mail(to: recipients, subject: @subject)
+        end
+      end
     end
   end
 end
