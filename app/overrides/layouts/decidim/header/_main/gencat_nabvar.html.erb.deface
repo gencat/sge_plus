@@ -1,0 +1,11 @@
+<!-- insert_after ".main-bar__container"
+    original '3091e05c43b4781e3416330b57eba614cc4ac53d'
+-->
+
+<div class="gencat-navbar">
+  <div class="custom-navbar">
+    <%= link_to  "/" do %>
+      <%= translated_attribute(current_organization.name) %>
+    <% end %>
+  </div>
+</div>

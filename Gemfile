@@ -22,6 +22,8 @@ gem "puma", ">= 6.3.1"
 # https://github.com/hlascelles/figjam
 gem "figjam", "2.0.0"
 
+gem "deface"
+
 group :development, :test do
   gem "byebug", "~> 11.0", platform: :mri
 
