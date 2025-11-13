@@ -8,7 +8,7 @@
 module Decidim
   module SignatureCollection
     class CandidacySignaturesController < Decidim::SignatureCollection::ApplicationController
-      layout "layouts/decidim/signature_collection/candidacy_signature_creation"
+      layout "layouts/decidim/candidacy_signature_creation"
       include Decidim::SignatureCollection::NeedsCandidacy
       include Decidim::FormFactory
 

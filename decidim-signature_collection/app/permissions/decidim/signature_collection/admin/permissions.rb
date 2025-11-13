@@ -148,12 +148,12 @@ module Decidim
             toggle_allow(candidacy.offline_signature_type? || candidacy.any_signature_type?)
           when :accept
             allowed = candidacy.published? &&
-                      candidacy.signature_end_date < Date.current &&
+                      candidacy.type.signature_period_end < Date.current &&
                       candidacy.supports_goal_reached?
             toggle_allow(allowed)
           when :reject
             allowed = candidacy.published? &&
-                      candidacy.signature_end_date < Date.current &&
+                      candidacy.type.signature_period_end < Date.current &&
                       !candidacy.supports_goal_reached?
             toggle_allow(allowed)
           when :send_to_technical_validation
