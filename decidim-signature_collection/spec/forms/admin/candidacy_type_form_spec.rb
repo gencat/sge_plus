@@ -69,6 +69,14 @@ module Decidim
             it { is_expected.to be_valid }
           end
         end
+
+        context "when minimum signing age is negative" do
+          let(:attributes) do
+            super().merge(minimum_signing_age: -1)
+          end
+
+          it { is_expected.to be_invalid }
+        end
       end
     end
   end

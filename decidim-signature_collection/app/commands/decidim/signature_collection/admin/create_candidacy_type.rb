@@ -8,7 +8,8 @@ module Decidim
         fetch_form_attributes :title, :description, :signature_type, :comments_enabled, :attachments_enabled,
                               :undo_online_signatures_enabled, :collect_user_extra_fields, :extra_fields_legal_information,
                               :validate_sms_code_on_votes, :document_number_authorization_handler, :child_scope_threshold_enabled,
-                              :only_global_scope_enabled, :organization, :signature_period_start, :signature_period_end
+                              :only_global_scope_enabled, :organization, :signature_period_start, :signature_period_end,
+                              :minimum_signing_age
 
         protected
 

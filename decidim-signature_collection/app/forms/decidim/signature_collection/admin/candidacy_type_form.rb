@@ -26,6 +26,7 @@ module Decidim
         attribute :signature_period_start, Decidim::Attributes::TimeWithZone
         attribute :signature_period_end, Decidim::Attributes::TimeWithZone
         attribute :published, Boolean, default: false
+        attribute :minimum_signing_age, Integer
 
         validates :title, :description, translatable_presence: true
         validates :attachments_enabled, :undo_online_signatures_enabled, inclusion: { in: [true, false] }
@@ -39,6 +40,7 @@ module Decidim
         validates :signature_period_end,
                   comparison: { greater_than: :signature_period_start, message: I18n.t("activemodel.attributes.candidacies_type.signature_period_end_greater_than") },
                   if: ->(form) { form.signature_period_start.present? && form.signature_period_end.present? }
+        validates :minimum_signing_age, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true
 
         alias organization current_organization
 
