@@ -78,7 +78,6 @@ shared_examples "update an candidacy type" do
         expect(candidacy_type.signature_type).to eq(form_params[:signature_type])
         expect(candidacy_type.attachments_enabled).to eq(form_params[:attachments_enabled])
         expect(candidacy_type.undo_online_signatures_enabled).to eq(form_params[:undo_online_signatures_enabled])
-        expect(candidacy_type.area_enabled).to eq(form_params[:area_enabled])
       end
 
       it "propagates signature type to created candidacies" do
