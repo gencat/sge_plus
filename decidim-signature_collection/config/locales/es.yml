@@ -195,6 +195,9 @@ es:
           email_outro: Has recibido esta notificación porque estás siguiendo la candidatura "%{resource_title}". Puedes dejar de recibir notificaciones siguiendo el enlace anterior.
           email_subject: '¡Nuevo hito completado!'
           notification_title: La candidatura <a href="%{resource_path}">%{resource_title}</a> ha logrado el %{percentage}% de las firmas.
+      signature_collection:
+        candidacy_sent_to_technical_validation:
+          notification_title: La candidatura "%{resource_title}" se ha enviado a validación técnica. Compruébalo a través del <a href="%{resource_path}">panel de administración</a>
       support_threshold_reached:
         email_intro: La candidatura %{resource_title} ha alcanzado el umbral de firmas
         email_outro: Has recibido esta notificación porque administras la plataforma.
@@ -579,6 +582,8 @@ es:
             one: Firma
             other: Firmas
       candidacies_mailer:
+        answered_body: 'La candidatura %{title} ha sido respondida. Puedes ver la respuesta aquí: %{answer_url}'
+        answered_subject: "Se ha respondido a tu candidatura ciudadana '%{title}'"
         creation_subject: Se ha creado tu candidatura ciudadana '%{title}'
         candidacy_link:
           check_candidacy_details: Puedes ver los detalles de la candidatura
@@ -591,6 +596,8 @@ es:
         status_change_for: La candidatura %{title} ha cambiado su estado
         validation_body: 'Por favor, revise la candidatura y realice la validación técnica necesaria.'
         validation_subject: "Tienes una nueva candidatura para revisar: '%{title}'"
+        candidacy_answered_subject: "La candidatura '%{title}' ha sido respondida"
+        candidacy_answered_body: "Se ha publicado una respuesta a la candidatura. Puedes ver los detalles a continuación:"
       last_activity:
         new_candidacy: 'Nueva candidatura:'
       modal:

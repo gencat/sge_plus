@@ -195,6 +195,9 @@ ca:
           email_outro: Has rebut aquesta notificació perquè estàs seguint la inciativa "%{resource_title}". Pots deixar de rebre notificacions seguint l'enllaç anterior.
           email_subject: S'ha completat una nova fita!
           notification_title: La candidatura <a href="%{resource_path}">%{resource_title}</a> ha aconseguit el %{percentage}% de les signatures.
+      signature_collection:
+        candidacy_sent_to_technical_validation:
+          notification_title: La candidatura "%{resource_title}" s'ha enviat a validació tècnica. Comprova-ho a través del <a href="%{resource_path}">taullel d'administració</a>
       support_threshold_reached:
         email_intro: La candidatura %{resource_title} ha arribat al llindar de signatures
         email_outro: Has rebut aquesta notificació perquè admnistres la plataforma.
@@ -579,6 +582,7 @@ ca:
             one: SIGNATURA
             other: SIGNATURES
       candidacies_mailer:
+        answered_subject: "S'ha respost a la teva candidatura ciutadana '%{title}'"
         creation_subject: S'ha creat la teva candidatura ciutadana '%{title}'
         candidacy_link:
           check_candidacy_details: Pots veure els detalls de la candidatura
@@ -589,8 +593,10 @@ ca:
         promotal_committee_help: Recorda que has de convidar almenys a %{member_count} persones a la Comissió Promotora. Reenvia el següent enllaç per convidar-les
         status_change_body_for: 'La candidatura %{title} ha canviat el seu estat a: %{state}'
         status_change_for: La candidatura %{title} ha canviat el seu estat
-        validation_body: 'Si us plau, revisa la candidatura i realitza la validació tècnica necessària.'
+        validation_body: 'Si us plau, reviseu la candidatura i feu la validació tècnica necessària.'
         validation_subject: "Tens una nova candidatura per revisar: '%{title}'"
+        candidacy_answered_subject: "La candidatura '%{title}' ha estat resposta"
+        candidacy_answered_body: "S'ha publicat una resposta a la candidatura. Podeu veure els detalls a continuació:"
       last_activity:
         new_candidacy: 'Nova candidatura:'
       modal:

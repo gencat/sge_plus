@@ -92,6 +92,25 @@ module Decidim
           mail(to: recipients, subject: @subject)
         end
       end
+
+      def notify_members_candidacy_answered(candidacy, current_user, members)
+        return if members.blank?
+
+        @candidacy = candidacy
+        @organization = candidacy.organization
+        @link = candidacy_url(candidacy, host: @organization.host)
+
+        recipients = members.map(&:email).compact
+
+        with_user(current_user) do
+          @subject = I18n.t(
+            "decidim.signature_collection.candidacies_mailer.candidacy_answered_subject",
+            title: translated_attribute(candidacy.title)
+          )
+
+          mail(to: recipients, subject: @subject)
+        end
+      end
     end
   end
 end

@@ -1,4 +1,4 @@
-<% if candidacy.answered? && translated_attribute(candidacy.answer).present? %>
+<% if candidacy.answered? && translated_attribute(candidacy.answer).present? && can_show_candidacy_answer?(candidacy) %>
   <% announcement_body = capture do %>
   <h5><%= t("decidim.signature_collection.candidacies.result.answer_title") %>:</h5>
   <p>

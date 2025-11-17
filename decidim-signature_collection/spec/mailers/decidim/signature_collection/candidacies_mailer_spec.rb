@@ -125,6 +125,65 @@ module Decidim
           end
         end
       end
+
+      context "when notifies members candidacy answered" do
+        let(:candidacy) { create(:candidacy, :answered, organization:) }
+        let(:current_user) { create(:user, :admin, organization:) }
+        let!(:admin1) { create(:user, :admin, organization:, email: "admin1@example.org") }
+        let!(:committee_member) { create(:user, organization:, email: "member@example.org") }
+        let(:members) { [admin1, committee_member, candidacy.author] }
+        let(:mail) { described_class.notify_members_candidacy_answered(candidacy, current_user, members) }
+
+        it "renders the headers with candidacy title" do
+          expect(mail.subject).to eq("The candidacy '#{translated(candidacy.title)}' has been answered")
+        end
+
+        it "sends to all member emails" do
+          expect(mail.to).to contain_exactly(admin1.email, committee_member.email, candidacy.author.email)
+        end
+
+        it "renders the body with candidacy title" do
+          expect(mail.body.encoded).to include(decidim_sanitize_translated(candidacy.title))
+        end
+
+        it "includes the answered body message" do
+          expect(mail.body.encoded).to include("A response has been published for the candidacy")
+        end
+
+        it "includes the candidacy answer" do
+          expect(mail.body.encoded).to include(decidim_sanitize_translated(candidacy.answer))
+        end
+
+        it "includes a link to the candidacy" do
+          candidacy_url = router.candidacy_url(candidacy, host: organization.host)
+          expect(mail.body.encoded).to include(candidacy_url)
+        end
+
+        context "when members is empty" do
+          let(:members) { [] }
+
+          it "does not send the email" do
+            expect(mail.message).to be_a(ActionMailer::Base::NullMail)
+          end
+        end
+
+        context "when members is nil" do
+          let(:members) { nil }
+
+          it "does not send the email" do
+            expect(mail.message).to be_a(ActionMailer::Base::NullMail)
+          end
+        end
+
+        context "when a member has no email" do
+          let(:user_without_email) { create(:user, organization:, email: nil) }
+          let(:members) { [admin1, user_without_email] }
+
+          it "sends only to members with email" do
+            expect(mail.to).to contain_exactly(admin1.email)
+          end
+        end
+      end
     end
   end
 end

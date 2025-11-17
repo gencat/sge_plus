@@ -1,0 +1,19 @@
+<p>
+  <%= t("decidim.signature_collection.candidacies_mailer.candidacy_answered_subject", title: translated_attribute(@candidacy.title)) %>.
+</p>
+
+<p>
+  <%= t("decidim.signature_collection.candidacies_mailer.candidacy_answered_body") %>
+</p>
+
+<% if @candidacy.answer.present? %>
+  <blockquote>
+    <%= decidim_sanitize_editor translated_attribute(@candidacy.answer) %>
+  </blockquote>
+<% end %>
+
+<p>
+  <%= t("check_candidacy_details", scope: "decidim.signature_collection.candidacies_mailer.candidacy_link") %>
+  <%= link_to t("here", scope: "decidim.signature_collection.candidacies_mailer.candidacy_link"),
+              candidacy_url(@candidacy, host: @organization.host) %>
+</p>
