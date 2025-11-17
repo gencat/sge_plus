@@ -195,6 +195,9 @@ en:
           email_outro: You have received this notification because you are following %{resource_title}. You can stop receiving notifications following the previous link.
           email_subject: New milestone completed!
           notification_title: The <a href="%{resource_path}">%{resource_title}</a> candidacy has achieved the %{percentage}% of signatures.
+      signature_collection:
+        candidacy_sent_to_technical_validation:
+          notification_title: The candidacy "%{resource_title}" has been sent to technical validation. Check it out at <a href="%{resource_path}">the admin panel</a>
       support_threshold_reached:
         email_intro: The candidacy %{resource_title} has reached the signatures threshold
         email_outro: You have received this notification because you are an admin of the platform.
@@ -412,6 +415,7 @@ en:
           new: Create a new candidacy
           select: I want to promote this candidacy
           select_candidacy_type_help: Candidacies are a means by which the participants can intervene so that the organization can undertake actions in defence of the general interest. Which candidacy do you want to launch?
+          select_candidacy_type: Promotes the candidacy
           verification_required: Promote this candidacy
         share_committee_link:
           invite_to_committee_help: Link to invite people that will be part of the promoter committee
@@ -580,6 +584,7 @@ en:
             one: Signature
             other: Signatures
       candidacies_mailer:
+        answered_subject: "Your candidacy '%{title}' has been answered"
         creation_subject: Your candidacy '%{title}' has been created
         candidacy_link:
           check_candidacy_details: You can see the candidacy details
@@ -590,6 +595,10 @@ en:
         promotal_committee_help: Remember that you must invite at least %{member_count} people to promoter committee. Forward the following link to invite people to the promoter committee
         status_change_body_for: 'The candidacy %{title} has changed its status to: %{state}'
         status_change_for: The candidacy %{title} has changed its status
+        validation_body: 'Please review the candidacy and make the necessary technical validation.'
+        validation_subject: "You have a new candidacy to review: '%{title}'"
+        candidacy_answered_subject: "The candidacy '%{title}' has been answered"
+        candidacy_answered_body: "A response has been published for the candidacy. You can see the details below:"
       last_activity:
         new_candidacy: 'New candidacy:'
       modal:

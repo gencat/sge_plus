@@ -4,6 +4,14 @@ module Decidim
   module SignatureCollection
     # Helper functions for candidacies views
     module CandidaciesHelper
+      def can_show_candidacy_answer?(candidacy)
+        return false unless current_user
+
+        current_user.admin? ||
+          candidacy.has_authorship?(current_user) ||
+          Decidim::SignatureCollection::CandidaciesPromoted.by(current_user).exists?(id: candidacy.id)
+      end
+
       private
 
       # i18n-tasks-use t('decidim.signature_collection.candidacies.filters.state')

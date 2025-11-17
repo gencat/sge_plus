@@ -1,0 +1,13 @@
+<p>
+  <%= t "decidim.signature_collection.candidacies_mailer.validation_subject", title: translated_attribute(@candidacy.title) %>.
+</p>
+
+<p>
+  <%= t "decidim.signature_collection.candidacies_mailer.validation_body" %>
+</p>
+
+<p>
+  <%= t("check_candidacy_details", scope: "decidim.signature_collection.candidacies_mailer.candidacy_link") %>
+  <%= link_to t("here", scope: "decidim.signature_collection.candidacies_mailer.candidacy_link"),
+              candidacy_url(@candidacy, host: @organization.host) %>
+</p>

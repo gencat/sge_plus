@@ -31,6 +31,7 @@ module Decidim
             attributes
           )
           notify_candidacy_is_extended if @notify_extended
+          notify_members
           broadcast(:ok, candidacy)
         rescue ActiveRecord::RecordInvalid
           broadcast(:invalid, candidacy)
@@ -68,6 +69,16 @@ module Decidim
             resource: candidacy,
             followers: candidacy.followers - [candidacy.author]
           )
+        end
+
+        def notify_members
+          members = candidacy.committee_members.approved.non_deleted.map(&:user)
+          members << candidacy.author if candidacy.author.present?
+          members = members.uniq
+
+          Decidim::SignatureCollection::CandidaciesMailer
+            .notify_members_candidacy_answered(candidacy, current_user, members)
+            .deliver_later
         end
       end
     end

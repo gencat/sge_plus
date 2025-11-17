@@ -590,4 +590,54 @@ describe Decidim::SignatureCollection::Permissions do
       it { is_expected.to be true }
     end
   end
+
+  describe "show_answer" do
+    let(:action) do
+      { scope: :public, action: :show_answer, subject: :candidacy }
+    end
+    let(:candidacy) { create(:candidacy, :answered, organization:) }
+    let(:context) do
+      { candidacy: }
+    end
+
+    context "when user is not logged in" do
+      let(:user) { nil }
+
+      it { is_expected.to be false }
+    end
+
+    context "when user is an admin" do
+      let(:user) { create(:user, :admin, organization:) }
+
+      it { is_expected.to be true }
+    end
+
+    context "when user is the author of the candidacy" do
+      let(:user) { candidacy.author }
+
+      it { is_expected.to be true }
+    end
+
+    context "when user is a committee member" do
+      let(:user) { create(:user, organization:) }
+
+      before do
+        create(:candidacies_committee_member, candidacy:, user:)
+      end
+
+      it { is_expected.to be true }
+    end
+
+    context "when user is a regular user" do
+      let(:user) { create(:user, organization:) }
+
+      it { is_expected.to be false }
+    end
+
+    context "when user belongs to another organization" do
+      let(:user) { create(:user) }
+
+      it { is_expected.to be false }
+    end
+  end
 end
