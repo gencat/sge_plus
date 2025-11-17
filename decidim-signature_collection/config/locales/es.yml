@@ -558,6 +558,7 @@ es:
           confirm: Vas a enviar la candidatura para que una administrador ala revise y publique. Una vez publicada no podrás editarla. ¿Estás segura?
           edit: Editar
           candidacy_data: Datos sobre la candidatura
+          minimum_signing_age: Edad mínima para firmar
           scope: Ámbito
           send_to_technical_validation: Enviar a validación técnica
           send_to_technical_validation_announcement: Si está todo correcto, haz clic en "Enviar a validación técnica" para que una administradora revise y publique tu candidatura

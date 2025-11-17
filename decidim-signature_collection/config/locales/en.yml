@@ -559,6 +559,7 @@ en:
           confirm: You are going to send the candidacy for an admin to review it and publish it. Once published you will not be able to edit it. Are you sure?
           edit: Edit
           candidacy_data: Candidacy data
+          minimum_signing_age: Minimum age for signature
           scope: Scope
           send_to_technical_validation: Send to technical validation
           send_to_technical_validation_announcement: If everything looks ok, click on "Send to technical validation" for an administrator to review and publish your candidacy
