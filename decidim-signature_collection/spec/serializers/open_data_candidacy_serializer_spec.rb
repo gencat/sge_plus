@@ -42,12 +42,12 @@ module Decidim::SignatureCollection
         expect(serialized).to include(published_at: candidacy.published_at)
       end
 
-      it "includes the signature_start_date" do
-        expect(serialized).to include(signature_start_date: candidacy.signature_start_date)
+      it "includes the signature_start_date or candidacy type signature period start" do
+        expect(serialized).to include(signature_start_date: candidacy.signature_start_date.presence || candidacy.type.signature_period_start.to_date)
       end
 
-      it "includes the signature_end_date" do
-        expect(serialized).to include(signature_end_date: candidacy.signature_end_date)
+      it "includes the signature_end_date or candidacy type signature period end" do
+        expect(serialized).to include(signature_end_date: candidacy.signature_end_date.presence || candidacy.type.signature_period_end.to_date)
       end
 
       it "includes the signature_type" do
