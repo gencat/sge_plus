@@ -16,7 +16,8 @@ module Decidim
           double(
             invalid?: invalid,
             current_user: user,
-            candidacies_order:
+            candidacies_order:,
+            creation_enabled: true
           )
         end
         let(:invalid) { false }

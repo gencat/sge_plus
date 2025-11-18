@@ -371,8 +371,8 @@ describe Decidim::SignatureCollection::Admin::CandidaciesController do
         candidacy.reload
         expect(candidacy).to be_published
         expect(candidacy.published_at).not_to be_nil
-        expect(candidacy.signature_start_date).not_to be_nil
-        expect(candidacy.signature_end_date).not_to be_nil
+        expect(candidacy.type.signature_period_start).not_to be_nil
+        expect(candidacy.type.signature_period_end).not_to be_nil
       end
     end
   end

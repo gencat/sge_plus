@@ -51,7 +51,7 @@ module Decidim
               .with(candidacy, a_collection_containing_exactly(another_admin))
               .and_call_original
 
-            expect { subject.call }.to have_enqueued_job(ActionMailer::MailDeliveryJob)
+            expect { subject.call }.to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(5).times
           end
         end
       end
