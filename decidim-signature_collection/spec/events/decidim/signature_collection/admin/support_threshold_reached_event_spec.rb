@@ -5,7 +5,7 @@ require "spec_helper"
 describe Decidim::SignatureCollection::Admin::SupportThresholdReachedEvent do
   include_context "when a simple event"
 
-  let(:event_name) { "decidim.events.signature_collection.support_threshold_reached" }
+  let(:event_name) { "decidim.events.support_threshold_reached" }
   let(:resource) { create(:candidacy) }
   let(:participatory_space) { resource }
   let(:email_subject) { "Signatures threshold reached" }

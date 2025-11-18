@@ -82,7 +82,7 @@ module Decidim
         return unless percentage
 
         Decidim::EventsManager.publish(
-          event: "decidim.events.signature_collection.milestone_completed",
+          event: "decidim.events.milestone_completed",
           event_class: Decidim::SignatureCollection::MilestoneCompletedEvent,
           resource: candidacy,
           affected_users: [candidacy.author],
@@ -98,7 +98,7 @@ module Decidim
         return if before == after || after != 100
 
         Decidim::EventsManager.publish(
-          event: "decidim.events.signature_collection.support_threshold_reached",
+          event: "decidim.events.support_threshold_reached",
           event_class: Decidim::SignatureCollection::Admin::SupportThresholdReachedEvent,
           resource: candidacy,
           followers: candidacy.organization.admins

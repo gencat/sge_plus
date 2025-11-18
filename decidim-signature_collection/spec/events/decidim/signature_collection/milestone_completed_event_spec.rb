@@ -5,7 +5,7 @@ require "spec_helper"
 describe Decidim::SignatureCollection::MilestoneCompletedEvent do
   include_context "when a simple event"
 
-  let(:event_name) { "decidim.events.signature_collection.milestone_completed" }
+  let(:event_name) { "decidim.events.milestone_completed" }
   let(:resource) { create(:candidacy) }
   let(:extra) { { percentage: 75 } }
   let(:participatory_space) { resource }

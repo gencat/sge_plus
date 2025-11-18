@@ -106,7 +106,7 @@ module Decidim
             expect(Decidim::EventsManager)
               .to receive(:publish)
               .with(
-                event: "decidim.events.signature_collection.milestone_completed",
+                event: "decidim.events.milestone_completed",
                 event_class: Decidim::SignatureCollection::MilestoneCompletedEvent,
                 resource: candidacy,
                 affected_users: [candidacy.author],
@@ -151,7 +151,7 @@ module Decidim
             expect(Decidim::EventsManager)
               .to receive(:publish)
               .with(
-                event: "decidim.events.signature_collection.support_threshold_reached",
+                event: "decidim.events.support_threshold_reached",
                 event_class: Decidim::SignatureCollection::Admin::SupportThresholdReachedEvent,
                 resource: candidacy,
                 followers: [admin]
@@ -180,7 +180,7 @@ module Decidim
               expect(Decidim::EventsManager)
                 .not_to receive(:publish)
                 .with(
-                  event: "decidim.events.signature_collection.support_threshold_reached",
+                  event: "decidim.events.support_threshold_reached",
                   event_class: Decidim::SignatureCollection::Admin::SupportThresholdReachedEvent,
                   resource: candidacy,
                   followers: [admin]
