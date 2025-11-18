@@ -95,6 +95,11 @@ FactoryBot.define do
     trait :only_global_scope_enabled do
       only_global_scope_enabled { true }
     end
+
+    trait :with_signature_period_passed do
+      signature_period_start { 2.months.ago }
+      signature_period_end { 1.month.ago }
+    end
   end
 
   factory :candidacies_type_scope, class: "Decidim::SignatureCollection::CandidaciesTypeScope" do
@@ -141,15 +146,11 @@ FactoryBot.define do
     trait :created do
       state { "created" }
       published_at { nil }
-      signature_start_date { nil }
-      signature_end_date { nil }
     end
 
     trait :validating do
       state { "validating" }
       published_at { nil }
-      signature_start_date { nil }
-      signature_end_date { nil }
     end
 
     trait :open do
@@ -177,22 +178,24 @@ FactoryBot.define do
     end
 
     trait :acceptable do
-      signature_start_date { Date.current - 3.months }
-      signature_end_date { Date.current - 2.months }
       signature_type { "online" }
 
       after(:build) do |candidacy|
+        candidacy.type.signature_period_start = Date.current - 4.months
+        candidacy.type.signature_period_end = Date.current - 1.month
+        candidacy.type.save!
         candidacy.online_votes[candidacy.scope.id.to_s] = candidacy.supports_required + 1
         candidacy.online_votes["total"] = candidacy.supports_required + 1
       end
     end
 
     trait :rejectable do
-      signature_start_date { Date.current - 3.months }
-      signature_end_date { Date.current - 2.months }
       signature_type { "online" }
 
       after(:build) do |candidacy|
+        candidacy.type.signature_period_start = Date.current - 4.months
+        candidacy.type.signature_period_end = Date.current - 1.month
+        candidacy.type.save!
         candidacy.online_votes[candidacy.scope.id.to_s] = 0
         candidacy.online_votes["total"] = 0
       end
