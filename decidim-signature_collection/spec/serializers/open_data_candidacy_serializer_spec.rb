@@ -42,12 +42,40 @@ module Decidim::SignatureCollection
         expect(serialized).to include(published_at: candidacy.published_at)
       end
 
-      it "includes the signature_start_date or candidacy type signature period start" do
-        expect(serialized).to include(signature_start_date: candidacy.signature_start_date.presence || candidacy.type.signature_period_start.to_date)
+      context "when candidacy has no custom signature dates" do
+        before do
+          candidacy.update!(signature_start_date: nil, signature_end_date: nil)
+        end
+
+        it "includes the signature_start_date from candidacy type" do
+          expect(serialized).to include(signature_start_date: candidacy.type.signature_period_start.to_date)
+        end
+
+        it "includes the signature_end_date from candidacy type" do
+          expect(serialized).to include(signature_end_date: candidacy.type.signature_period_end.to_date)
+        end
       end
 
-      it "includes the signature_end_date or candidacy type signature period end" do
-        expect(serialized).to include(signature_end_date: candidacy.signature_end_date.presence || candidacy.type.signature_period_end.to_date)
+      context "when candidacy has custom signature dates" do
+        let(:custom_start_date) { 1.month.ago.to_date }
+        let(:custom_end_date) { 1.month.from_now.to_date }
+
+        before do
+          candidacy.update!(signature_start_date: custom_start_date, signature_end_date: custom_end_date)
+        end
+
+        it "includes the candidacy signature_start_date" do
+          expect(serialized).to include(signature_start_date: custom_start_date)
+        end
+
+        it "includes the candidacy signature_end_date" do
+          expect(serialized).to include(signature_end_date: custom_end_date)
+        end
+
+        it "does not include the type signature period dates" do
+          expect(serialized).not_to include(signature_start_date: candidacy.type.signature_period_start.to_date)
+          expect(serialized).not_to include(signature_end_date: candidacy.type.signature_period_end.to_date)
+        end
       end
 
       it "includes the signature_type" do
