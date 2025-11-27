@@ -273,7 +273,8 @@ en:
             confirm_send_to_technical_validation: Are you sure?
             discard: Discard the candidacy
             export_pdf_signatures: Export PDF of signatures
-            export_votes: Export signatures
+            export_xml_signatures: Export XML of signatures
+            export_csv_votes: Export CSV of signatures
             reject: Reject candidacy
             send_to_technical_validation: Send to technical validation
             success: The candidacy has been sent to technical validation.
@@ -431,7 +432,7 @@ en:
         discard: Discard the candidacy
         export_pdf_signatures: Export PDF of signatures
         export_xml_signatures: Export XML of signatures
-        export_votes: Export signatures
+        export_csv_votes: Export CSV of signatures
         reject: Reject candidacy
         title: Edit Candidacy
         update: Update

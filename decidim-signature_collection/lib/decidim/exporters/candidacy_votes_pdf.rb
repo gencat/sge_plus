@@ -110,7 +110,9 @@ module Decidim
       end
 
       def scope(model)
-        return I18n.t("decidim.signature_collection.unavailable_scope") if model.scope.blank?
+        return translated_attribute(model.scope_name) if model.respond_to?(:scope_name)
+
+        return I18n.t("decidim.signature_collection.unavailable_scope") if !model.respond_to?(:scope) || model.scope.blank?
 
         translated_attribute(model.scope.name)
       end

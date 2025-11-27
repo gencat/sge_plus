@@ -273,7 +273,8 @@ ca:
             confirm_send_to_technical_validation: Segur?
             discard: Descarta la candidatura
             export_pdf_signatures: Exporta PDF de signatures
-            export_votes: Exportar signatures
+            export_xml_signatures: Exporta XML de signatures
+            export_csv_votes: Exportar CSV de signatures
             reject: Rebutja la candidatura
             send_to_technical_validation: Enviar a validació tècnica
             success: La candidatura s'ha enviat a validació tècnica.
@@ -430,7 +431,7 @@ ca:
         discard: Descarta la candidatura
         export_pdf_signatures: Exporta PDF de signatures
         export_xml_signatures: Exporta XML de signatures
-        export_votes: Exportar signatures
+        export_csv_votes: Exportar CSV de signatures
         reject: Rebutja la candidatura
         title: Editar candidatura
         update: Actualitzar

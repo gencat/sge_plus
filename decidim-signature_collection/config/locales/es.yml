@@ -237,6 +237,9 @@ es:
             candidacy_votes_count: Recuento de firmas
             candidacies: Candidaturas
             state: Estado
+        candidacies:
+          index:
+            actions_title: Acción
         committee_requests:
           index:
             approve: Aprobar
@@ -254,10 +257,10 @@ es:
               most_recent: Más recientes
         exports:
           candidacies: Candidaturas
-      export:
-        xml:
-          directory_missing: No se ha encontrado el directorio de XML de firmas para esta candidatura.
-          no_files: No se han encontrado ficheros XML para esta candidatura.
+        export:
+          xml:
+            directory_missing: No se ha encontrado el directorio de XML de firmas para esta candidatura.
+            no_files: No se han encontrado ficheros XML para esta candidatura.
         index:
           candidacies_types:
             alert_html: "<p>Tienes que crear por lo menos un tipo de candidatura para que las participantes puedan empezar a crear sus candidaturas.</p><p>%{link}</p>"
@@ -268,12 +271,14 @@ es:
           discard:
             success: La candidatura se ha descartado correctamente.
           edit:
+            actions_title: Acción
             accept: Aceptar candidatura
             confirm: '¿Estás seguro?'
             confirm_send_to_technical_validation: '¿Estás seguro/a?'
             discard: Descartar la candidatura
             export_pdf_signatures: Exportar PDF de Firmas
-            export_votes: Exportar firmas
+            export_xml_signatures: Exportar XML de firmas
+            export_csv_votes: Exportar CSV de firmas
             reject: Rechazar la candidatura
             send_to_technical_validation: Enviar a validación técnica
             success: La candidatura se ha enviado a validación técnica.
@@ -430,7 +435,7 @@ es:
         discard: Descartar la candidatura
         export_pdf_signatures: Exportar PDF de firmas
         export_xml_signatures: Exportar XML de firmas
-        export_votes: Exportar firmas
+        export_csv_votes: Exportar CSV de firmas
         reject: Rechazar la candidatura
         title: Editar Iniciativa
         update: Actualizar
