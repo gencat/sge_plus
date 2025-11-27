@@ -31,9 +31,9 @@ module Decidim
         pdf_export = Decidim::Exporters::CandidacyVotesPDF.new(@votes, current_candidacy, serializer).export
 
         output = if pdf_signature_service
-                    pdf_signature_service.new(pdf: pdf_export.read).signed_pdf
-                  else
-                    pdf_export.read
+                   pdf_signature_service.new(pdf: pdf_export.read).signed_pdf
+                 else
+                   pdf_export.read
                   end
 
         respond_to do |format|
