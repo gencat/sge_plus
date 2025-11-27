@@ -30,6 +30,7 @@ module Decidim
 
         candidacy_committee_action?
         send_to_technical_validation?
+        export_candidacy_files?
 
         permission_action
       end
@@ -216,6 +217,19 @@ module Decidim
 
       def authorship_or_admin?
         candidacy&.has_authorship?(user) || user.admin?
+      end
+
+      def export_candidacy_files?
+        return false unless permission_action.subject == :candidacy
+
+        case permission_action.action
+        when :export_pdf_signatures, :export_xml_signatures
+          allowed = (candidacy.published? || candidacy.accepted? || candidacy.rejected?) && (authorship_or_admin? || committee_member?)
+          toggle_allow(allowed)
+        when :export_votes
+          allowed = (candidacy.online_signature_type? || candidacy.any_signature_type?) && (authorship_or_admin? || committee_member?)
+          toggle_allow(allowed)
+        end
       end
     end
   end

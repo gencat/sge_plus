@@ -153,6 +153,7 @@ ca:
             candidacy_signatures_count: Nombre de signatures digitals
             candidacy_start_date: Data d'inici
             candidacy_title: Títol de la candidatura
+            candidacy_type: Tipus de candidatura
             name_and_surname: Nom i cognoms
             nickname: Àlies
             postal_code: Codi postal
@@ -253,6 +254,10 @@ ca:
               most_recent: Més recents
         exports:
           candidacies: Candidatures
+      export:
+        xml:
+          directory_missing: No s'ha trobat el directori d'XML de signatures per a aquesta candidatura.
+          no_files: No s'han trobat fitxers XML per a aquesta candidatura.
         index:
           candidacies_types:
             alert_html: "<p>Has de crear com a mínim un tipus d'candidatura per tal que les participants puguin començar a crear les seves candidatures.</p><p>%{link}</p>"
@@ -424,6 +429,7 @@ ca:
         confirm: Segur?
         discard: Descarta la candidatura
         export_pdf_signatures: Exporta PDF de signatures
+        export_xml_signatures: Exporta XML de signatures
         export_votes: Exportar signatures
         reject: Rebutja la candidatura
         title: Editar candidatura
@@ -557,6 +563,8 @@ ca:
           before_send_to_technical_validation_announcement: 'Abans d''enviar la teva candidatura a validació tècnica, has d''afegir %{count} membres més a la comissió promotora.<br/><br/>Comparteix aquest enllaç amb les persones que vulguis que siguin part de la comissió: %{href}'
           confirm: Estàs a punt d'enviar la candidatura perquè una administradora la revisi i la publiqui. Un cop publicada no la podràs editar. Segur?
           edit: Editar
+          export_signatures: Exportar signatures
+          candidacy_actions: Accions de la comissió promotora
           candidacy_data: Dades sobre la candidatura
           minimum_signing_age: Edat mínima per signar
           scope: Àmbit

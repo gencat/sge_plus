@@ -142,7 +142,7 @@ module Decidim
             toggle_allow(candidacy.validating?)
           when :unpublish
             toggle_allow(candidacy.published?)
-          when :export_pdf_signatures
+          when :export_pdf_signatures, :export_xml_signatures
             toggle_allow(candidacy.published? || candidacy.accepted? || candidacy.rejected?)
           when :export_votes
             toggle_allow(candidacy.offline_signature_type? || candidacy.any_signature_type?)

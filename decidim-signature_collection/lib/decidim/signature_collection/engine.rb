@@ -60,6 +60,9 @@ module Decidim
             get :authorization_create_modal, to: "authorization_create_modals#show"
             get :print, to: "candidacies#print", as: "print"
             get :send_to_technical_validation, to: "candidacies#send_to_technical_validation"
+            get :export_pdf_signatures, to: "candidacies#export_pdf_signatures"
+            get :export_xml_signatures, to: "candidacies#export_xml_signatures"
+            get :export_votes, to: "candidacies#export_votes"
           end
 
           resource :candidacy_vote, only: [:create, :destroy]
