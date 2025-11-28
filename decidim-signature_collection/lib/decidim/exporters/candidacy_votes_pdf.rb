@@ -43,19 +43,21 @@ module Decidim
           layout.text(I18n.t("models.candidacies_votes.fields.candidacy_start_date", scope: "decidim.admin"), style: :candidacy_th),
           layout.text(I18n.t("models.candidacies_votes.fields.candidacy_end_date", scope: "decidim.admin"), style: :candidacy_th),
           layout.text(I18n.t("models.candidacies_votes.fields.candidacy_signatures_count", scope: "decidim.admin"), style: :candidacy_th),
-          layout.text(I18n.t("models.candidacies_votes.fields.candidacy_scope", scope: "decidim.admin"), style: :candidacy_th)
+          layout.text(I18n.t("models.candidacies_votes.fields.candidacy_scope", scope: "decidim.admin"), style: :candidacy_th),
+          layout.text(I18n.t("models.candidacies_votes.fields.candidacy_type", scope: "decidim.admin"), style: :candidacy_th)
         ]
 
         data_row = [
           layout.text(candidacy.reference, style: :candidacy_td),
           layout.text(translated_attribute(candidacy.title), style: :candidacy_td),
-          layout.text(I18n.l(candidacy.signature_start_date, format: :long), style: :candidacy_td),
-          layout.text(I18n.l(candidacy.signature_end_date, format: :long), style: :candidacy_td),
+          layout.text(I18n.l(candidacy.type.signature_period_start.to_date, format: :long), style: :candidacy_td),
+          layout.text(I18n.l(candidacy.type.signature_period_end.to_date, format: :long), style: :candidacy_td),
           layout.text(collection.count.to_s, style: :candidacy_td),
-          layout.text(scope(candidacy), style: :candidacy_td)
+          layout.text(scope(candidacy), style: :candidacy_td),
+          layout.text(translated_attribute(candidacy.type.title), style: :candidacy_td)
         ]
 
-        column_widths = [-1, -1.75, -0.55, -0.55, -1, -1]
+        column_widths = [-1, -1.75, -0.55, -0.55, -1, -1, -1]
 
         cells = [
           [layout.table([data_header], column_widths:, cell_style: row_style)],
@@ -108,7 +110,9 @@ module Decidim
       end
 
       def scope(model)
-        return I18n.t("decidim.signature_collection.unavailable_scope") if model.scope.blank?
+        return translated_attribute(model.scope_name) if model.respond_to?(:scope_name)
+
+        return I18n.t("decidim.signature_collection.unavailable_scope") if !model.respond_to?(:scope) || model.scope.blank?
 
         translated_attribute(model.scope.name)
       end

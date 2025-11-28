@@ -153,6 +153,7 @@ es:
             candidacy_signatures_count: Número de firmas
             candidacy_start_date: Fecha de inicio
             candidacy_title: Título de la candidatura
+            candidacy_type: Tipo de candidatura
             name_and_surname: Nombre y apellido
             nickname: Alias
             postal_code: Código postal
@@ -236,6 +237,9 @@ es:
             candidacy_votes_count: Recuento de firmas
             candidacies: Candidaturas
             state: Estado
+        candidacies:
+          index:
+            actions_title: Acción
         committee_requests:
           index:
             approve: Aprobar
@@ -253,6 +257,10 @@ es:
               most_recent: Más recientes
         exports:
           candidacies: Candidaturas
+        export:
+          xml:
+            directory_missing: No se ha encontrado el directorio de XML de firmas para esta candidatura.
+            no_files: No se han encontrado ficheros XML para esta candidatura.
         index:
           candidacies_types:
             alert_html: "<p>Tienes que crear por lo menos un tipo de candidatura para que las participantes puedan empezar a crear sus candidaturas.</p><p>%{link}</p>"
@@ -263,12 +271,14 @@ es:
           discard:
             success: La candidatura se ha descartado correctamente.
           edit:
+            actions_title: Acción
             accept: Aceptar candidatura
             confirm: '¿Estás seguro?'
             confirm_send_to_technical_validation: '¿Estás seguro/a?'
             discard: Descartar la candidatura
             export_pdf_signatures: Exportar PDF de Firmas
-            export_votes: Exportar firmas
+            export_xml_signatures: Exportar XML de firmas
+            export_csv_votes: Exportar CSV de firmas
             reject: Rechazar la candidatura
             send_to_technical_validation: Enviar a validación técnica
             success: La candidatura se ha enviado a validación técnica.
@@ -424,7 +434,8 @@ es:
         confirm: '¿Estás seguro/a?'
         discard: Descartar la candidatura
         export_pdf_signatures: Exportar PDF de firmas
-        export_votes: Exportar firmas
+        export_xml_signatures: Exportar XML de firmas
+        export_csv_votes: Exportar CSV de firmas
         reject: Rechazar la candidatura
         title: Editar Iniciativa
         update: Actualizar
@@ -557,6 +568,8 @@ es:
           before_send_to_technical_validation_announcement: 'Antes de enviar tu candidatura a validación técnica, tienes que añadir %{count} miembros más a la comisión promotora.<br/><br/>Comparte este enlace con las personas que quieres formar parte de la comisión: %{href}'
           confirm: Vas a enviar la candidatura para que una administrador ala revise y publique. Una vez publicada no podrás editarla. ¿Estás segura?
           edit: Editar
+          export_signatures: Exportar firmas
+          candidacy_actions: Acciones de la comisión promotora
           candidacy_data: Datos sobre la candidatura
           minimum_signing_age: Edad mínima para firmar
           scope: Ámbito

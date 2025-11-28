@@ -31,6 +31,7 @@ module Decidim
               delete :discard
               get :export_votes
               get :export_pdf_signatures
+              get :export_xml_signatures
               post :accept
               delete :reject
             end

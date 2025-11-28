@@ -12,6 +12,7 @@ module Decidim
         include Decidim::SignatureCollection::TypeSelectorOptions
         include Decidim::SignatureCollection::Admin::Filterable
         include Decidim::Admin::ParticipatorySpaceAdminBreadcrumb
+        include Decidim::SignatureCollection::ExportSignatures
 
         helper ::Decidim::Admin::ResourcePermissionsHelper
         helper Decidim::SignatureCollection::CandidacyHelper
@@ -150,44 +151,6 @@ module Decidim
           redirect_back(fallback_location: candidacies_path)
         end
 
-        # GET /admin/candidacies/:id/export_votes
-        def export_votes
-          enforce_permission_to :export_votes, :candidacy, candidacy: current_candidacy
-
-          votes = current_candidacy.votes.map(&:sha1)
-          csv_data = CSV.generate(headers: false) do |csv|
-            votes.each do |sha1|
-              csv << [sha1]
-            end
-          end
-
-          respond_to do |format|
-            format.csv { send_data csv_data, file_name: "votes.csv" }
-          end
-        end
-
-        # GET /admin/candidacies/:id/export_pdf_signatures.pdf
-        def export_pdf_signatures
-          enforce_permission_to :export_pdf_signatures, :candidacy, candidacy: current_candidacy
-
-          @votes = current_candidacy.votes
-
-          serializer = Decidim::Forms::UserAnswersSerializer
-          pdf_export = Decidim::Exporters::CandidacyVotesPDF.new(@votes, current_candidacy, serializer).export
-
-          output = if pdf_signature_service
-                     pdf_signature_service.new(pdf: pdf_export.read).signed_pdf
-                   else
-                     pdf_export.read
-                   end
-
-          respond_to do |format|
-            format.pdf do
-              send_data(output, filename: "votes_#{current_candidacy.id}.pdf", type: "application/pdf")
-            end
-          end
-        end
-
         private
 
         def show_candidacy_type_callout?
@@ -196,10 +159,6 @@ module Decidim
 
         def collection
           @collection ||= ManageableCandidacies.for(current_user)
-        end
-
-        def pdf_signature_service
-          @pdf_signature_service ||= Decidim.pdf_signature_service.to_s.safe_constantize
         end
 
         def default_format

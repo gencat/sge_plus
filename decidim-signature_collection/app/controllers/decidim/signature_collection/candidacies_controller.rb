@@ -24,6 +24,7 @@ module Decidim
       include Paginable
       include Decidim::FormFactory
       include Decidim::SignatureCollection::Orderable
+      include Decidim::SignatureCollection::ExportSignatures
       include TypeSelectorOptions
       include NeedsCandidacy
       include SingleCandidacyType

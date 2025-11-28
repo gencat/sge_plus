@@ -153,6 +153,7 @@ en:
             candidacy_signatures_count: Number of signatures
             candidacy_start_date: Start date
             candidacy_title: Candidacy title
+            candidacy_type: Candidacy Type
             name_and_surname: Name and surname
             nickname: Nickname
             postal_code: Postal code
@@ -253,6 +254,10 @@ en:
               most_recent: Most recent
         exports:
           candidacies: Candidacies
+      export:
+        xml:
+          directory_missing: XML signatures directory not found for this candidacy.
+          no_files: No XML files found for this candidacy.
         index:
           candidacies_types:
             alert_html: "<p>You must create at least one candidacy type so participants can start creating candidacies.</p><p> %{link}</p>"
@@ -268,7 +273,8 @@ en:
             confirm_send_to_technical_validation: Are you sure?
             discard: Discard the candidacy
             export_pdf_signatures: Export PDF of signatures
-            export_votes: Export signatures
+            export_xml_signatures: Export XML of signatures
+            export_csv_votes: Export CSV of signatures
             reject: Reject candidacy
             send_to_technical_validation: Send to technical validation
             success: The candidacy has been sent to technical validation.
@@ -425,7 +431,8 @@ en:
         confirm: Are you sure?
         discard: Discard the candidacy
         export_pdf_signatures: Export PDF of signatures
-        export_votes: Export signatures
+        export_xml_signatures: Export XML of signatures
+        export_csv_votes: Export CSV of signatures
         reject: Reject candidacy
         title: Edit Candidacy
         update: Update
@@ -558,6 +565,8 @@ en:
           before_send_to_technical_validation_announcement: 'Before sending your candidacy for technical validation, you need to add %{count} more members to the promoter committee.<br/><br/>Share this link with the people you want to be part of your committee: %{href}'
           confirm: You are going to send the candidacy for an admin to review it and publish it. Once published you will not be able to edit it. Are you sure?
           edit: Edit
+          export_signatures: Export signatures
+          candidacy_actions: Promoter committee actions
           candidacy_data: Candidacy data
           minimum_signing_age: Minimum age for signature
           scope: Scope
