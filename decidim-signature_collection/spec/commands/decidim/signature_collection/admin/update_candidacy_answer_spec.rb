@@ -40,6 +40,33 @@ module Decidim
               end
             end
           end
+
+          context "when candidacy is validating and return_to_create_state is true" do
+            let(:organization) { create(:organization) }
+            let!(:candidacy) { create(:candidacy, organization:, state: :validating) }
+            let(:form_params) do
+              {
+                signature_start_date: Date.current + 10.days,
+                signature_end_date: Date.current + 500.days,
+                answer: { en: "Measured answer" },
+                answer_url: "http://decidim.org",
+                return_to_create_state: true
+              }
+            end
+
+            let!(:form) do
+              form_klass.from_params(form_params).with_context(current_organization: organization, candidacy: candidacy)
+            end
+
+            let(:command) { described_class.new(candidacy, form) }
+
+            it "sets candidacy state to created (0)" do
+              command.call
+              candidacy.reload
+
+              expect(candidacy.state).to eq(0)
+            end
+          end
         end
 
         context "when validation failure" do

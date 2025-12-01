@@ -14,6 +14,7 @@ module Decidim
         attribute :answer_url, String
         attribute :signature_start_date, Decidim::Attributes::LocalizedDate
         attribute :signature_end_date, Decidim::Attributes::LocalizedDate
+        attribute :return_to_create_state, Boolean, default: false
 
         validates :signature_start_date, :signature_end_date, presence: true, if: :signature_dates_required?
         validates :signature_end_date, date: { after: :signature_start_date }, if: lambda { |form|
