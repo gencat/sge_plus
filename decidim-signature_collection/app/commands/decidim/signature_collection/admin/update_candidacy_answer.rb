@@ -54,10 +54,12 @@ module Decidim
             attrs[:signature_end_date] = form.signature_end_date
 
             if candidacy.published? && form.signature_end_date != candidacy.signature_end_date &&
-               form.signature_end_date > candidacy.signature_end_date
+               form.signature_end_date > candidacy.type.signature_period_end
               @notify_extended = true
             end
           end
+
+          attrs[:state] = 0 if candidacy.validating? && form.return_to_create_state
 
           attrs
         end

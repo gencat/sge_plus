@@ -17,6 +17,12 @@
           </div>
 
           <div class="card-section">
+            <% if current_candidacy.validating? %>
+              <div class="row column">
+                <%= f.check_box :return_to_create_state, id: :candidacy_return_to_create_state %>
+              </div>
+            <% end %>
+
             <div class="row column">
               <%= f.translated :editor, :answer, autofocus: true, rows: 15 %>
             </div>

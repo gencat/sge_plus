@@ -12,6 +12,7 @@ ca:
         offline_votes: Signatures presencials
         offline_votes_for_scope: Signatures presencials per a %{scope_name}
         scope_id: Àmbit
+        return_to_create_state: Tornar a l'estat de creació
         signature_end_date: Fi del període de recollida de signatures
         signature_start_date: Inici del període de recollida de signatures
         signature_type: Tipus de recollida de signatures
@@ -165,6 +166,9 @@ ca:
       titles:
         candidacies: Candidatures
         candidacies_types: Tipus d'candidatures
+    candidacies:
+      actions:
+        answer: Resposta
     download_your_data:
       show:
         candidacies: Exportar les candidatures
@@ -253,10 +257,10 @@ ca:
               most_recent: Més recents
         exports:
           candidacies: Candidatures
-      export:
-        xml:
-          directory_missing: No s'ha trobat el directori d'XML de signatures per a aquesta candidatura.
-          no_files: No s'han trobat fitxers XML per a aquesta candidatura.
+        export:
+          xml:
+            directory_missing: No s'ha trobat el directori d'XML de signatures per a aquesta candidatura.
+            no_files: No s'han trobat fitxers XML per a aquesta candidatura.
         index:
           candidacies_types:
             alert_html: "<p>Has de crear com a mínim un tipus d'candidatura per tal que les participants puguin començar a crear les seves candidatures.</p><p>%{link}</p>"

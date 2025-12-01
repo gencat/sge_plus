@@ -12,6 +12,7 @@ en:
         offline_votes: In-person signatures
         offline_votes_for_scope: In-person signatures for %{scope_name}
         scope_id: Scope
+        return_to_create_state: Return to creation state
         signature_end_date: End of signature collection period
         signature_start_date: Start of signature collection period
         signature_type: Signature collection type
@@ -165,6 +166,9 @@ en:
       titles:
         candidacies: Candidacies
         candidacies_types: Candidacy types
+    candidacies:
+      actions:
+        answer: Answer
     download_your_data:
       show:
         candidacies: Candidacies export
@@ -260,10 +264,10 @@ en:
               most_recent: Most recent
         exports:
           candidacies: Candidacies
-      export:
-        xml:
-          directory_missing: XML signatures directory not found for this candidacy.
-          no_files: No XML files found for this candidacy.
+        export:
+          xml:
+            directory_missing: XML signatures directory not found for this candidacy.
+            no_files: No XML files found for this candidacy.
         index:
           candidacies_types:
             alert_html: "<p>You must create at least one candidacy type so participants can start creating candidacies.</p><p> %{link}</p>"

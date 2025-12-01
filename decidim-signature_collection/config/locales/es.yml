@@ -12,6 +12,7 @@ es:
         offline_votes: Firmas presenciales
         offline_votes_for_scope: Firmas en persona para %{scope_name}
         scope_id: Ámbito
+        return_to_create_state: Devolver al estado de creación
         signature_end_date: Fin del período de recogida de firmas
         signature_start_date: Inicio del período de recogida de firmas
         signature_type: Tipo de recogida de firmas
@@ -165,6 +166,9 @@ es:
       titles:
         candidacies: Candidaturas
         candidacies_types: Tipos de candidatura
+    candidacies:
+      actions:
+        answer: Respuesta
     download_your_data:
       show:
         candidacies: Exportar las candidaturas

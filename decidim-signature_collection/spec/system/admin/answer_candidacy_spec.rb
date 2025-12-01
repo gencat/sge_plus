@@ -102,6 +102,14 @@ describe "User answers the candidacy" do
           expect(page).to have_no_css("#candidacy_signature_end_date_date")
         end
       end
+
+      it "shows the return_to_create_state checkbox" do
+        page.find(".action-icon--answer").click
+
+        within ".edit_candidacy_answer" do
+          expect(page).to have_css("input#candidacy_return_to_create_state[type='checkbox']")
+        end
+      end
     end
   end
 end
