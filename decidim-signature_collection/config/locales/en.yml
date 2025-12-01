@@ -257,10 +257,10 @@ en:
               most_recent: Most recent
         exports:
           candidacies: Candidacies
-      export:
-        xml:
-          directory_missing: XML signatures directory not found for this candidacy.
-          no_files: No XML files found for this candidacy.
+        export:
+          xml:
+            directory_missing: XML signatures directory not found for this candidacy.
+            no_files: No XML files found for this candidacy.
         index:
           candidacies_types:
             alert_html: "<p>You must create at least one candidacy type so participants can start creating candidacies.</p><p> %{link}</p>"
