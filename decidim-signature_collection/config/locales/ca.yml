@@ -12,6 +12,7 @@ ca:
         offline_votes: Signatures presencials
         offline_votes_for_scope: Signatures presencials per a %{scope_name}
         scope_id: Àmbit
+        send_create: Tornar a l'estat de creació
         signature_end_date: Fi del període de recollida de signatures
         signature_start_date: Inici del període de recollida de signatures
         signature_type: Tipus de recollida de signatures

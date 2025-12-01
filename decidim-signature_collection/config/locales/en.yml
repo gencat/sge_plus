@@ -12,6 +12,7 @@ en:
         offline_votes: In-person signatures
         offline_votes_for_scope: In-person signatures for %{scope_name}
         scope_id: Scope
+        send_create: Return to creation state
         signature_end_date: End of signature collection period
         signature_start_date: Start of signature collection period
         signature_type: Signature collection type
