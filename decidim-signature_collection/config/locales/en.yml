@@ -165,6 +165,9 @@ en:
       titles:
         candidacies: Candidacies
         candidacies_types: Candidacy types
+    candidacies:
+      actions:
+        answer: Answer
     download_your_data:
       show:
         candidacies: Candidacies export

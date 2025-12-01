@@ -165,6 +165,9 @@ ca:
       titles:
         candidacies: Candidatures
         candidacies_types: Tipus d'candidatures
+    candidacies:
+      actions:
+        answer: Resposta
     download_your_data:
       show:
         candidacies: Exportar les candidatures
