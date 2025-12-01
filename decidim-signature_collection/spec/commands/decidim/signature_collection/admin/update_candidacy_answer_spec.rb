@@ -41,7 +41,7 @@ module Decidim
             end
           end
 
-          context "when candidacy is validating and send_create is true" do
+          context "when candidacy is validating and return_to_create_state is true" do
             let(:organization) { create(:organization) }
             let!(:candidacy) { create(:candidacy, organization:, state: :validating) }
             let(:form_params) do
@@ -50,7 +50,7 @@ module Decidim
                 signature_end_date: Date.current + 500.days,
                 answer: { en: "Measured answer" },
                 answer_url: "http://decidim.org",
-                send_create: true
+                return_to_create_state: true
               }
             end
 

@@ -59,7 +59,7 @@ module Decidim
             end
           end
 
-          attrs[:state] = 0 if candidacy.validating? && form.send_create
+          attrs[:state] = 0 if candidacy.validating? && form.return_to_create_state
 
           attrs
         end

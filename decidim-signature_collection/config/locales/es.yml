@@ -12,7 +12,7 @@ es:
         offline_votes: Firmas presenciales
         offline_votes_for_scope: Firmas en persona para %{scope_name}
         scope_id: Ámbito
-        send_create: Devolver al estado de creación
+        return_to_create_state: Devolver al estado de creación
         signature_end_date: Fin del período de recogida de firmas
         signature_start_date: Inicio del período de recogida de firmas
         signature_type: Tipo de recogida de firmas

@@ -103,11 +103,11 @@ describe "User answers the candidacy" do
         end
       end
 
-      it "shows the send_create checkbox" do
+      it "shows the return_to_create_state checkbox" do
         page.find(".action-icon--answer").click
 
         within ".edit_candidacy_answer" do
-          expect(page).to have_css("input#candidacy_send_create[type='checkbox']")
+          expect(page).to have_css("input#candidacy_return_to_create_state[type='checkbox']")
         end
       end
     end
