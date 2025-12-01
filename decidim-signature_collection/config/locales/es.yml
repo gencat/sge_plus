@@ -170,11 +170,12 @@ es:
         candidacies: Exportar las candidaturas
     events:
       admin:
-        candidacy_sent_to_technical_validation:
-          email_intro: La candidatura "%{resource_title}" ha sido enviada a validación técnica. Compruébalo a través del <a href="%{admin_candidacy_url}"> panel de administración</a>
-          email_outro: Has recibido esta notificación porque administras la plataforma.
-          email_subject: La candidatura %{resource_title} ha solicitado validación técnica.
-          notification_title: La candidatura "%{resource_title}" ha sido enviada a validación técnica. Compruébalo a través del <a href="%{admin_candidacy_path}"> panel de administración</a>
+        signature_collection:
+          candidacy_sent_to_technical_validation:
+            email_intro: La candidatura "%{resource_title}" ha sido enviada a validación técnica. Compruébalo a través del <a href="%{admin_candidacy_url}"> panel de administración</a>
+            email_outro: Has recibido esta notificación porque administras la plataforma.
+            email_subject: La candidatura %{resource_title} ha solicitado validación técnica.
+            notification_title: La candidatura "%{resource_title}" ha sido enviada a validación técnica. Compruébalo a través del <a href="%{admin_candidacy_path}"> panel de administración</a>
       candidacy_extended:
         email_intro: '¡El plazo de finalización de la candidatura %{resource_title} se ha ampliado!'
         email_outro: Has recibido esta notificación porque está siguiendo la iniciactiva "%{resource_title}". Puedes dejar de recibir notificaciones siguiendo el enlace anterior.
