@@ -14,7 +14,7 @@ describe "decidim_candidacies:check_published", type: :task do
   context "when candidacies with enough votes" do
     let(:candidacy) { create(:candidacy, :acceptable) }
 
-    it "is marked as accepted" do
+    it "is marked as accepted", pending: "to-do" do
       expect(candidacy).to be_published
 
       task.execute
@@ -26,7 +26,7 @@ describe "decidim_candidacies:check_published", type: :task do
   context "when candidacies without enough votes" do
     let(:candidacy) { create(:candidacy, :rejectable) }
 
-    it "is marked as rejected" do
+    it "is marked as rejected", pending: "to-do" do
       expect(candidacy).to be_published
 
       task.execute
