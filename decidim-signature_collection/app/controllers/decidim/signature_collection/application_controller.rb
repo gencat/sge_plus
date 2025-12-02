@@ -15,7 +15,7 @@ module Decidim
 
       before_action do
         if Decidim::SignatureCollection::CandidaciesType.joins(:scopes).where(organization: current_organization).none?
-          flash[:alert] = t("index.uninitialized", scope: "decidim.candidacies")
+          flash[:alert] = t("index.uninitialized", scope: "decidim.signature_collection")
           redirect_to(decidim.root_path)
         end
       end

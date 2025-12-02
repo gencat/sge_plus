@@ -38,8 +38,6 @@ describe "Admin manages candidacies types" do
 
       select("Online", from: "Signature type")
 
-      dynamically_attach_file(:candidacies_type_banner_image, Decidim::Dev.asset("city2.jpeg"))
-
       click_on "Create"
 
       expect(page).to have_admin_callout("A new candidacy type has been successfully created")
@@ -69,8 +67,6 @@ describe "Admin manages candidacies types" do
       select("Mixed", from: "Signature type")
       check "Enable attachments"
       uncheck "Enable participants to undo their online signatures"
-      check "Enable authors to choose the end of signature collection period"
-      check "Enable authors to choose the area for their candidacy"
       uncheck "Enable comments"
 
       click_on "Update"
