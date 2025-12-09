@@ -609,7 +609,7 @@ es:
         more_information: Aquí tienes más información sobre el proceso de creación de una candidatura.
         progress_report_body_for: La candidatura %{title} ha alcanzado el %{percentage}% de firmas requeridas.
         progress_report_for: 'Resumen de la candidatura: %{title}'
-        promotal_committee_help: Recuerda que debes invitar al menos a %{member_count} personas a la Comisión Promotora. Reenvia el siguiente enlace para invitarlas.
+        promotal_committee_help: "Comparte el siguiente enlace para invitar a otras personas a formar parte de la Comisión Promotora de tu candidatura:"
         status_change_body_for: 'La candidatura %{title} ha cambiado su estado a: %{state}'
         status_change_for: La candidatura %{title} ha cambiado su estado
         validation_body: 'Por favor, revise la candidatura y realice la validación técnica necesaria.'
