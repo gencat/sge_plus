@@ -5,8 +5,7 @@
 
 <% if @candidacy.promoting_committee_enabled? %>
     <p>
-      <%= t "decidim.signature_collection.candidacies_mailer.promotal_committee_help",
-            member_count: Decidim::SignatureCollection.minimum_committee_members %>
+      <%= t "decidim.signature_collection.candidacies_mailer.promotal_committee_help" %>
     </p>
     <p>
       <%= link_to decidim_candidacies.new_candidacy_committee_request_url(@candidacy, host: @organization.host),

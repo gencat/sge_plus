@@ -604,7 +604,7 @@ ca:
         more_information: Aquí tens més informació sobre el procés de creació d'candidatures.
         progress_report_body_for: La candidatura %{title} ha arribat al %{percentage}% de les signatures necessàries.
         progress_report_for: 'Resum de la candidatura: %{title}'
-        promotal_committee_help: Recorda que has de convidar almenys a %{member_count} persones a la Comissió Promotora. Reenvia el següent enllaç per convidar-les
+        promotal_committee_help: "Comparteix el següent enllaç per convidar altres persones a formar part de la Comissió Promotora de la teva candidatura:"
         status_change_body_for: 'La candidatura %{title} ha canviat el seu estat a: %{state}'
         status_change_for: La candidatura %{title} ha canviat el seu estat
         validation_body: 'Si us plau, reviseu la candidatura i feu la validació tècnica necessària.'

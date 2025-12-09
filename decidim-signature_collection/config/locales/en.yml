@@ -605,8 +605,7 @@ en:
         more_information: Here you have more information about the candidacy creation process.
         progress_report_body_for: The candidacy %{title} has reached the %{percentage}% of required signatures.
         progress_report_for: 'Summary about the candidacy: %{title}'
-        promotal_committee_help: Remember that you must invite at least %{member_count} people to promoter committee. Forward the following link to invite people to the promoter committee
-        status_change_body_for: 'The candidacy %{title} has changed its status to: %{state}'
+        promotal_committee_help: "Share the following link to invite other people to be part of the promoter committee of your candidacy:"
         status_change_for: The candidacy %{title} has changed its status
         validation_body: 'Please review the candidacy and make the necessary technical validation.'
         validation_subject: "You have a new candidacy to review: '%{title}'"
