@@ -78,11 +78,11 @@ en:
         signature_collection:
           candidacies_type:
             elections:
-              congress: Congrés
-              senate: Senat
-              congress_and_senate: Congrés i Senat
-              european_parliament: Parlament Europeu
-              parliament_of_catalonia: Parlament de Catalunya
+              congress: Congress
+              senate: Senate
+              congress_and_senate: Congress and Senate
+              european_parliament: European Parliament
+              parliament_of_catalonia: Parliament of Catalonia
     models:
       decidim/candidacy:
         one: Candidacy
