@@ -13,7 +13,13 @@
       <div class="row column">
         <%= form.translated :text_field, :title, autofocus: true, aria: { label: :title } %>
       </div>
-
+      <div class="row column">
+        <%= form.select :elections,
+          options_for_select(
+            Decidim::SignatureCollection::CandidaciesType.elections.keys.map { |k| [I18n.t(k, scope: [:activerecord, :attributes, :decidim, :signature_collection, :candidacies_type, :elections]), k] },
+            form.object.elections
+          ) %>
+      </div>
       <div class="row column">
         <%= form.translated :editor, :description, aria: { label: :description } %>
       </div>

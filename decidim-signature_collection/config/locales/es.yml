@@ -73,6 +73,16 @@ es:
               needs_to_be_reattached: Es necesario volver a adjuntar el archivo
               title: El título no puede estar vacío
   activerecord:
+    attributes:
+      decidim:
+        signature_collection:
+          candidacies_type:
+            elections:
+              congress: Congrés
+              senate: Senat
+              congress_and_senate: Congrés i Senat
+              european_parliament: Parlament Europeu
+              parliament_of_catalonia: Parlament de Catalunya
     models:
       decidim/candidacy:
         one: Iniciativa
