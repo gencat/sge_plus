@@ -597,14 +597,14 @@ ca:
             other: SIGNATURES
       candidacies_mailer:
         answered_subject: "S'ha respost a la teva candidatura ciutadana '%{title}'"
-        creation_subject: S'ha creat la teva candidatura ciutadana '%{title}'
+        creation_subject: S'ha creat la teva candidatura '%{title}'. Encara la pots revisar i editar
         candidacy_link:
-          check_candidacy_details: Pots veure els detalls de la candidatura
+          check_candidacy_details: 'Comparteix el següent enllaç per convicar altres persones a formar part de la Comissió Promotora de la teva candidatura:'
           here: aquí
         more_information: Aquí tens més informació sobre el procés de creació d'candidatures.
         progress_report_body_for: La candidatura %{title} ha arribat al %{percentage}% de les signatures necessàries.
         progress_report_for: 'Resum de la candidatura: %{title}'
-        promotal_committee_help: "Comparteix el següent enllaç per convidar altres persones a formar part de la Comissió Promotora de la teva candidatura:"
+        promotal_committee_help: "Recorda enviar-la a <b>Validació Tècnica</b> per a què una administradora la validi i la publiqui. Un cop enviada a ja no es podrà tornar a editar."
         status_change_body_for: 'La candidatura %{title} ha canviat el seu estat a: %{state}'
         status_change_for: La candidatura %{title} ha canviat el seu estat
         validation_body: 'Si us plau, reviseu la candidatura i feu la validació tècnica necessària.'

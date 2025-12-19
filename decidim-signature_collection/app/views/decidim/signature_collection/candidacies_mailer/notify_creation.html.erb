@@ -1,21 +1,17 @@
 <p>
 <%= t "decidim.signature_collection.candidacies_mailer.creation_subject", title: translated_attribute(@candidacy.title) %>.
-<%= link_to t("decidim.signature_collection.candidacies_mailer.more_information"), decidim.page_url("candidacies", host: @organization.host) %>
+<%= link_to t("decidim.signature_collection.candidacies_mailer.candidacy_link.here"), decidim_candidacies.candidacy_url(@candidacy, host: @organization.host) %>
 </p>
 
 <% if @candidacy.promoting_committee_enabled? %>
-    <p>
-      <%= t "decidim.signature_collection.candidacies_mailer.promotal_committee_help" %>
-    </p>
-    <p>
-      <%= link_to decidim_candidacies.new_candidacy_committee_request_url(@candidacy, host: @organization.host),
-                  decidim_candidacies.new_candidacy_committee_request_url(@candidacy, host: @organization.host) %>
-    </p>
+  <p>
+    <%= t("decidim.signature_collection.candidacies_mailer.promotal_committee_help").html_safe %>
+  </p>
 <% end %>
 <br><br>
 
 <p>
   <%= t("check_candidacy_details", scope: "decidim.signature_collection.candidacies_mailer.candidacy_link") %>
   <%= link_to t("here", scope: "decidim.signature_collection.candidacies_mailer.candidacy_link"),
-              decidim_candidacies.candidacy_url(@candidacy, host: @organization.host) %>
+             decidim_candidacies.new_candidacy_committee_request_url(@candidacy, host: @organization.host) %>
 </p>
