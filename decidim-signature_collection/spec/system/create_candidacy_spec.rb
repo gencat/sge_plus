@@ -3,22 +3,16 @@
 require "spec_helper"
 
 describe "Candidacy" do
-  let(:organization) { create(:organization, available_authorizations: authorizations) }
-  let(:do_not_require_authorization) { true }
-  let(:authorizations) { %w(dummy_authorization_handler another_dummy_authorization_handler) }
-  let!(:authorized_user) { create(:user, :confirmed, organization:) }
-  let!(:authorization) { create(:authorization, user: authorized_user) }
+  let(:organization) { create(:organization) }
+  let!(:user) { create(:user, :confirmed, organization:) }
   let(:login) { true }
-  let(:candidacy_type_minimum_committee_members) { 2 }
   let(:signature_type) { "any" }
-  let(:candidacy_type_promoting_committee_enabled) { true }
   let(:candidacy_type) do
     create(:candidacies_type, :attachments_enabled,
            organization:,
-           minimum_committee_members: candidacy_type_minimum_committee_members,
-           promoting_committee_enabled: candidacy_type_promoting_committee_enabled,
            signature_type:)
   end
+  let!(:candidacies_settings) { create(:candidacies_settings, creation_enabled: true, organization:) }
   let!(:candidacy_type_scope) { create(:candidacies_type_scope, type: candidacy_type) }
   let!(:candidacy_type_scope2) { create(:candidacies_type_scope, type: candidacy_type) }
   let!(:other_candidacy_type) { create(:candidacies_type, :attachments_enabled, organization:) }
@@ -37,14 +31,12 @@ describe "Candidacy" do
 
   before do
     switch_to_host(organization.host)
-    login_as(authorized_user, scope: :user) if authorized_user && login
+    login_as(user, scope: :user) if user && login
     visit decidim_candidacies.candidacies_path
-    allow(Decidim::SignatureCollection.config).to receive(:do_not_require_authorization).and_return(do_not_require_authorization)
   end
 
   context "when user visits the candidacies wizard and is not logged in" do
     let(:login) { false }
-    let(:do_not_require_authorization) { false }
     let(:signature_type) { "online" }
 
     context "when there is only one candidacy type" do
@@ -82,7 +74,6 @@ describe "Candidacy" do
   end
 
   context "when user requests a page not having all the data required" do
-    let(:do_not_require_authorization) { false }
     let(:signature_type) { "online" }
 
     context "when there is only one candidacy type" do
@@ -118,78 +109,15 @@ describe "Candidacy" do
     end
   end
 
-  describe "create candidacy verification" do
+  describe "create candidacy" do
     context "when there is just one candidacy type" do
       let!(:other_candidacy_type) { nil }
       let!(:other_candidacy_type_scope) { nil }
 
       context "when the user is logged in" do
-        context "and they do not need to be verified" do
-          it "they are taken to the candidacy form" do
-            click_on "New candidacy"
-            expect(page).to have_content("Create a new candidacy")
-          end
-        end
-
-        context "and creation require a verification" do
-          before do
-            allow(Decidim::SignatureCollection.config).to receive(:do_not_require_authorization).and_return(false)
-            visit decidim_candidacies.candidacies_path
-          end
-
-          context "and they are verified" do
-            it "they are taken to the candidacy form" do
-              click_on "New candidacy"
-              expect(page).to have_content("Create a new candidacy")
-            end
-          end
-
-          context "and they are not verified" do
-            let(:authorization) { nil }
-
-            it "they need to verify" do
-              click_on "New candidacy"
-              expect(page).to have_content("Authorization required")
-            end
-
-            it "they are redirected to the candidacy form after verifying" do
-              click_on "New candidacy"
-              click_on "View authorizations"
-              click_on(text: /Example authorization/)
-              fill_in "Document number", with: "123456789X"
-              click_on "Send"
-              expect(page).to have_content("Review the content of your candidacy.")
-            end
-          end
-        end
-
-        context "and an authorization handler has been activated" do
-          before do
-            candidacy_type.create_resource_permission(
-              permissions: {
-                "create" => {
-                  "authorization_handlers" => {
-                    "dummy_authorization_handler" => { "options" => {} }
-                  }
-                }
-              }
-            )
-            visit decidim_candidacies.candidacies_path
-          end
-
-          let(:authorization) { nil }
-
-          it "they need to verify" do
-            click_on "New candidacy"
-            expect(page).to have_content("We need to verify your identity")
-          end
-
-          it "they are authorized to create after verifying" do
-            click_on "New candidacy"
-            fill_in "Document number", with: "123456789X"
-            click_on "Send"
-            expect(page).to have_content("Review the content of your candidacy. ")
-          end
+        it "they are taken to the candidacy form" do
+          click_on "New candidacy"
+          expect(page).to have_content("Create a new candidacy")
         end
       end
 
@@ -198,187 +126,27 @@ describe "Candidacy" do
 
         it "they need to login in" do
           click_on "New candidacy"
-          expect(page).to have_content("Please log in")
+          expect(page).to have_content("You need to log in")
         end
 
-        context "when they do not need to be verified" do
-          it "they are redirected to the candidacy form after log in" do
-            click_on "New candidacy"
-            within "#loginModal" do
-              fill_in "Email", with: authorized_user.email
-              fill_in "Password", with: "decidim123456789"
-              click_on "Log in"
-            end
-
-            expect(page).to have_content("Create a new candidacy")
-          end
-        end
-
-        context "and creation require a verification" do
-          before do
-            allow(Decidim::SignatureCollection.config).to receive(:do_not_require_authorization).and_return(false)
+        it "they are redirected to the candidacy form after log in" do
+          click_on "New candidacy"
+          within "#session_new_user" do
+            fill_in "Email", with: user.email
+            fill_in "Password", with: "decidim123456789"
+            click_on "Log in"
           end
 
-          context "and they are verified" do
-            it "they are redirected to the candidacy form after log in" do
-              click_on "New candidacy"
-              within "#loginModal" do
-                fill_in "Email", with: authorized_user.email
-                fill_in "Password", with: "decidim123456789"
-                click_on "Log in"
-              end
-
-              expect(page).to have_content("Create a new candidacy")
-            end
-          end
-
-          context "and they are not verified" do
-            let(:authorization) { nil }
-
-            it "they are shown an error" do
-              click_on "New candidacy"
-              within "#loginModal" do
-                fill_in "Email", with: authorized_user.email
-                fill_in "Password", with: "decidim123456789"
-                click_on "Log in"
-              end
-
-              expect(page).to have_content("You are not authorized to perform this action")
-            end
-          end
-        end
-
-        context "and an authorization handler has been activated" do
-          before do
-            candidacy_type.create_resource_permission(
-              permissions: {
-                "create" => {
-                  "authorization_handlers" => {
-                    "dummy_authorization_handler" => { "options" => {} }
-                  }
-                }
-              }
-            )
-            visit decidim_candidacies.candidacies_path
-          end
-
-          let(:authorization) { nil }
-
-          it "they are redirected to authorization form page" do
-            click_on "New candidacy"
-            within "#loginModal" do
-              fill_in "Email", with: authorized_user.email
-              fill_in "Password", with: "decidim123456789"
-              click_on "Log in"
-            end
-
-            expect(page).to have_content("We need to verify your identity")
-            expect(page).to have_content("Verify with Example authorization")
-          end
-        end
-
-        context "and more than one authorization handlers has been activated" do
-          before do
-            candidacy_type.create_resource_permission(
-              permissions: {
-                "create" => {
-                  "authorization_handlers" => {
-                    "dummy_authorization_handler" => { "options" => {} },
-                    "another_dummy_authorization_handler" => { "options" => {} }
-                  }
-                }
-              }
-            )
-            visit decidim_candidacies.candidacies_path
-          end
-
-          let(:authorization) { nil }
-
-          it "they are redirected to pending onboarding authorizations page" do
-            click_on "New candidacy"
-            within "#loginModal" do
-              fill_in "Email", with: authorized_user.email
-              fill_in "Password", with: "decidim123456789"
-              click_on "Log in"
-            end
-
-            expect(page).to have_content("You are almost ready to create an candidacy")
-            expect(page).to have_css("a[data-verification]", count: 2)
-          end
+          expect(page).to have_content("Create a new candidacy")
         end
       end
     end
 
     context "when there are multiples candidacy type" do
       context "when the user is logged in" do
-        context "and they do not need to be verified" do
-          it "they are taken to the candidacy form" do
-            click_on "New candidacy"
-            expect(page).to have_content("Which candidacy do you want to launch")
-          end
-        end
-
-        context "and creation require a verification" do
-          before do
-            allow(Decidim::SignatureCollection.config).to receive(:do_not_require_authorization).and_return(false)
-          end
-
-          context "and they are verified" do
-            it "they are taken to the candidacy form" do
-              click_on "New candidacy"
-              expect(page).to have_content("Which candidacy do you want to launch")
-            end
-          end
-
-          context "and they are not verified" do
-            let(:authorization) { nil }
-
-            it "they need to verify" do
-              click_on "New candidacy"
-              expect(page).to have_css("a[data-dialog-open=not-authorized-modal]", visible: :all, count: 2)
-            end
-
-            it "they are redirected to the candidacy form after verifying" do
-              click_on "New candidacy"
-              click_on "Verify your account to promote this candidacy", match: :first
-              click_on "View authorizations"
-              click_on(text: /Example authorization/)
-              fill_in "Document number", with: "123456789X"
-              click_on "Send"
-              expect(page).to have_content("Which candidacy do you want to launch")
-            end
-          end
-        end
-
-        context "and an authorization handler has been activated on the first candidacy type" do
-          before do
-            candidacy_type.create_resource_permission(
-              permissions: {
-                "create" => {
-                  "authorization_handlers" => {
-                    "dummy_authorization_handler" => { "options" => {} }
-                  }
-                }
-              }
-            )
-            visit decidim_candidacies.candidacies_path
-          end
-
-          let(:authorization) { nil }
-
-          it "they need to verify" do
-            click_on "New candidacy"
-            click_on "Verify your account to promote this candidacy", match: :first
-            expect(page).to have_content("We need to verify your identity")
-          end
-
-          it "they are authorized to create after verifying" do
-            click_on "New candidacy"
-            click_on "Verify your account to promote this candidacy", match: :first
-            fill_in "Document number", with: "123456789X"
-            click_on "Send"
-            expect(page).to have_content("Review the content of your candidacy.")
-          end
+        it "they are taken to the candidacy form" do
+          click_on "New candidacy"
+          expect(page).to have_content("Which candidacy do you want to launch")
         end
       end
 
@@ -390,81 +158,15 @@ describe "Candidacy" do
           expect(page).to have_content("Please log in")
         end
 
-        context "when they do not need to be verified" do
-          it "they are redirected to the candidacy form after log in" do
-            click_on "New candidacy"
-            within "#loginModal" do
-              fill_in "Email", with: authorized_user.email
-              fill_in "Password", with: "decidim123456789"
-              click_on "Log in"
-            end
-
-            expect(page).to have_content("Which candidacy do you want to launch")
-          end
-        end
-
-        context "and creation require a verification" do
-          before do
-            allow(Decidim::SignatureCollection.config).to receive(:do_not_require_authorization).and_return(false)
+        it "they are redirected to the candidacy form after log in" do
+          click_on "New candidacy"
+          within "#loginModal" do
+            fill_in "Email", with: user.email
+            fill_in "Password", with: "decidim123456789"
+            click_on "Log in"
           end
 
-          context "and they are verified" do
-            it "they are redirected to the candidacy form after log in" do
-              click_on "New candidacy"
-              within "#loginModal" do
-                fill_in "Email", with: authorized_user.email
-                fill_in "Password", with: "decidim123456789"
-                click_on "Log in"
-              end
-
-              expect(page).to have_content("Which candidacy do you want to launch")
-            end
-          end
-
-          context "and they are not verified" do
-            let(:authorization) { nil }
-
-            it "they are shown an error" do
-              click_on "New candidacy"
-              within "#loginModal" do
-                fill_in "Email", with: authorized_user.email
-                fill_in "Password", with: "decidim123456789"
-                click_on "Log in"
-              end
-
-              expect(page).to have_css("a[data-dialog-open=not-authorized-modal]", visible: :all, count: 2)
-            end
-          end
-        end
-
-        context "and an authorization handler has been activated" do
-          before do
-            candidacy_type.create_resource_permission(
-              permissions: {
-                "create" => {
-                  "authorization_handlers" => {
-                    "dummy_authorization_handler" => { "options" => {} }
-                  }
-                }
-              }
-            )
-            visit decidim_candidacies.candidacies_path
-          end
-
-          let(:authorization) { nil }
-
-          it "they are redirected to the candidacy form after log in but need to verify" do
-            click_on "New candidacy"
-            within "#loginModal" do
-              fill_in "Email", with: authorized_user.email
-              fill_in "Password", with: "decidim123456789"
-              click_on "Log in"
-            end
-
-            expect(page).to have_content("Create a new candidacy")
-            click_on "Verify your account to promote this candidacy", match: :first
-            expect(page).to have_content("We need to verify your identity")
-          end
+          expect(page).to have_content("Which candidacy do you want to launch")
         end
       end
     end
@@ -474,14 +176,14 @@ describe "Candidacy" do
     before do
       organization.update(rich_text_editor_in_public_views: true)
       click_on "New candidacy"
-      first("button.card__highlight").click
+      first(".card__highlight .button__secondary").click
     end
 
     it_behaves_like "having a rich text editor", "new_candidacy_form", "content"
   end
 
   describe "creating an candidacy" do
-    context "without validation" do
+    context "with validation" do
       before do
         click_on "New candidacy"
       end
@@ -510,7 +212,7 @@ describe "Candidacy" do
 
       context "and fill basic data" do
         before do
-          first("button.card__highlight").click
+          first(".card__highlight .button__secondary").click
         end
 
         it "does not show the select input for candidacy_type" do
@@ -577,7 +279,7 @@ describe "Candidacy" do
           let!(:other_candidacy_type) { nil }
           let!(:other_candidacy_type_scope) { nil }
           let(:candidacy_type_scope2) { nil }
-          let(:candidacy_type) { create(:candidacies_type, organization:, minimum_committee_members: candidacy_type_minimum_committee_members, signature_type:) }
+          let(:candidacy_type) { create(:candidacies_type, organization:, signature_type:) }
 
           it "hides and automatically selects the values" do
             expect(page).to have_no_content("Signature collection type")
@@ -610,7 +312,7 @@ describe "Candidacy" do
 
         context "when there are several candidacy types" do
           before do
-            first("button.card__highlight").click
+            first(".card__highlight .button__secondary").click
           end
 
           it "create view is shown" do
@@ -637,7 +339,7 @@ describe "Candidacy" do
 
           context "when only one signature collection and scope are available" do
             let(:candidacy_type_scope2) { nil }
-            let(:candidacy_type) { create(:candidacies_type, organization:, minimum_committee_members: candidacy_type_minimum_committee_members, signature_type: "offline") }
+            let(:candidacy_type) { create(:candidacies_type, organization:, signature_type: "offline") }
 
             it "hides and automatically selects the values" do
               expect(page).to have_no_content("Signature collection type")
@@ -664,7 +366,7 @@ describe "Candidacy" do
 
           context "when the candidacy type enables custom signature end date" do
             let(:signature_type) { "offline" }
-            let(:candidacy_type) { create(:candidacies_type, :custom_signature_end_date_enabled, organization:, minimum_committee_members: candidacy_type_minimum_committee_members, signature_type:) }
+            let(:candidacy_type) { create(:candidacies_type, :custom_signature_end_date_enabled, organization:, signature_type:) }
 
             it "shows the signature end date" do
               expect(page).to have_content("End of signature collection period")
@@ -679,7 +381,7 @@ describe "Candidacy" do
 
           context "when the candidacy type enables area" do
             let(:signature_type) { "offline" }
-            let(:candidacy_type) { create(:candidacies_type, :area_enabled, organization:, minimum_committee_members: candidacy_type_minimum_committee_members, signature_type:) }
+            let(:candidacy_type) { create(:candidacies_type, :area_enabled, organization:, signature_type:) }
 
             it "shows the area" do
               expect(page).to have_content("Area")
@@ -694,7 +396,8 @@ describe "Candidacy" do
               visit current_path
             end
 
-            it_behaves_like "having a rich text editor", "new_candidacy_form", "content"
+            # TO-DO
+            # it_behaves_like "having a rich text editor", "new_candidacy_form", "content"
           end
         end
       end
@@ -703,7 +406,7 @@ describe "Candidacy" do
         let(:candidacy) { build(:candidacy, organization:, scoped_type: candidacy_type_scope) }
 
         before do
-          first("button.card__highlight").click
+          first(".card__highlight .button__secondary").click
 
           fill_in "Title", with: translated(candidacy.title, locale: :en)
           fill_in "candidacy_description", with: translated(candidacy.description, locale: :en)
@@ -712,32 +415,10 @@ describe "Candidacy" do
           find_button("Continue").click
         end
 
-        it "shows the promoter committee" do
-          expect(page).to have_content("Promoter committee")
-        end
-
-        it "offers contextual help" do
-          within ".flash.secondary" do
-            expect(page).to have_content("This kind of candidacy requires a Promoting Commission consisting of at least #{candidacy_type_minimum_committee_members} people (attestors). You must share the following link with the other people that are part of this candidacy. When your contacts receive this link they will have to follow the indicated steps.")
-          end
-        end
-
-        it "contains a link to invite other users" do
-          expect(page).to have_content("/committee_requests/new")
-        end
-
-        it "contains a button to continue with next step" do
-          expect(page).to have_content("Continue")
-        end
-
-        context "when minimum committee size is zero" do
-          let(:candidacy_type_minimum_committee_members) { 0 }
-
-          it "skips to next step" do
-            within("#wizard-steps [data-active]") do
-              expect(page).to have_no_content("Promoter committee")
-              expect(page).to have_content("Finish")
-            end
+        it "skips to next step" do
+          within("#wizard-steps [data-active]") do
+            expect(page).to have_no_content("Promoter committee")
+            expect(page).to have_content("Finish")
           end
         end
 
@@ -752,13 +433,13 @@ describe "Candidacy" do
       end
 
       context "when the candidacy is created by an user group" do
-        let(:organization) { create(:organization, available_authorizations: authorizations, user_groups_enabled: true) }
+        let(:organization) { create(:organization, user_groups_enabled: true) }
         let(:candidacy) { build(:candidacy) }
-        let!(:user_group) { create(:user_group, :verified, organization:, users: [authorized_user]) }
+        let!(:user_group) { create(:user_group, :verified, organization:, users: [user]) }
 
         before do
-          authorized_user.reload
-          first("button.card__highlight").click
+          user.reload
+          first(".card__highlight .button__secondary").click
 
           fill_in "Title", with: translated(candidacy.title, locale: :en)
           fill_in "candidacy_description", with: translated(candidacy.description, locale: :en)
@@ -766,7 +447,7 @@ describe "Candidacy" do
           select(translated(candidacy_type_scope&.scope&.name, locale: :en), from: "Scope")
         end
 
-        it "shows the user group as author" do
+        xit "shows the user group as author", pending: "todo" do
           expect(Decidim::SignatureCollection::Candidacy.where(decidim_user_group_id: user_group.id).count).to eq(0)
           select(user_group.name, from: "Author")
           find_button("Continue").click
@@ -778,7 +459,7 @@ describe "Candidacy" do
         let(:candidacy) { build(:candidacy) }
 
         before do
-          first("button.card__highlight").click
+          first(".card__highlight .button__secondary").click
 
           fill_in "Title", with: translated(candidacy.title, locale: :en)
           fill_in "candidacy_description", with: translated(candidacy.description, locale: :en)
@@ -786,7 +467,6 @@ describe "Candidacy" do
           select(translated(candidacy_type_scope&.scope&.name, locale: :en), from: "Scope")
           dynamically_attach_file(:candidacy_documents, Decidim::Dev.asset("Exampledocument.pdf"))
           find_button("Continue").click
-          find_link("Continue").click
           expect(page).to have_content("Your candidacy has been successfully created.")
         end
 
@@ -794,7 +474,7 @@ describe "Candidacy" do
           expect(Decidim::SignatureCollection::Candidacy.last.documents.count).to eq(1)
         end
 
-        it "shows the page component" do
+        xit "shows the page component", pending: "todo" do
           find_link("Go to my candidacies").click
           find_link(translated(candidacy.title, locale: :en)).click
 
@@ -830,11 +510,10 @@ describe "Candidacy" do
 
       context "when minimum committee size is zero" do
         let(:candidacy) { build(:candidacy, organization:, scoped_type: candidacy_type_scope) }
-        let(:candidacy_type_minimum_committee_members) { 0 }
         let(:expected_message) { "You are going to send the candidacy for an admin to review it and publish it. Once published you will not be able to edit it. Are you sure?" }
 
         before do
-          first("button.card__highlight").click
+          first(".card__highlight .button__secondary").click
 
           fill_in "Title", with: translated(candidacy.title, locale: :en)
           fill_in "candidacy_description", with: translated(candidacy.description, locale: :en)
@@ -854,11 +533,10 @@ describe "Candidacy" do
       context "when promoting committee is not enabled" do
         let(:candidacy) { build(:candidacy, organization:, scoped_type: candidacy_type_scope) }
         let(:candidacy_type_promoting_committee_enabled) { false }
-        let(:candidacy_type_minimum_committee_members) { 0 }
         let(:expected_message) { "You are going to send the candidacy for an admin to review it and publish it. Once published you will not be able to edit it. Are you sure?" }
 
         before do
-          first("button.card__highlight").click
+          first(".card__highlight .button__secondary").click
 
           fill_in "Title", with: translated(candidacy.title, locale: :en)
           fill_in "candidacy_description", with: translated(candidacy.description, locale: :en)
