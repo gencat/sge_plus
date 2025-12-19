@@ -608,15 +608,14 @@ en:
             other: Signatures
       candidacies_mailer:
         answered_subject: "Your candidacy '%{title}' has been answered"
-        creation_subject: Your candidacy '%{title}' has been created
+        creation_subject: Your candidacy '%{title}' has been created. You can still review and edit it.
         candidacy_link:
-          check_candidacy_details: You can see the candidacy details
+          check_candidacy_details: 'Share the following link to convince other people to be part of the Promotion Committee of your candidacy:'
           here: here
         more_information: Here you have more information about the candidacy creation process.
         progress_report_body_for: The candidacy %{title} has reached the %{percentage}% of required signatures.
         progress_report_for: 'Summary about the candidacy: %{title}'
-        promotal_committee_help: Remember that you must invite at least %{member_count} people to promoter committee. Forward the following link to invite people to the promoter committee
-        status_change_body_for: 'The candidacy %{title} has changed its status to: %{state}'
+        promotal_committee_help: "Remember to send it to <b>Technical Validation</b> so that an administrator can validate and publish it. Once sent to, it cannot be edited again."
         status_change_for: The candidacy %{title} has changed its status
         validation_body: 'Please review the candidacy and make the necessary technical validation.'
         validation_subject: "You have a new candidacy to review: '%{title}'"
