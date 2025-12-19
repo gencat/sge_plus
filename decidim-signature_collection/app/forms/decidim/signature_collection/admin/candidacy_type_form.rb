@@ -63,10 +63,6 @@ module Decidim
             ]
           end
         end
-
-        def elections=(value)
-          super(value.presence)
-        end
       end
     end
   end

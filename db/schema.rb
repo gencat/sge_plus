@@ -14,7 +14,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_12_14_204836) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "ltree"
   enable_extension "pg_trgm"
-    enable_extension "plpgsql"
+  enable_extension "pgcrypto"
+  enable_extension "plpgsql"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -1483,6 +1484,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_12_14_204836) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.integer "decidim_user_group_id"
+    t.string "hashtag"
     t.integer "scoped_type_id"
     t.datetime "first_progress_notification_at", precision: nil
     t.datetime "second_progress_notification_at", precision: nil
@@ -1535,7 +1537,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_12_14_204836) do
   end
 
   create_table "decidim_signature_collection_candidacies_types", force: :cascade do |t|
-    t.jsonb "title", null: false
     t.jsonb "description", null: false
     t.integer "decidim_organization_id"
     t.datetime "created_at", precision: nil, null: false
@@ -1559,6 +1560,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_12_14_204836) do
     t.datetime "signature_period_end"
     t.boolean "published", default: true
     t.integer "minimum_signing_age"
+    t.jsonb "title", null: false
     t.string "elections", default: "", null: false
     t.index ["decidim_organization_id"], name: "index_decidim_candidacy_types_on_decidim_organization_id"
   end

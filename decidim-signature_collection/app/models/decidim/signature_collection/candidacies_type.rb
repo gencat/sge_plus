@@ -32,10 +32,11 @@ module Decidim
         congress_and_senate: "congress_and_senate",
         european_parliament: "european_parliament",
         parliament_of_catalonia: "parliament_of_catalonia"
-      }, _suffix: true
+      }, _prefix: true
 
       validates :title, :description, :signature_type, presence: true
       validates :document_number_authorization_handler, presence: true, if: ->(form) { form.collect_user_extra_fields? }
+      validates :elections, presence: true
 
       has_one_attached :banner_image
       validates_upload :banner_image, uploader: Decidim::BannerImageUploader
