@@ -8,7 +8,7 @@ module Decidim
       class UpdateCandidacyType < Decidim::Commands::UpdateResource
         fetch_form_attributes :title, :description, :signature_type, :attachments_enabled, :comments_enabled,
                               :undo_online_signatures_enabled, :collect_user_extra_fields, :minimum_signing_age,
-                              :extra_fields_legal_information, :validate_sms_code_on_votes,
+                              :extra_fields_legal_information, :validate_sms_code_on_votes, :elections,
                               :document_number_authorization_handler, :child_scope_threshold_enabled,
                               :only_global_scope_enabled, :signature_period_start, :signature_period_end, :published
 

@@ -26,7 +26,8 @@ module Decidim
             comments_enabled:,
             promoting_committee_enabled:,
             minimum_committee_members:,
-            banner_image: Decidim::Dev.test_file("city2.jpeg", "image/jpeg")
+            banner_image: Decidim::Dev.test_file("city2.jpeg", "image/jpeg"),
+            elections: "congress"
           }
         end
         let(:context) do
@@ -76,6 +77,12 @@ module Decidim
           end
 
           it { is_expected.to be_invalid }
+        end
+
+        context "when elections is present" do
+          it "includes the elections field in the attributes" do
+            expect(subject.elections).to eq("congress")
+          end
         end
       end
     end

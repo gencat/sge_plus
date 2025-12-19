@@ -73,6 +73,16 @@ en:
               needs_to_be_reattached: Needs to be reattached
               title: Title should not be empty
   activerecord:
+    attributes:
+      decidim:
+        signature_collection:
+          candidacies_type:
+            elections:
+              congress: Congress
+              senate: Senate
+              congress_and_senate: Congress and Senate
+              european_parliament: European Parliament
+              parliament_of_catalonia: Parliament of Catalonia
     models:
       decidim/candidacy:
         one: Candidacy
