@@ -13,7 +13,6 @@ module Decidim
       include Decidim::FormFactory
 
       prepend_before_action :set_wizard_steps
-      before_action :authenticate_user!
       before_action :authorize_wizard_step, only: [
         :fill_personal_data,
         :store_personal_data,
@@ -187,7 +186,7 @@ module Decidim
       end
 
       def fill_personal_data_step?
-        candidacy_type.collect_user_extra_fields?
+        true
       end
 
       def authorize_wizard_step

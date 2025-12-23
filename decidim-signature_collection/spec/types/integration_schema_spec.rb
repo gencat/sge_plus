@@ -46,7 +46,7 @@ describe "Decidim::Api::QueryType" do
   end
   let(:candidacy_type_data) do
     {
-      "collectUserExtraFields" => candidacy.type.collect_user_extra_fields?,
+      "collectUserExtraFields" => true,
       "createdAt" => candidacy.type.created_at.to_time.iso8601,
       "description" => { "translation" => candidacy.type.description[locale] },
       "extraFieldsLegalInformation" => candidacy.type.extra_fields_legal_information,

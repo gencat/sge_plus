@@ -4,7 +4,19 @@
   <%= form_required_explanation %>
   <div>
     <div class="form__wrapper">
-      <%= f.text_field :name_and_surname, autofocus: true, required: true %>
+      <%= f.text_field :name, autofocus: true, required: true %>
+    </div>
+
+    <div class="form__wrapper">
+      <%= f.text_field :first_surname, autofocus: true, required: true %>
+    </div>
+
+    <div class="form__wrapper">
+      <%= f.text_field :second_surname, autofocus: true %>
+    </div>
+
+    <div class="form__wrapper">
+      <%= f.select :document_type, options_for_select(Decidim::SignatureCollection::VoteForm.document_types.map { |k, v| [I18n.t(k, scope: [:activerecord, :attributes, :decidim, :signature_collection, :vote_form, :document_types]), v] }, f.object.document_type), required: true %>
     </div>
 
     <div class="form__wrapper">

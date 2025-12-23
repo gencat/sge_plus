@@ -58,7 +58,10 @@ ca:
       candidacies_vote:
         date_of_birth: Data de naixement
         document_number: Número de document
-        name_and_surname: Nom i cognoms
+        document_type: Tipus de document
+        name: Nom
+        first_surname: Primer cognom
+        second_surname: Segon cognom
         postal_code: Codi postal
       organization_data:
         address: Adreça
@@ -72,10 +75,22 @@ ca:
               file: Aquest arxiu és invàlid
               needs_to_be_reattached: És necessari tornar a adjuntar l'arxiu
               title: El títol no pot quedar buit
+        candidacies_vote:
+          already_voted_as_user: "Ja has signat aquesta candidatura amb el teu compte d'usuari"
+          attributes:
+            document_number:
+              invalid_nif_format: "El format del NIF no és vàlid. Ha de contenir 8 dígits seguits d'una lletra (ex: 12345678A)"
+              invalid_nif_letter: "La lletra del NIF no és correcta"
+              invalid_nie_format: "El format del NIE no és vàlid. Ha de començar amb X, Y o Z, seguit de 7 dígits i una lletra (ex: X1234567A)"
+              invalid_nie_letter: "La lletra del NIE no és correcta"
   activerecord:
     attributes:
       decidim:
         signature_collection:
+          vote_form:
+            document_types:
+              nif: NIF
+              nie: NIE
           candidacies_type:
             elections:
               congress: Congrés
@@ -165,7 +180,9 @@ ca:
             candidacy_start_date: Data d'inici
             candidacy_title: Títol de la candidatura
             candidacy_type: Tipus de candidatura
-            name_and_surname: Nom i cognoms
+            name: Nom
+            first_surname: Primer cognom
+            second_surname: Segon cognom
             nickname: Àlies
             postal_code: Codi postal
             signature_count: Recompte de signatures

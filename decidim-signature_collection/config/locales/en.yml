@@ -58,7 +58,10 @@ en:
       candidacies_vote:
         date_of_birth: Date of birth
         document_number: Document number
-        name_and_surname: Name and surname
+        document_type: Document type
+        name: Name
+        first_surname: First surname
+        second_surname: Second surname
         postal_code: Postal code
       organization_data:
         address: Address
@@ -72,10 +75,22 @@ en:
               file: File is invalid
               needs_to_be_reattached: Needs to be reattached
               title: Title should not be empty
+        candidacies_vote:
+          already_voted_as_user: "You have already signed this candidacy with your user account"
+          attributes:
+            document_number:
+              invalid_nif_format: "The NIF format is invalid. It must contain 8 digits followed by a letter (e.g: 12345678A)"
+              invalid_nif_letter: "The NIF letter is incorrect"
+              invalid_nie_format: "The NIE format is invalid. It must start with X, Y or Z, followed by 7 digits and a letter (e.g: X1234567A)"
+              invalid_nie_letter: "The NIE letter is incorrect"
   activerecord:
     attributes:
       decidim:
         signature_collection:
+          vote_form:
+            document_types:
+              nif: NIF
+              nie: NIE
           candidacies_type:
             elections:
               congress: Congress
@@ -165,7 +180,9 @@ en:
             candidacy_start_date: Start date
             candidacy_title: Candidacy title
             candidacy_type: Candidacy Type
-            name_and_surname: Name and surname
+            name: Name
+            first_surname: First surname
+            second_surname: Second surname
             nickname: Nickname
             postal_code: Postal code
             signature_count: Signature count

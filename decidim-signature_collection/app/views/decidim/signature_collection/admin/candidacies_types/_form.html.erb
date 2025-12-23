@@ -73,9 +73,7 @@
         <%= form.check_box :comments_enabled %>
       </div>
 
-      <div class="row column">
-        <%= form.check_box :collect_user_extra_fields %>
-      </div>
+      <%= form.hidden_field :collect_user_extra_fields, value: true %>
 
       <div class="row column">
         <%= form.translated :editor, :extra_fields_legal_information, aria: { label: :extra_fields_legal_information } %>

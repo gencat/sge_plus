@@ -15,6 +15,8 @@ module Decidim
         read_public_candidacy?
         search_candidacy_types_and_scopes?
         request_membership?
+        vote_candidacy?
+        sign_candidacy?
 
         return permission_action unless user
 
@@ -22,8 +24,6 @@ module Decidim
         update_public_candidacy?
         print_candidacy?
 
-        vote_candidacy?
-        sign_candidacy?
         unvote_candidacy?
 
         candidacy_attachment?
@@ -125,6 +125,9 @@ module Decidim
         return false unless permission_action.action == :vote &&
                             permission_action.subject == :candidacy
 
+        # Permitir votar sin usuario autenticado
+        return toggle_allow(candidacy.votes_enabled?) if user.blank?
+
         toggle_allow(can_vote?)
       end
 
@@ -156,6 +159,9 @@ module Decidim
         return false unless permission_action.action == :sign_candidacy &&
                             permission_action.subject == :candidacy
 
+        # Permitir firmar cuando hay steps (formulario de datos personales), independientemente del usuario
+        return toggle_allow(true) if context.fetch(:signature_has_steps, false) && candidacy.votes_enabled?
+
         can_sign = can_vote? &&
                    context.fetch(:signature_has_steps, false)
 
@@ -167,6 +173,9 @@ module Decidim
       end
 
       def can_vote?
+        # Permitir votar sin usuario autenticado
+        return candidacy.votes_enabled? if user.blank?
+
         candidacy.votes_enabled? &&
           candidacy.organization&.id == user.organization&.id &&
           candidacy.votes.where(author: user).empty?

@@ -61,8 +61,8 @@ module Decidim
       describe "collectUserExtraFields" do
         let(:query) { "{ collectUserExtraFields }" }
 
-        it "returns the collect user extra fields field" do
-          expect(response["collectUserExtraFields"]).to eq(model.collect_user_extra_fields)
+        it "returns true (always collects user extra fields)" do
+          expect(response["collectUserExtraFields"]).to eq(true)
         end
       end
 
