@@ -43,7 +43,7 @@ module Decidim
           return false unless current_candidacy
 
           candidacy_type = current_candidacy.scoped_type.type
-          candidacy_type.collect_user_extra_fields? || candidacy_type.validate_sms_code_on_votes?
+          true || candidacy_type.validate_sms_code_on_votes?
         end
 
         private

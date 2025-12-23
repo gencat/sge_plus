@@ -87,24 +87,28 @@ module Decidim
       def vote_row(model, index)
         cell = [
           layout.text((index + 1).to_s, style: :vote_td),
-          layout.text(model.author.nickname, style: :vote_td),
+          layout.text(model.author&.nickname || I18n.t("models.candidacies_votes.fields.no_user", scope: "decidim.admin", default: "Sin usuario"), style: :vote_td),
           layout.text(I18n.l(model.created_at, format: "%Y-%m-%d %H:%M:%S %Z"), style: :vote_td),
           layout.text(truncate(model.hash_id), style: :vote_td)
         ]
 
         if collect_user_extra_fields
-          metadata ||= model.encrypted_metadata ? encryptor.decrypt(model.encrypted_metadata) : {}
+          metadata = model.encrypted_metadata ? encryptor.decrypt(model.encrypted_metadata) : {}
+
+          full_name = [metadata[:name], metadata[:first_surname], metadata[:second_surname]].compact.join(" ")
+          date_of_birth = metadata[:date_of_birth] ? I18n.l(metadata[:date_of_birth].to_date, format: :long) : ""
 
           cell += [
-            layout.text(metadata[:name_and_surname].presence || "", style: :vote_td),
-            layout.text(metadata[:document_number].presence || "", style: :vote_td),
-            layout.text(metadata[:date_of_birth].presence || "", style: :vote_td),
-            layout.text(metadata[:postal_code].presence || "", style: :vote_td)
+            layout.text(full_name.presence || "", style: :vote_td),
+            layout.text(metadata[:document_number].to_s, style: :vote_td),
+            layout.text(date_of_birth, style: :vote_td),
+            layout.text(metadata[:postal_code].to_s, style: :vote_td)
           ]
         end
 
+        timestamp_text = model.timestamp ? truncate(model.timestamp.to_s) : ""
         cell += [
-          layout.text(truncate(model.timestamp.presence || ""), style: :vote_td)
+          layout.text(timestamp_text, style: :vote_td)
         ]
         [cell]
       end
@@ -140,7 +144,10 @@ module Decidim
         header
       end
 
-      def collect_user_extra_fields = candidacy.type.collect_user_extra_fields
+      # Siempre recopila datos del usuario (collect_user_extra_fields siempre es true)
+      def collect_user_extra_fields
+        true
+      end
 
       def cell_style
         lambda do |cell|

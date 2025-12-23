@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_12_19_102109) do
+ActiveRecord::Schema[7.0].define(version: 2025_12_22_131419) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "ltree"
   enable_extension "pg_trgm"
@@ -1565,7 +1565,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_12_19_102109) do
 
   create_table "decidim_signature_collection_candidacies_votes", force: :cascade do |t|
     t.bigint "decidim_signature_collection_candidacy_id", null: false
-    t.bigint "decidim_author_id", null: false
+    t.bigint "decidim_author_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.text "encrypted_metadata"
