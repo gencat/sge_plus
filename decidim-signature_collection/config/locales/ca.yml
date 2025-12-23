@@ -180,9 +180,7 @@ ca:
             candidacy_start_date: Data d'inici
             candidacy_title: Títol de la candidatura
             candidacy_type: Tipus de candidatura
-            name: Nom
-            first_surname: Primer cognom
-            second_surname: Segon cognom
+            name_and_surname: Nom i cognoms
             nickname: Àlies
             postal_code: Codi postal
             signature_count: Recompte de signatures

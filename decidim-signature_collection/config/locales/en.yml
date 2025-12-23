@@ -180,9 +180,7 @@ en:
             candidacy_start_date: Start date
             candidacy_title: Candidacy title
             candidacy_type: Candidacy Type
-            name: Name
-            first_surname: First surname
-            second_surname: Second surname
+            name_and_surname: Name and surnames
             nickname: Nickname
             postal_code: Postal code
             signature_count: Signature count

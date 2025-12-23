@@ -180,9 +180,7 @@ es:
             candidacy_start_date: Fecha de inicio
             candidacy_title: Título de la candidatura
             candidacy_type: Tipo de candidatura
-            name: Nombre
-            first_surname: Primer apellido
-            second_surname: Segundo apellido
+            name_and_surname: Nombre y apellidos
             nickname: Alias
             postal_code: Código postal
             signature_count: Recuento de firmas
