@@ -8,7 +8,7 @@ en:
         area_id: Area
         decidim_scope_id: Scope
         decidim_user_group_id: Author
-        description: Description
+        description: Candidacy short program
         offline_votes: In-person signatures
         offline_votes_for_scope: In-person signatures for %{scope_name}
         scope_id: Scope
@@ -21,7 +21,7 @@ en:
           offline: In-person
           online: Online
         state: Status
-        title: Title
+        title: Name and acronym of the candidacy to endorse
         type_id: Type
       candidacies_committee_member:
         user: Committee member
@@ -407,21 +407,21 @@ en:
         fill_data:
           back: Back
           continue: Continue
-          fill_data_help: "<ul> <li>Review the content of your candidacy. Is your title easy to understand? Is the objective of your candidacy clear?</li> <li>You have to choose the type of signature. In-person, online or a combination of both</li> <li>Which is the geographic scope of the candidacy?</li> </ul>"
+          fill_data_help: "Remember that, prior to starting the collection of signatures, in the case of parliamentary elections, you must inform the relevant electoral board of the electronic signature system used; and in the case of municipal elections, you must verify that the city council recognizes this electronic signature collection system as valid."
           more_information: "(More information)"
           select_area: Select an area
           select_scope: Select a scope
         finish:
           back: Back
           back_to_candidacies: Back to candidacies
-          callout_text: Congratulations! Your candidacy has been successfully created.
+          callout_text: Congratulations! The process has been successfully initiated. Remember to send the application to <b>Technical Validation</b> to begin collecting signatures.
           confirm: You are going to send the candidacy for an admin to review it and publish it. Once published you will not be able to edit it. Are you sure?
           edit_my_candidacy: Edit my candidacy
           go_to_my_candidacies: Go to my candidacies
           more_information: "(More information)"
           send_my_candidacy: Send my candidacy to technical validation
         finish_help:
-          publish_helper_text: Remember that for your candidacy to be published you must complete the required information and <strong>send it to technical validation</strong> for an administrator to review it.
+          publish_helper_text: You can still review and edit your candidacy information. Once you submit it for technical validation, it will no longer be possible to modify it. Remember that, before starting the signature collection process, you must, in the case of parliamentary elections, inform the relevant electoral board of the electronic signature system you will be using; and in the case of municipal elections, verify that the city council recognizes this electronic signature collection system as valid.
         previous_form:
           back: Back
           continue: Continue
@@ -432,7 +432,7 @@ en:
           back: Back
           choose_html: I want to create a <strong>%{title}</strong>
           more_information: More information
-          new: Create a new candidacy
+          new: Start a new candidacy to endorse
           select: I want to promote this candidacy
           select_candidacy_type_help: Candidacies are a means by which the participants can intervene so that the organization can undertake actions in defence of the general interest. Which candidacy do you want to launch?
           select_candidacy_type: Promotes the candidacy
@@ -535,7 +535,7 @@ en:
           state: Status
           type: Type
         index_header:
-          new_candidacy: New candidacy
+          new_candidacy: New candidacy to endorse
         candidacies:
           closed_candidacies_warning: Currently, there are no open candidacies, but here you can find all the closed candidacies listed.
           no_candidacies_warning: No candidacies match your search criteria.

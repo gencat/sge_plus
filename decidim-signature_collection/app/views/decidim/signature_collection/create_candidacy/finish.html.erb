@@ -7,8 +7,7 @@
 <% end %>
 
 <% announcement_body = capture do %>
-  <%= t("callout_text", scope: "decidim.signature_collection.create_candidacy.finish") %>
-  <%= link_to t(".more_information"), decidim.page_path("candidacies"), target: "_blank", class: "button button__sm button__text-secondary block text-left" %>
+  <%= t("callout_text", scope: "decidim.signature_collection.create_candidacy.finish").html_safe %>
 <% end %>
 
 <%= cell("decidim/announcement", { body: announcement_body }, callout_class: "secondary") %>
