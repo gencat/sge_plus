@@ -6,12 +6,12 @@ es:
         answer: Respuesta
         answer_url: URL de la respuesta
         area_id: Área
-        decidim_scope_id: Ámbito
+        decidim_scope_id: Circumscripción
         decidim_user_group_id: Autora
-        description: Descripción
+        description: Programa abreviado de la candidatura
         offline_votes: Firmas presenciales
         offline_votes_for_scope: Firmas en persona para %{scope_name}
-        scope_id: Ámbito
+        scope_id: Circumscripción
         return_to_create_state: Devolver al estado de creación
         signature_end_date: Fin del período de recogida de firmas
         signature_start_date: Inicio del período de recogida de firmas
@@ -21,7 +21,7 @@ es:
           offline: Presencial
           online: Digital
         state: Estado
-        title: Título
+        title: Nombre y siglas de la candidatura a avalar
         type_id: Tipo
       candidacies_committee_member:
         user: Miembro del Comité
@@ -411,21 +411,21 @@ es:
         fill_data:
           back: Volver
           continue: Continuar
-          fill_data_help: "<ul> <li>Revisa el contenido de tu candidatura. ¿Tu título es fácil de entender? ¿Está claro el objetivo de tu candidatura?</li> <li>Tienes que elegir el tipo de firma. En persona, en línea o una combinación de ambos</li> <li>¿Cuál es el alcance geográfico de la candidatura?</li> </ul>"
+          fill_data_help: Recuerda que, previo al inicio de la recogida de firmas, hace falta que, en el caso de elecciones a Parlamento, comunicáis a la junta electoral competente el sistema de firma electrónica que se utiliza; y en el caso de elecciones municipales, verificáis que el ayuntamiento reconozca como válido este sistema de recogida de firmas electrónicas.
           more_information: "(Más información)"
           select_area: Selecciona un área
           select_scope: Selecciona un ámbito
         finish:
           back: Volver
           back_to_candidacies: Volver a candidaturas
-          callout_text: '¡Enhorabuena! Tu candidatura se ha creado correctamente.'
+          callout_text: '¡Enhorabuena! El trámite se ha iniciado correctamente. Recuerda enviar la candidatura a <b>Validación Técnica</b> para iniciar la recogida de firmas.'
           confirm: Vas a enviar la candidatura para que una administrador ala revise y publique. Una vez publicada no podrás editarla. ¿Estás segura?
           edit_my_candidacy: Editar mi candidatura
           go_to_my_candidacies: Ir a mis candidaturas
           more_information: "(Más información)"
           send_my_candidacy: Enviar mi candidatura a validación técnica
         finish_help:
-          publish_helper_text: Recuerda que para que tu candidatura sea publicada debes completar la información requerida y <strong>enviarla a validación técnica</strong> para que una administradora la revise.
+          publish_helper_text: Todavía puedes revisar y editar la información de la candidatura. Una vez lo envíes a validación técnica ya no se podrá modificar. Recuerda que, previo al inicio de la recogida de firmas, hace falta que, en el caso de elecciones a Parlamento, comunicáis a la junta electoral competente el sistema de firma electrónica que se utiliza; y en el caso de elecciones municipales, verificáis que el ayuntamiento reconozca como válido este sistema de recogida de firmas electrónicas.
         previous_form:
           back: Volver
           continue: Continuar
@@ -436,7 +436,7 @@ es:
           back: Volver
           choose_html: Quiero <strong>%{title}</strong>
           more_information: Más información
-          new: Crea una nueva candidatura
+          new: Iniciar una nueva candidatura a avalar
           select: Quiero promover esta candidatura
           select_candidacy_type_help: Las candidaturas son un medio por el que las participantes pueden intervenir para que la organización emprenda acciones en defensa del interés general. ¿Qué candidatura quieres lanzar?
           select_candidacy_type: Impulsa la candidatura
@@ -538,7 +538,7 @@ es:
           state: Estado
           type: Tipo
         index_header:
-          new_candidacy: Nueva candidatura
+          new_candidacy: Nueva candidatura a avalar
         candidacies:
           closed_candidacies_warning: Actualmente no hay candidaturas abiertas, pero aquí puedes encontrar todas las candidaturas cerradas listadas.
           no_candidacies_warning: Ninguna candidatura coincide con los criterios de búsqueda.
