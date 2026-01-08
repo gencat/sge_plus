@@ -1565,14 +1565,12 @@ ActiveRecord::Schema[7.0].define(version: 2025_12_22_131419) do
 
   create_table "decidim_signature_collection_candidacies_votes", force: :cascade do |t|
     t.bigint "decidim_signature_collection_candidacy_id", null: false
-    t.bigint "decidim_author_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.text "encrypted_metadata"
     t.string "timestamp"
     t.string "hash_id"
     t.integer "decidim_scope_id"
-    t.index ["decidim_author_id"], name: "idx_signaturecollect_candidacies_votes_on_author_id"
     t.index ["decidim_signature_collection_candidacy_id"], name: "idx_signaturecollect_candidacies_votes_on_candidacy_id"
     t.index ["hash_id"], name: "idx_signaturecollect_candidacies_votes_on_hash_id"
   end

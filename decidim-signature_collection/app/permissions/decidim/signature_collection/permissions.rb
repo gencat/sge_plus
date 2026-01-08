@@ -125,7 +125,6 @@ module Decidim
         return false unless permission_action.action == :vote &&
                             permission_action.subject == :candidacy
 
-        # Permitir votar sin usuario autenticado
         return toggle_allow(candidacy.votes_enabled?) if user.blank?
 
         toggle_allow(can_vote?)
@@ -159,13 +158,7 @@ module Decidim
         return false unless permission_action.action == :sign_candidacy &&
                             permission_action.subject == :candidacy
 
-        # Permitir firmar cuando hay steps (formulario de datos personales), independientemente del usuario
-        return toggle_allow(true) if context.fetch(:signature_has_steps, false) && candidacy.votes_enabled?
-
-        can_sign = can_vote? &&
-                   context.fetch(:signature_has_steps, false)
-
-        toggle_allow(can_sign)
+        toggle_allow(context.fetch(:signature_has_steps, false) && candidacy.votes_enabled?)
       end
 
       def decidim_user_group_id
@@ -173,7 +166,6 @@ module Decidim
       end
 
       def can_vote?
-        # Permitir votar sin usuario autenticado
         return candidacy.votes_enabled? if user.blank?
 
         candidacy.votes_enabled? &&

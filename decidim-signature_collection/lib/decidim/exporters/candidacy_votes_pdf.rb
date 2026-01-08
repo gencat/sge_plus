@@ -77,34 +77,28 @@ module Decidim
       end
 
       def signature_column_widths
-        if collect_user_extra_fields
-          [-0.5, -1, -0.75, -0.75, -0.75, -0.75, -0.75, -0.5, -0.75]
-        else
-          [-0.5, -1, -0.75, -0.75, -0.75]
-        end
+        [-0.5, -1, -0.75, -0.75, -0.75, -0.75, -0.75, -0.5, -0.75]
       end
 
       def vote_row(model, index)
         cell = [
           layout.text((index + 1).to_s, style: :vote_td),
-          layout.text(model.author&.nickname || I18n.t("models.candidacies_votes.fields.no_user", scope: "decidim.admin", default: "Sin usuario"), style: :vote_td),
+          layout.text(model.author&.nickname || I18n.t("models.candidacies_votes.fields.no_user", scope: "decidim.admin"), style: :vote_td),
           layout.text(I18n.l(model.created_at, format: "%Y-%m-%d %H:%M:%S %Z"), style: :vote_td),
           layout.text(truncate(model.hash_id), style: :vote_td)
         ]
 
-        if collect_user_extra_fields
-          metadata = model.encrypted_metadata ? encryptor.decrypt(model.encrypted_metadata) : {}
+        metadata = model.encrypted_metadata ? encryptor.decrypt(model.encrypted_metadata) : {}
 
-          full_name = [metadata[:name], metadata[:first_surname], metadata[:second_surname]].compact.join(" ")
-          date_of_birth = metadata[:date_of_birth] ? I18n.l(metadata[:date_of_birth].to_date, format: :long) : ""
+        full_name = [metadata[:name], metadata[:first_surname], metadata[:second_surname]].compact.join(" ")
+        date_of_birth = metadata[:date_of_birth] ? I18n.l(metadata[:date_of_birth].to_date, format: :long) : ""
 
-          cell += [
-            layout.text(full_name.presence || "", style: :vote_td),
-            layout.text(metadata[:document_number].to_s, style: :vote_td),
-            layout.text(date_of_birth, style: :vote_td),
-            layout.text(metadata[:postal_code].to_s, style: :vote_td)
-          ]
-        end
+        cell += [
+          layout.text(full_name.presence || "", style: :vote_td),
+          layout.text(metadata[:document_number].to_s, style: :vote_td),
+          layout.text(date_of_birth, style: :vote_td),
+          layout.text(metadata[:postal_code].to_s, style: :vote_td)
+        ]
 
         timestamp_text = model.timestamp ? truncate(model.timestamp.to_s) : ""
         cell += [
@@ -122,31 +116,17 @@ module Decidim
       end
 
       def header
-        header = [
+        [
           layout.text(I18n.t("models.candidacies_votes.fields.signature_count", scope: "decidim.admin"), style: :vote_th),
           layout.text(I18n.t("models.candidacies_votes.fields.nickname", scope: "decidim.admin"), style: :vote_th),
           layout.text(I18n.t("models.candidacies_votes.fields.date_and_time", scope: "decidim.admin"), style: :vote_th),
           layout.text(I18n.t("models.candidacies_votes.fields.hash", scope: "decidim.admin"), style: :vote_th)
-        ]
-
-        if collect_user_extra_fields
-          header += [
-            layout.text(I18n.t("models.candidacies_votes.fields.name_and_surname", scope: "decidim.admin"), style: :vote_th),
-            layout.text(I18n.t("models.candidacies_votes.fields.document_number", scope: "decidim.admin"), style: :vote_th),
-            layout.text(I18n.t("models.candidacies_votes.fields.date_of_birth", scope: "decidim.admin"), style: :vote_th),
-            layout.text(I18n.t("models.candidacies_votes.fields.postal_code", scope: "decidim.admin"), style: :vote_th)
-          ]
-        end
-
-        header += [
+          layout.text(I18n.t("models.candidacies_votes.fields.name_and_surname", scope: "decidim.admin"), style: :vote_th),
+          layout.text(I18n.t("models.candidacies_votes.fields.document_number", scope: "decidim.admin"), style: :vote_th),
+          layout.text(I18n.t("models.candidacies_votes.fields.date_of_birth", scope: "decidim.admin"), style: :vote_th),
+          layout.text(I18n.t("models.candidacies_votes.fields.postal_code", scope: "decidim.admin"), style: :vote_th)
           layout.text(I18n.t("models.candidacies_votes.fields.timestamp", scope: "decidim.admin"), style: :vote_th)
         ]
-        header
-      end
-
-      # Siempre recopila datos del usuario (collect_user_extra_fields siempre es true)
-      def collect_user_extra_fields
-        true
       end
 
       def cell_style

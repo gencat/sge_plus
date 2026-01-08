@@ -13,22 +13,14 @@ module Decidim
       include Decidim::FormFactory
 
       prepend_before_action :set_wizard_steps
-      before_action :authorize_wizard_step, only: [
-        :fill_personal_data,
-        :store_personal_data,
-        :sms_phone_number,
-        :store_sms_phone_number,
-        :sms_code,
-        :store_sms_code,
-        :finish
-      ]
+      before_action :authorize_wizard_step
 
       helper CandidacyHelper
 
-      helper_method :candidacy_type, :extra_data_legal_information, :sms_step?, :fill_personal_data_step?
+      helper_method :candidacy_type, :extra_data_legal_information
 
       def index
-        redirect_to send(fill_personal_data_step? ? :fill_personal_data_path : :sms_phone_number_path)
+        redirect_to fill_personal_data_path
       end
 
       # POST /candidacies/:candidacy_id/candidacy_signatures
@@ -54,8 +46,6 @@ module Decidim
       end
 
       def fill_personal_data
-        redirect_to(sms_phone_number_path) && return unless fill_personal_data_step?
-
         @form = form(Decidim::SignatureCollection::VoteForm)
                 .from_params(
                   candidacy: current_candidacy,
@@ -64,8 +54,6 @@ module Decidim
       end
 
       def store_personal_data
-        redirect_to(sms_phone_number_path) && return unless fill_personal_data_step?
-
         build_vote_form(params)
 
         if @vote_form.invalid?
@@ -142,7 +130,7 @@ module Decidim
           on(:invalid) do |vote|
             logger.fatal "Failed creating signature: #{vote.errors.full_messages.join(", ")}" if vote
             flash[:alert] = I18n.t("create.invalid", scope: "decidim.signature_collection.candidacy_votes")
-            send(sms_step? ? :sms_code_path : :fill_personal_data_path)
+            redirect_to send(:fill_personal_data_path)
           end
         end
       end
@@ -190,7 +178,7 @@ module Decidim
       end
 
       def authorize_wizard_step
-        enforce_permission_to :sign_candidacy, :candidacy, candidacy: current_candidacy, signature_has_steps: signature_has_steps?
+        enforce_permission_to :sign_candidacy, :candidacy, candidacy: current_candidacy, signature_has_steps: true
       end
 
       def set_wizard_steps
