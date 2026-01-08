@@ -419,11 +419,10 @@ es:
           back: Volver
           back_to_candidacies: Volver a candidaturas
           callout_text: '¡Enhorabuena! El trámite se ha iniciado correctamente. Recuerda enviar la candidatura a <b>Validación Técnica</b> para iniciar la recogida de firmas.'
-          confirm: Vas a enviar la candidatura para que una administrador ala revise y publique. Una vez publicada no podrás editarla. ¿Estás segura?
-          edit_my_candidacy: Editar mi candidatura
-          go_to_my_candidacies: Ir a mis candidaturas
+          confirm: Estás a punto de enviar la candidatura para revisión y publicación. Una vez publicada no la podrás editar.
+          edit_my_candidacy: Editar candidatura
           more_information: "(Más información)"
-          send_my_candidacy: Enviar mi candidatura a validación técnica
+          send_my_candidacy: Enviar candidatura a validación técnica
         finish_help:
           publish_helper_text: Todavía puedes revisar y editar la información de la candidatura. Una vez lo envíes a validación técnica ya no se podrá modificar. Recuerda que, previo al inicio de la recogida de firmas, hace falta que, en el caso de elecciones a Parlamento, comunicáis a la junta electoral competente el sistema de firma electrónica que se utiliza; y en el caso de elecciones municipales, verificáis que el ayuntamiento reconozca como válido este sistema de recogida de firmas electrónicas.
         previous_form:
@@ -580,7 +579,7 @@ es:
         show:
           area: Área
           before_send_to_technical_validation_announcement: 'Antes de enviar tu candidatura a validación técnica, tienes que añadir %{count} miembros más a la comisión promotora.<br/><br/>Comparte este enlace con las personas que quieres formar parte de la comisión: %{href}'
-          confirm: Vas a enviar la candidatura para que una administrador ala revise y publique. Una vez publicada no podrás editarla. ¿Estás segura?
+          confirm: Estás a punto de enviar la candidatura para revisión y publicación. Una vez publicada no la podrás editar.
           edit: Editar
           export_signatures: Exportar firmas
           candidacy_actions: Acciones de la comisión promotora

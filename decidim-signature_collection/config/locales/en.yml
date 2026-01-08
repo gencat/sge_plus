@@ -415,11 +415,10 @@ en:
           back: Back
           back_to_candidacies: Back to candidacies
           callout_text: Congratulations! The process has been successfully initiated. Remember to send the application to <b>Technical Validation</b> to begin collecting signatures.
-          confirm: You are going to send the candidacy for an admin to review it and publish it. Once published you will not be able to edit it. Are you sure?
-          edit_my_candidacy: Edit my candidacy
-          go_to_my_candidacies: Go to my candidacies
+          confirm: You are going to send the candidacy for review and publication. Once published, you will not be able to edit it.
+          edit_my_candidacy: Edit candidacy
           more_information: "(More information)"
-          send_my_candidacy: Send my candidacy to technical validation
+          send_my_candidacy: Send candidacy to technical validation
         finish_help:
           publish_helper_text: You can still review and edit your candidacy information. Once you submit it for technical validation, it will no longer be possible to modify it. Remember that, before starting the signature collection process, you must, in the case of parliamentary elections, inform the relevant electoral board of the electronic signature system you will be using; and in the case of municipal elections, verify that the city council recognizes this electronic signature collection system as valid.
         previous_form:
@@ -577,7 +576,7 @@ en:
         show:
           area: Area
           before_send_to_technical_validation_announcement: 'Before sending your candidacy for technical validation, you need to add %{count} more members to the promoter committee.<br/><br/>Share this link with the people you want to be part of your committee: %{href}'
-          confirm: You are going to send the candidacy for an admin to review it and publish it. Once published you will not be able to edit it. Are you sure?
+          confirm:  You are going to send the candidacy for review and publication. Once published, you will not be able to edit it.
           edit: Edit
           export_signatures: Export signatures
           candidacy_actions: Promoter committee actions
