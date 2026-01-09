@@ -20,7 +20,6 @@ module Decidim
       let(:form_params) do
         {
           candidacy:,
-          signer: current_user
         }
       end
 

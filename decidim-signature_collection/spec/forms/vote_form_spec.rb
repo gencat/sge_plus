@@ -73,7 +73,6 @@ module Decidim
       let(:vote_attributes) do
         {
           candidacy:,
-          signer: current_user
         }
       end
       let(:attributes) { personal_data.merge(vote_attributes) }

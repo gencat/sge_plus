@@ -158,7 +158,7 @@ module Decidim
         return false unless permission_action.action == :sign_candidacy &&
                             permission_action.subject == :candidacy
 
-        toggle_allow(context.fetch(:signature_has_steps, false) && candidacy.votes_enabled?)
+        toggle_allow(candidacy.votes_enabled?)
       end
 
       def decidim_user_group_id
@@ -168,9 +168,7 @@ module Decidim
       def can_vote?
         return candidacy.votes_enabled? if user.blank?
 
-        candidacy.votes_enabled? &&
-          candidacy.organization&.id == user.organization&.id &&
-          candidacy.votes.where(author: user).empty?
+        candidacy.votes_enabled? && candidacy.organization&.id == user.organization&.id
       end
 
       def can_user_support?(candidacy)
