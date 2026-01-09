@@ -82,14 +82,6 @@ module Decidim
         end
       end
 
-      describe "validateSmsCodeOnVotes" do
-        let(:query) { "{ validateSmsCodeOnVotes }" }
-
-        it "returns the validate sms code on votes field" do
-          expect(response["validateSmsCodeOnVotes"]).to eq(model.validate_sms_code_on_votes)
-        end
-      end
-
       describe "undoOnlineSignaturesEnabled" do
         let(:query) { "{ undoOnlineSignaturesEnabled }" }
 

@@ -51,7 +51,6 @@ en:
         signature_type: Signature type
         title: Title
         undo_online_signatures_enabled: Enable participants to undo their online signatures
-        validate_sms_code_on_votes: Add SMS code validation step to signature process
       candidacies_type_scope:
         decidim_scopes_id: Scopes
         supports_required: Supports required
@@ -506,12 +505,6 @@ en:
           help: Please, fill the following fields with your personal data to sign the candidacy.
         finish:
           back_to_candidacy: Back to candidacy
-        sms_code:
-          continue: Check code and continue
-          help: Check the SMS received at your phone
-        sms_phone_number:
-          continue: Send me an SMS
-          help: Fill the form with your verified phone number to request your verification code.
       candidacy_votes:
         create:
           error: There was a problem signing the candidacy.
@@ -519,10 +512,6 @@ en:
           success_html: Congratulations! The <strong> %{title}</strong> candidacy has been successfully signed.
         personal_data:
           invalid: Personal data is not consistent with data provided for authorization.
-        sms_code:
-          invalid: Your verification code does not match ours. Please double-check the SMS we sent you.
-        sms_phone:
-          invalid: The phone number is invalid or pending of authorization. Please, check your authorizations.
       candidacies:
         author_list:
           hidden_authors_count:
@@ -713,8 +702,6 @@ en:
       candidacy_signature_creation_header:
         fill_personal_data: Complete your data
         finish: Finish
-        sms_code: SMS code verification
-        sms_phone_number: Mobile phone number
         title: Sign %{candidacy_title}
       candidacies:
         no_candidacies_yet:

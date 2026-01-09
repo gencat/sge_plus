@@ -20,12 +20,11 @@ module Decidim
       attribute :hash_id, String
 
       attribute :candidacy, Decidim::SignatureCollection::Candidacy
-      attribute :signer, Decidim::User
 
       validates :candidacy, presence: true
-      validates :authorized_scopes, presence: true
+      # TO REVIEW
+      # validates :authorized_scopes, presence: true
 
-      validate :user_has_not_voted_yet
       validate :already_voted?
       validate :document_number_format
 
@@ -85,7 +84,7 @@ module Decidim
       #
       # Returns a Decidim::Scope.
       def user_authorized_scope
-        return scope if handler_name.blank? || !signer
+        return scope if handler_name.blank?
         return scope unless authorized?
         return scope if authorization.metadata.blank?
 
@@ -125,17 +124,6 @@ module Decidim
 
       protected
 
-      # Private: Checks that the unique hash computed from the authorization
-      # and the user provided data match.
-      #
-      # This prevents users that know partial data from another user to sign
-      # candidacies with someone elses identity.
-      def document_number_authorized?
-        return false if candidacy.document_number_authorization_handler.blank?
-
-        errors.add(:document_number, :invalid) unless authorized? && authorization_handler && authorization.unique_id == authorization_handler.unique_id
-      end
-
       # Private: Checks if there is any existing vote that matches the user's data.
       def already_voted?
         return unless hash_id.present?
@@ -148,16 +136,6 @@ module Decidim
         end
       end
 
-      # Private: Checks if a logged user has already voted for this candidacy
-      def user_has_not_voted_yet
-        return unless signer.present? && candidacy.present?
-        
-        if candidacy.votes.exists?(author: signer)
-          errors.add(:base, :already_voted_as_user)
-        end
-      end
-
-      # Private: Validates the format of the document number based on document type
       def document_number_format
         return if document_number.blank? || document_type.blank?
 
@@ -169,7 +147,6 @@ module Decidim
         end
       end
 
-      # Private: Validates NIF format (8 digits + 1 letter)
       def validate_nif_format
         nif_regex = /\A\d{8}[A-Z]\z/i
         unless document_number.to_s.upcase.match?(nif_regex)
@@ -177,11 +154,9 @@ module Decidim
           return
         end
 
-        # Validate NIF check letter
         validate_nif_letter
       end
 
-      # Private: Validates NIE format (X/Y/Z + 7 digits + 1 letter)
       def validate_nie_format
         nie_regex = /\A[XYZ]\d{7}[A-Z]\z/i
         unless document_number.to_s.upcase.match?(nie_regex)
@@ -189,11 +164,9 @@ module Decidim
           return
         end
 
-        # Validate NIE check letter
         validate_nie_letter
       end
 
-      # Private: Validates the check letter for NIF
       def validate_nif_letter
         letters = "TRWAGMYFPDXBNJZSQVHLCKE"
         doc = document_number.to_s.upcase
@@ -204,12 +177,10 @@ module Decidim
         errors.add(:document_number, :invalid_nif_letter) unless letter == expected_letter
       end
 
-      # Private: Validates the check letter for NIE
       def validate_nie_letter
         letters = "TRWAGMYFPDXBNJZSQVHLCKE"
         doc = document_number.to_s.upcase
         
-        # Replace X, Y, Z with 0, 1, 2 respectively
         nie_number = doc.dup
         nie_number[0] = '0' if doc[0] == 'X'
         nie_number[0] = '1' if doc[0] == 'Y'
@@ -228,20 +199,20 @@ module Decidim
 
       # Private: Finds an authorization for the user signing the candidacy and
       # the configured handler.
-      def authorization
-        return unless signer && handler_name
+      # def authorization
+      #   return unless signer && handler_name
 
-        @authorization ||= Verifications::Authorizations.new(
-          organization: signer.organization,
-          user: signer,
-          name: handler_name
-        ).first
-      end
+      #   @authorization ||= Verifications::Authorizations.new(
+      #     organization: signer.organization,
+      #     user: signer,
+      #     name: handler_name
+      #   ).first
+      # end
 
       # Private: Checks if the authorization has not expired or is invalid.
-      def authorized?
-        authorization_status&.first == :ok
-      end
+      # def authorized?
+      #   authorization_status&.first == :ok
+      # end
 
       # Private: Builds an authorization handler with the data the user provided
       # when signing the candidacy.
@@ -259,32 +230,32 @@ module Decidim
       # unique_id and compare it to an existing authorization.
       #
       # Returns a Decidim::AuthorizationHandler.
-      def authorization_handler
-        return unless document_number && handler_name && signer
+      # def authorization_handler
+      #   return unless document_number && handler_name && signer
 
-        @authorization_handler ||= Decidim::AuthorizationHandler.handler_for(handler_name,
-                                                                             document_type:,
-                                                                             document_number:,
-                                                                             name:,
-                                                                             first_surname:,
-                                                                             second_surname:,
-                                                                             date_of_birth:,
-                                                                             postal_code:)
-      end
+      #   @authorization_handler ||= Decidim::AuthorizationHandler.handler_for(handler_name,
+      #                                                                        document_type:,
+      #                                                                        document_number:,
+      #                                                                        name:,
+      #                                                                        first_surname:,
+      #                                                                        second_surname:,
+      #                                                                        date_of_birth:,
+      #                                                                        postal_code:)
+      # end
 
       # Private: The AuthorizationHandler name used to verify the user's
       # document number.
       #
       # Returns a String.
-      def handler_name
-        candidacy.document_number_authorization_handler
-      end
+      # def handler_name
+      #   candidacy.document_number_authorization_handler
+      # end
 
-      def authorization_status
-        return unless authorization
+      # def authorization_status
+      #   return unless authorization
 
-        Decidim::Verifications::Adapter.from_element(handler_name).authorize(authorization, {}, nil, nil)
-      end
+      #   Decidim::Verifications::Adapter.from_element(handler_name).authorize(authorization, {}, nil, nil)
+      # end
 
       def encryptor
         @encryptor ||= DataEncryptor.new(secret: "personal user metadata")

@@ -51,7 +51,6 @@ ca:
         signature_type: Tipus de signatura
         title: Títol
         undo_online_signatures_enabled: Permetre a les participants desfer les seves signatures digitals
-        validate_sms_code_on_votes: Afegeix el pas de validació mitjançant SMS al procés de signatura
       candidacies_type_scope:
         decidim_scopes_id: Àmbits
         supports_required: Es requereixen suports
@@ -505,12 +504,6 @@ ca:
           help: Si us plau, omple els següents camps amb les teves dades personals per signar la candidatura.
         finish:
           back_to_candidacy: Torna a la candidatura
-        sms_code:
-          continue: Comprova el codi i continua
-          help: Consulta el SMS rebut al teu mòbil
-        sms_phone_number:
-          continue: Envia'm un SMS
-          help: Omple el formulari amb el teu número de telèfon mòbil verificat per sol·licitar el teu codi de verificació.
       candidacy_votes:
         create:
           error: S'ha produït un error en signar la candidatura.
@@ -518,10 +511,6 @@ ca:
           success_html: Enhorabona! Has signat la candidatura <strong> %{title}</strong> correctament.
         personal_data:
           invalid: Les dades personals no són coherents amb les dades proporcionades per a l'autorització.
-        sms_code:
-          invalid: El codi de verificació que has introduït no coincideix amb el nostre. Si us plau, torna a revisar l'SMS que t'hem enviat.
-        sms_phone:
-          invalid: El número de telèfon no és vàlid o està pendent d'autorització. Si us plau, consulta les teves autoritzacions.
       candidacies:
         author_list:
           hidden_authors_count:
@@ -713,8 +702,6 @@ ca:
       candidacy_signature_creation_header:
         fill_personal_data: Completa les teves dades
         finish: Finalitzar
-        sms_code: Verificació per codi SMS
-        sms_phone_number: Número de telèfon mòbil
         title: Signa %{candidacy_title}
       candidacies:
         no_candidacies_yet:

@@ -101,12 +101,6 @@
           )
         %>
       </div>
-
-      <% if current_organization.available_authorizations.include? "sms" %>
-        <div class="row column">
-          <%= form.check_box :validate_sms_code_on_votes %>
-        </div>
-      <% end %>
     </div>
   </div>
 

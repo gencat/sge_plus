@@ -14,14 +14,12 @@ module Decidim
         translatable_attribute :title, String
         translatable_attribute :description, Decidim::Attributes::RichText
         attribute :signature_type, String
-        attribute :undo_online_signatures_enabled, Boolean
         attribute :attachments_enabled, Boolean
         attribute :comments_enabled, Boolean
         attribute :child_scope_threshold_enabled, Boolean
         attribute :only_global_scope_enabled, Boolean
         attribute :collect_user_extra_fields, Boolean
         translatable_attribute :extra_fields_legal_information, Decidim::Attributes::RichText
-        attribute :validate_sms_code_on_votes, Boolean
         attribute :document_number_authorization_handler, String
         attribute :signature_period_start, Decidim::Attributes::TimeWithZone
         attribute :signature_period_end, Decidim::Attributes::TimeWithZone
@@ -30,7 +28,7 @@ module Decidim
         attribute :elections, String
         
         validates :title, :description, translatable_presence: true
-        validates :attachments_enabled, :undo_online_signatures_enabled, inclusion: { in: [true, false] }
+        validates :attachments_enabled, inclusion: { in: [true, false] }
         validates :minimum_committee_members, numericality: { only_integer: true }, allow_nil: true
         validates :document_number_authorization_handler, presence: true, if: ->(form) { form.collect_user_extra_fields? }
 
