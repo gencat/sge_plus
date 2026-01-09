@@ -84,10 +84,6 @@ FactoryBot.define do
       document_number_authorization_handler { "dummy_authorization_handler" }
     end
 
-    trait :with_sms_code_validation do
-      validate_sms_code_on_votes { true }
-    end
-
     trait :child_scope_threshold_enabled do
       child_scope_threshold_enabled { true }
     end

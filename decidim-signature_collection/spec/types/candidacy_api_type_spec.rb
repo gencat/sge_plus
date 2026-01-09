@@ -61,8 +61,8 @@ module Decidim
       describe "collectUserExtraFields" do
         let(:query) { "{ collectUserExtraFields }" }
 
-        it "returns the collect user extra fields field" do
-          expect(response["collectUserExtraFields"]).to eq(model.collect_user_extra_fields)
+        it "returns true (always collects user extra fields)" do
+          expect(response["collectUserExtraFields"]).to eq(true)
         end
       end
 
@@ -79,14 +79,6 @@ module Decidim
 
         it "returns the minimum committee members field" do
           expect(response["minimumCommitteeMembers"]).to eq(model.minimum_committee_members)
-        end
-      end
-
-      describe "validateSmsCodeOnVotes" do
-        let(:query) { "{ validateSmsCodeOnVotes }" }
-
-        it "returns the validate sms code on votes field" do
-          expect(response["validateSmsCodeOnVotes"]).to eq(model.validate_sms_code_on_votes)
         end
       end
 

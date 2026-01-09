@@ -8,10 +8,6 @@ module Decidim
     class CandidaciesVote < ApplicationRecord
       include Decidim::TranslatableAttributes
 
-      belongs_to :author,
-                 foreign_key: "decidim_author_id",
-                 class_name: "Decidim::User"
-
       belongs_to :candidacy,
                  foreign_key: "decidim_signature_collection_candidacy_id",
                  class_name: "Decidim::SignatureCollection::Candidacy",
@@ -22,7 +18,6 @@ module Decidim
                  class_name: "Decidim::Scope",
                  optional: true
 
-      validates :candidacy, uniqueness: { scope: [:author, :scope] }
       validates :candidacy, uniqueness: { scope: [:hash_id, :scope] }
 
       after_commit :update_counter_cache, on: [:create, :destroy]
@@ -36,7 +31,7 @@ module Decidim
         title = translated_attribute(candidacy.title)
         description = translated_attribute(candidacy.description)
 
-        Digest::SHA1.hexdigest "#{authorization_unique_id}#{title}#{description}"
+        Digest::SHA1.hexdigest "#{hash_id}#{title}#{description}"
       end
 
       def decrypted_metadata
@@ -47,14 +42,6 @@ module Decidim
 
       def encryptor
         @encryptor ||= Decidim::SignatureCollection::DataEncryptor.new(secret: "personal user metadata")
-      end
-
-      def authorization_unique_id
-        first_authorization = Decidim::SignatureCollection::UserAuthorizations
-                              .for(author)
-                              .first
-
-        first_authorization&.unique_id || author.email
       end
 
       def update_counter_cache

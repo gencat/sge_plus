@@ -44,6 +44,7 @@ module Decidim
       delegate :candidacy, to: :form
 
       def create_votes
+        # To review
         @votes = form.authorized_scopes.map do |scope|
           candidacy.votes.create!(
             author: form.signer,

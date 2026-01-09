@@ -62,20 +62,18 @@
       </div>
 
       <div class="row column">
-        <%= form.check_box :child_scope_threshold_enabled, help_text: t(".child_scope_threshold_enabled_help_html") %>
+        <%#= form.check_box :child_scope_threshold_enabled, help_text: t(".child_scope_threshold_enabled_help_html") %>
       </div>
 
       <div class="row column">
-        <%= form.check_box :only_global_scope_enabled, help_text: t(".only_global_scope_enabled_help_html") %>
+        <%#= form.check_box :only_global_scope_enabled, help_text: t(".only_global_scope_enabled_help_html") %>
       </div>
 
       <div class="row column">
         <%= form.check_box :comments_enabled %>
       </div>
 
-      <div class="row column">
-        <%= form.check_box :collect_user_extra_fields %>
-      </div>
+      <%= form.hidden_field :collect_user_extra_fields, value: true %>
 
       <div class="row column">
         <%= form.translated :editor, :extra_fields_legal_information, aria: { label: :extra_fields_legal_information } %>
@@ -103,12 +101,6 @@
           )
         %>
       </div>
-
-      <% if current_organization.available_authorizations.include? "sms" %>
-        <div class="row column">
-          <%= form.check_box :validate_sms_code_on_votes %>
-        </div>
-      <% end %>
     </div>
   </div>
 

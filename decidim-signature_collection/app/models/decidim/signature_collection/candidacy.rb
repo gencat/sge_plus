@@ -486,15 +486,6 @@ module Decidim
         nil
       end
 
-      # Public: Checks if the type the candidacy belongs to enables SMS code
-      # verification step. Tis configuration is ignored if the organization
-      # does not have the sms authorization available
-      #
-      # Returns a Boolean
-      def validate_sms_code_on_votes?
-        organization.available_authorizations.include?("sms") && type.validate_sms_code_on_votes?
-      end
-
       # Public: Returns an empty object. This method should be implemented by
       # `ParticipatorySpaceResourceable`, but for some reason this model does not
       # implement this interface.

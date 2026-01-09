@@ -17,7 +17,6 @@ module Decidim
 
         @form = form(Decidim::SignatureCollection::VoteForm).from_params(
           candidacy: current_candidacy,
-          signer: current_user
         )
 
         VoteCandidacy.call(@form) do

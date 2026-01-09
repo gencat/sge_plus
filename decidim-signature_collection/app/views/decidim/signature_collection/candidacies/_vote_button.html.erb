@@ -1,19 +1,9 @@
 <% if allowed_to? :vote, :candidacy, candidacy: candidacy %>
-  <% if steps %>
-    <%= link_to(
-      vote_label,
-      candidacy_signatures_path(candidacy_slug: current_candidacy.slug),
-      class: "button button__xl w-full button__secondary"
-    ) %>
-  <% else %>
-    <%= button_to(
-      vote_label,
-      candidacy_signatures_path(candidacy_slug: current_candidacy.slug),
-      remote: true,
-      data: { disable: true },
-      class: "button button__xl w-full button__secondary"
-    ) %>
-  <% end %>
+  <%= link_to(
+    vote_label,
+    candidacy_signatures_path(candidacy_slug: current_candidacy.slug),
+    class: "button button__xl w-full button__secondary"
+  ) %>
 <% else %>
   <% if candidacy.voted_by?(current_user) %>
     <% if allowed_to? :unvote, :candidacy, candidacy: candidacy %>
@@ -37,7 +27,7 @@
     <%= action_authorized_link_to(
       :vote,
       t("vote", scope: "decidim.signature_collection.candidacies.vote_cabin"),
-      steps ? candidacy_signatures_path(candidacy_slug: current_candidacy.slug) : candidacy_path(current_candidacy),
+      candidacy_signatures_path(candidacy_slug: current_candidacy.slug),
       resource: current_candidacy,
       permissions_holder: current_candidacy.type,
       authorizations_modal_path: authorization_sign_modal_candidacy_path(current_candidacy),
