@@ -21,7 +21,6 @@ module Decidim
         attribute :only_global_scope_enabled, Boolean
         attribute :collect_user_extra_fields, Boolean
         translatable_attribute :extra_fields_legal_information, Decidim::Attributes::RichText
-        attribute :validate_sms_code_on_votes, Boolean
         attribute :document_number_authorization_handler, String
         attribute :signature_period_start, Decidim::Attributes::TimeWithZone
         attribute :signature_period_end, Decidim::Attributes::TimeWithZone

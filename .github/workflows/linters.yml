@@ -27,6 +27,7 @@ jobs:
         with:
           ruby-version: ${{ env.RUBY_VERSION }}
           bundler-cache: true
+          bundler-options: '--with development test'
 
       - uses: actions/setup-node@master
         with:
@@ -35,5 +36,5 @@ jobs:
       - run: npm install
         name: Install JS dependencies
 
-      - run: bundle exec rubocop -P
+      - run: bundle exec rubocop
         name: Lint Ruby files

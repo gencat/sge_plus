@@ -31,7 +31,6 @@ shared_examples "update an candidacy type" do
         custom_signature_end_date_enabled: true,
         area_enabled: true,
         comments_enabled: true,
-        collect_user_extra_fields: false,
         extra_fields_legal_information: Decidim::Faker::Localized.sentence(word_count: 25).except("machine_translations"),
         document_number_authorization_handler: "",
         child_scope_threshold_enabled: false,

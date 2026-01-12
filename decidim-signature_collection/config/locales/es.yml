@@ -51,14 +51,16 @@ es:
         signature_type: Tipo de firma
         title: Título
         undo_online_signatures_enabled: Permitir a las participantes deshacer sus firmas digitales
-        validate_sms_code_on_votes: Añadir paso de validación mediante SMS al proceso de firma
       candidacies_type_scope:
         decidim_scopes_id: Ámbitos
         supports_required: Se requieren apoyos
       candidacies_vote:
         date_of_birth: Fecha de nacimiento
         document_number: Número de documento
-        name_and_surname: Nombre y apellido
+        document_type: Tipo de documento
+        name: Nombre
+        first_surname: Primer apellido
+        second_surname: Segundo apellido
         postal_code: Código postal
       organization_data:
         address: Dirección
@@ -72,10 +74,22 @@ es:
               file: Este archivo es invalido
               needs_to_be_reattached: Es necesario volver a adjuntar el archivo
               title: El título no puede estar vacío
+        candidacies_vote:
+          already_voted_as_user: "Ya has firmado esta candidatura con tu cuenta de usuario"
+          attributes:
+            document_number:
+              invalid_nif_format: "El formato del NIF no es válido. Debe contener 8 dígitos seguidos de una letra (ej: 12345678A)"
+              invalid_nif_letter: "La letra del NIF no es correcta"
+              invalid_nie_format: "El formato del NIE no es válido. Debe empezar con X, Y o Z, seguido de 7 dígitos y una letra (ej: X1234567A)"
+              invalid_nie_letter: "La letra del NIE no es correcta"
   activerecord:
     attributes:
       decidim:
         signature_collection:
+          vote_form:
+            document_types:
+              nif: NIF
+              nie: NIE
           candidacies_type:
             elections:
               congress: Congreso
@@ -165,7 +179,7 @@ es:
             candidacy_start_date: Fecha de inicio
             candidacy_title: Título de la candidatura
             candidacy_type: Tipo de candidatura
-            name_and_surname: Nombre y apellido
+            name_and_surname: Nombre y apellidos
             nickname: Alias
             postal_code: Código postal
             signature_count: Recuento de firmas
@@ -494,12 +508,6 @@ es:
           help: Por favor, rellena los siguientes campos con tus datos personales para firmar la candidatura.
         finish:
           back_to_candidacy: Volver a la candidatura
-        sms_code:
-          continue: Comprueba el código y continúa
-          help: Consulta el SMS recibido en tu móvil
-        sms_phone_number:
-          continue: Envíame un SMS
-          help: Rellena el formulario con tu número de teléfono verificado para solicitar tu código de verificación.
       candidacy_votes:
         create:
           error: Se ha producido un error al firmar la candidatura.
@@ -507,10 +515,6 @@ es:
           success_html: '¡Enhorabuena! Has firmado la candidatura <strong> %{title}</strong> correctamente.'
         personal_data:
           invalid: Los datos personales no son coherentes con los datos proporcionados para la autorización.
-        sms_code:
-          invalid: El código de verificación no coincide con el nuestro. Por favor, vuelve a revisar el SMS que te enviamos.
-        sms_phone:
-          invalid: El número de teléfono no es válido o está pendiente de autorización. Por favor, revisa tus autorizaciones.
       candidacies:
         author_list:
           hidden_authors_count:
@@ -703,8 +707,6 @@ es:
       candidacy_signature_creation_header:
         fill_personal_data: Completa tus datos
         finish: Terminar
-        sms_code: Verificación por código SMS
-        sms_phone_number: Número de teléfono móvil
         title: Firmar %{candidacy_title}
       candidacies:
         no_candidacies_yet:

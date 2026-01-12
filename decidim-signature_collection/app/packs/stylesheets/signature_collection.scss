@@ -169,3 +169,9 @@
 .edit_candidacy .profile__group__list {
   @apply w-full;
 }
+
+.new_candidacies_vote {
+  .form__wrapper {
+    gap: 0 !important;
+  }
+}
