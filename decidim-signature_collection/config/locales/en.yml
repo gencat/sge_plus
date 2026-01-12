@@ -213,6 +213,12 @@ en:
         email_outro: You have received this notification because you are an admin of the platform.
         email_subject: Candidacy "%{resource_title}" was sent to technical validation.
         notification_title: The candidacy "%{resource_title}" has been sent to technical validation. Check it out at <a href="%{admin_candidacy_path}">the admin panel</a>
+      signature_collection:
+        candidacy_sent_to_technical_validation:
+          email_intro: The candidacy "%{resource_title}" has been sent to technical validation. Check it out at <a href="%{admin_candidacy_url}">the admin panel</a>
+          email_outro: You have received this notification because you are an admin of the platform.
+          email_subject: Candidacy "%{resource_title}" was sent to technical validation.
+          notification_title: The candidacy "%{resource_title}" has been sent to technical validation. Check it out at <a href="%{admin_candidacy_path}">the admin panel</a>
       milestone_completed:
         affected_user:
           email_intro: Your candidacy %{resource_title} has achieved the %{percentage}% of signatures!
