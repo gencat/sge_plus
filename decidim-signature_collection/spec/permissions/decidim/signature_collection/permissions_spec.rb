@@ -488,7 +488,7 @@ describe Decidim::SignatureCollection::Permissions do
           { scope: :public, action: :sign_candidacy, subject: :candidacy }
         end
         let(:context) do
-          { candidacy:, signature_has_steps: true }
+          { candidacy: }
         end
       end
     end
@@ -502,7 +502,7 @@ describe Decidim::SignatureCollection::Permissions do
         { scope: :public, action: :sign_candidacy, subject: :candidacy }
       end
       let(:context) do
-        { candidacy:, signature_has_steps: false }
+        { candidacy: }
       end
 
       before do
