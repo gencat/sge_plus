@@ -393,11 +393,7 @@ module Decidim
       end
 
       def update_online_votes_counters
-        online_votes = votes.group(:scope).count.each_with_object({}) do |(scope, count), counters|
-          counters[scope&.id || "global"] = count
-          counters["total"] ||= 0
-          counters["total"] += count
-        end
+        online_votes = { "global": 0, "total": votes.count }
 
         # rubocop:disable Rails/SkipsModelValidations
         update_column("online_votes", online_votes)

@@ -3,7 +3,7 @@
     <% if index == 0 %>
       <%= cell(
         "decidim/progress_bar",
-        current_candidacy.supports_count_for(type_scope.scope),
+        current_candidacy.supports_count,
         total: type_scope.supports_required,
         units_name: "decidim.signature_collection.candidacies.votes_count.count",
         element_id: "candidacy-#{current_candidacy.id}-votes-count"
@@ -11,7 +11,7 @@
     <% else %>
       <%= cell(
         "decidim/progress_bar",
-        current_candidacy.supports_count_for(type_scope.scope),
+        current_candidacy.supports_count,
         total: type_scope.supports_required,
         element_id: "candidacy-scope-#{type_scope.id}-#{current_candidacy.id}-votes-count"
         ) %>

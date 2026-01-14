@@ -44,16 +44,11 @@ module Decidim
       delegate :candidacy, to: :form
 
       def create_votes
-        # To review
-        @votes = form.authorized_scopes.map do |scope|
-          candidacy.votes.create!(
-            author: form.signer,
-            encrypted_metadata: form.encrypted_metadata,
-            timestamp:,
-            hash_id: form.hash_id,
-            scope:
-          )
-        end
+        candidacy.votes.create!(
+          encrypted_metadata: form.encrypted_metadata,
+          timestamp:,
+          hash_id: form.hash_id
+        )
       end
 
       def timestamp
