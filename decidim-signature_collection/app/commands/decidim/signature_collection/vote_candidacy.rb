@@ -23,7 +23,7 @@ module Decidim
         percentage_before = candidacy.percentage
 
         Candidacy.transaction do
-          create_votes
+          create_vote
         end
 
         percentage_after = candidacy.reload.percentage
@@ -43,17 +43,12 @@ module Decidim
 
       delegate :candidacy, to: :form
 
-      def create_votes
-        # To review
-        @votes = form.authorized_scopes.map do |scope|
-          candidacy.votes.create!(
-            author: form.signer,
-            encrypted_metadata: form.encrypted_metadata,
-            timestamp:,
-            hash_id: form.hash_id,
-            scope:
-          )
-        end
+      def create_vote
+        candidacy.votes.create!(
+          encrypted_xml_doc_to_sign: form.encrypted_xml_doc_to_sign,
+          filename: form.filename,
+          hash_id: form.hash_id
+        )
       end
 
       def timestamp

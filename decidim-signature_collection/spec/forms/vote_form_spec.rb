@@ -72,7 +72,7 @@ module Decidim
 
       let(:vote_attributes) do
         {
-          candidacy:,
+          candidacy:
         }
       end
       let(:attributes) { personal_data.merge(vote_attributes) }

@@ -27,7 +27,7 @@ module Decidim
 
         @form = form(Decidim::SignatureCollection::VoteForm)
                 .from_params(
-                  candidacy: current_candidacy,
+                  candidacy: current_candidacy
                 )
 
         VoteCandidacy.call(@form) do
@@ -45,7 +45,7 @@ module Decidim
       def fill_personal_data
         @form = form(Decidim::SignatureCollection::VoteForm)
                 .from_params(
-                  candidacy: current_candidacy,
+                  candidacy: current_candidacy
                 )
       end
 
