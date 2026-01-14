@@ -16,7 +16,8 @@ module Decidim
       attribute :date_of_birth, Date
 
       attribute :postal_code, String
-      attribute :encrypted_metadata, String
+      attribute :encrypted_xml_doc_signed, String
+      attribute :encrypted_xml_doc_to_sign, String
       attribute :hash_id, String
 
       attribute :candidacy, Decidim::SignatureCollection::Candidacy
@@ -34,10 +35,6 @@ module Decidim
         { nif: 1, nie: 2 }
       end
 
-      def encrypted_metadata
-        @encrypted_metadata ||= encryptor.encrypt(metadata)
-      end
-
       # Public: The hash to uniquely identify an candidacy vote
       #
       # Returns a String.
@@ -53,24 +50,30 @@ module Decidim
         )
       end
 
-      def metadata
-        {
-          name:,
-          first_surname:,
-          second_surname:,
-          document_type:,
-          document_number:,
-          date_of_birth:,
-          postal_code:
-        }
+      def filename
+        "#{document_number}.xml"
+      end
+
+      def encrypted_xml_doc_to_sign
+        xml = Decidim::SignatureCollection::XmlBuilder.new({
+                                                             candidacy:,
+                                                             name:,
+                                                             first_surname:,
+                                                             second_surname:,
+                                                             document_type:,
+                                                             document_number:,
+                                                             date_of_birth:
+                                                           }).build
+
+        encryptor.encrypt(xml)
       end
 
       protected
 
       # Private: Checks if there is any existing vote that matches the user's data.
       def already_voted?
-        return unless hash_id.present?
-        
+        return false if hash_id.blank?
+
         errors.add(:document_number, :taken) if candidacy.votes.exists?(hash_id: hash_id)
       end
 
@@ -118,16 +121,16 @@ module Decidim
       def validate_nie_letter
         letters = "TRWAGMYFPDXBNJZSQVHLCKE"
         doc = document_number.to_s.upcase
-        
+
         nie_number = doc.dup
-        nie_number[0] = '0' if doc[0] == 'X'
-        nie_number[0] = '1' if doc[0] == 'Y'
-        nie_number[0] = '2' if doc[0] == 'Z'
-        
+        nie_number[0] = "0" if doc[0] == "X"
+        nie_number[0] = "1" if doc[0] == "Y"
+        nie_number[0] = "2" if doc[0] == "Z"
+
         number = nie_number[0..7].to_i
         letter = doc[8]
         expected_letter = letters[number % 23]
-        
+
         errors.add(:document_number, :invalid_nie_letter) unless letter == expected_letter
       end
 
@@ -196,7 +199,7 @@ module Decidim
       # end
 
       def encryptor
-        @encryptor ||= DataEncryptor.new(secret: "personal user metadata")
+        @encryptor ||= DataEncryptor.new(secret: Rails.application.secret_key_base)
       end
     end
   end

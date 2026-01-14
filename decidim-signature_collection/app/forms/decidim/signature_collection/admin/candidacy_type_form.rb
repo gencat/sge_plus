@@ -27,7 +27,7 @@ module Decidim
         attribute :published, Boolean, default: false
         attribute :minimum_signing_age, Integer
         attribute :elections, String
-        
+
         validates :title, :description, translatable_presence: true
         validates :attachments_enabled, :undo_online_signatures_enabled, inclusion: { in: [true, false] }
         validates :minimum_committee_members, numericality: { only_integer: true }, allow_nil: true

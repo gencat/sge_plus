@@ -57,7 +57,7 @@ describe "Decidim::Api::QueryType" do
       "signatureType" => candidacy.type.signature_type,
       "title" => { "translation" => candidacy.type.title[locale] },
       "undoOnlineSignaturesEnabled" => candidacy.type.undo_online_signatures_enabled,
-      "updatedAt" => candidacy.type.updated_at.to_time.iso8601,
+      "updatedAt" => candidacy.type.updated_at.to_time.iso8601
     }
   end
 

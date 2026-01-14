@@ -19,7 +19,7 @@ module Decidim
 
       let(:form_params) do
         {
-          candidacy:,
+          candidacy:
         }
       end
 

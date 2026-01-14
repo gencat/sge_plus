@@ -393,7 +393,7 @@ module Decidim
       end
 
       def update_online_votes_counters
-        online_votes = { "global": 0, "total": votes.count }
+        online_votes = { global: 0, total: votes.count }
 
         # rubocop:disable Rails/SkipsModelValidations
         update_column("online_votes", online_votes)
