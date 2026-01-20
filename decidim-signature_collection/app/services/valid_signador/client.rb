@@ -19,7 +19,7 @@ module ValidSignador
     # @raise [ApiError] if the request fails
     def init_process
       request = Request.new(config)
-      response = request.get("/initProcess")
+      response = request.get("/signador/initProcess")
 
       validate_response!(response)
       response
@@ -51,7 +51,7 @@ module ValidSignador
       ).build
 
       request = Request.new(config)
-      response = request.post("/startSignProcess", payload)
+      response = request.post("/signador/startSignProcess", payload)
 
       validate_response!(response)
       response

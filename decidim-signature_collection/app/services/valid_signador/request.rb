@@ -51,7 +51,7 @@ module ValidSignador
     end
 
     def add_auth_headers(request)
-      date = Time.current.strftime("%d/%m/%Y %H:%M")
+      date = Time.now.in_time_zone('Europe/Madrid').strftime('%d/%m/%Y %H:%M')
       request["Date"] = date
       request["Origin"] = config.domain
       request["Authorization"] = "SC #{hmac_signature(date)}"
