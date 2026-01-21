@@ -21,9 +21,10 @@ module Decidim
         return broadcast(:invalid) if form.invalid?
 
         percentage_before = candidacy.percentage
+        vote = nil
 
         Candidacy.transaction do
-          create_vote
+          vote = create_vote
         end
 
         percentage_after = candidacy.reload.percentage
@@ -32,10 +33,8 @@ module Decidim
         notify_percentage_change(percentage_before, percentage_after)
         notify_support_threshold_reached(percentage_before, percentage_after)
 
-        broadcast(:ok, votes)
+        broadcast(:ok, vote)
       end
-
-      attr_reader :votes
 
       private
 
@@ -44,11 +43,15 @@ module Decidim
       delegate :candidacy, to: :form
 
       def create_vote
-        candidacy.votes.create!(
+        vote = Decidim::SignatureCollection::CandidaciesVote.new(
+          candidacy:,
           encrypted_xml_doc_to_sign: form.encrypted_xml_doc_to_sign,
           filename: form.filename,
           hash_id: form.hash_id
         )
+        candidacy.votes.build(vote.attributes).save!
+
+        vote
       end
 
       def timestamp

@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   # ValidSignador routes (outside of Decidim engine)
   namespace :valid_signador do
-    post "/callback", to: "callbacks#create", as: :callback
+    get "/callback", to: "callbacks#create", as: :callback
   end
 
   mount Decidim::Core::Engine => "/"

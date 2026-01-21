@@ -64,10 +64,9 @@ module ValidSignador
     # @raise [ApiError] if the request fails
     def get_signature(token:)
       request = Request.new(config)
-      response = request.get("/getSignature?identificador=#{token}")
+      response = request.get("/signador/getSignature?identificador=#{token}")
 
       validate_response!(response)
-      response
     end
 
     # Build the URL for user to sign the document
@@ -75,7 +74,7 @@ module ValidSignador
     # @param token [String] Token from initProcess
     # @return [String] URL to redirect user to
     def sign_url(token:)
-      "#{config.base_url}/?id=#{token}"
+      "#{config.base_url}/signador/?id=#{token}"
     end
 
     # Retrieve stored process state from session

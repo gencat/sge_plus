@@ -6,43 +6,61 @@ module ValidSignador
     # Skip CSRF verification for callbacks from external service
     skip_before_action :verify_authenticity_token, only: [:create]
 
-    # POST /valid_signador/callback
     # Receives the signed document from Signador service
     def create
-      process_state = retrieve_process_state
+      vote = Decidim::SignatureCollection::CandidaciesVote.find_by(signador_token: params[:token])
+      token = vote.signador_token
+      current_candidacy = vote.candidacy
+      
+      client = ValidSignador::Client.new(session: session)
+      response = client.get_signature(token: token)
 
-      if process_state.nil?
-        render_error("No s'ha trobat l'estat del procés de signatura", :not_found)
-        return
+      if response["status"] == "OK"
+        signed_document = response["signResult"]
+        vote.update(encrypted_xml_doc_signed: Decidim::SignatureCollection::DataEncryptor.new(secret: Rails.application.secret_key_base).encrypt(signed_document))
+
+        finish_candidacy_signatures_path(current_candidacy)
+      else
+        flash[:alert] = "Error obtenint la signatura: #{response['message']}"
+        redirect_to fill_personal_data_path
       end
 
-      # Validate token matches
-      unless params[:token] == process_state[:token]
-        render_error("El token no coincideix", :unprocessable_entity)
-        return
-      end
+      
+      # process_state = retrieve_process_state
+      
+      # if process_state.nil?
+      #   render_error("No s'ha trobat l'estat del procés de signatura", :not_found)
+      #   return
+    #   end
+      
+    #   # Validate token matches
+    #   unless params[:token] == process_state[:token]
+    #     render_error("El token no coincideix", :unprocessable_entity)
+    #     return
+    #   end
+      
+    #   # Check if signature was successful
+    #   if params[:status] == "KO"
+    #     error_message = params[:error] || "Error desconegut en el procés de signatura"
+    #     handle_signature_error(process_state, error_message)
+    #     return
+    #   end
+      
+    #   # Get the signed document
+    #   signed_result = params[:signResult]
+      
+    #   if signed_result.blank?
+    #     render_error("No s'ha rebut el document signat", :unprocessable_entity)
+    #     return
+    #   end
+    #   byebug
 
-      # Check if signature was successful
-      if params[:status] == "KO"
-        error_message = params[:error] || "Error desconegut en el procés de signatura"
-        handle_signature_error(process_state, error_message)
-        return
-      end
-
-      # Get the signed document
-      signed_result = params[:signResult]
-
-      if signed_result.blank?
-        render_error("No s'ha rebut el document signat", :unprocessable_entity)
-        return
-      end
-
-      # Process the signed document
-      process_signed_document(process_state, signed_result)
-    rescue StandardError => e
-      Rails.logger.error("Error processing Signador callback: #{e.message}")
-      Rails.logger.error(e.backtrace.join("\n"))
-      render_error("Error processant la resposta del Signador: #{e.message}", :internal_server_error)
+    #   # Process the signed document
+    #   process_signed_document(process_state, signed_result)
+    # rescue StandardError => e
+    #   Rails.logger.error("Error processing Signador callback: #{e.message}")
+    #   Rails.logger.error(e.backtrace.join("\n"))
+    #   render_error("Error processant la resposta del Signador: #{e.message}", :internal_server_error)
     end
 
     private

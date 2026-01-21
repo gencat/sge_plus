@@ -50,13 +50,13 @@ module ValidSignador
 
     def applet_config
       {
-        keystore_type: "0", # Generic keystore
-        signature_mode: "12", # XAdES-T enveloped with timestamp
-        doc_type: "4", # B64fileContent - full document in base64
+        keystore_type: 0, # Generic keystore
+        signature_mode: 13, # XAdES-T enveloped with timestamp
+        doc_type: 4, # B64fileContent - full document in base64
         doc_name: doc_name,
         document_to_sign: encode_document,
         hash_algorithm: hash_algorithm,
-        xml_cfg: xml_config
+        # xml_cfg: xml_config
       }
     end
 

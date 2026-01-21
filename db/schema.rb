@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_01_14_112832) do
+ActiveRecord::Schema[7.0].define(version: 2026_01_21_080858) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "ltree"
   enable_extension "pg_trgm"
@@ -1571,6 +1571,7 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_14_112832) do
     t.text "encrypted_xml_doc_to_sign"
     t.text "encrypted_xml_doc_signed"
     t.string "filename"
+    t.text "signador_token"
     t.index ["decidim_signature_collection_candidacy_id"], name: "idx_signaturecollect_candidacies_votes_on_candidacy_id"
     t.index ["hash_id"], name: "idx_signaturecollect_candidacies_votes_on_hash_id"
   end
