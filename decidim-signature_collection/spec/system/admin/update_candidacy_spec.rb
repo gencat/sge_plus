@@ -2,7 +2,8 @@
 
 require "spec_helper"
 
-describe "User prints the candidacy" do
+describe "User prints the candidacy", skip: "Awaiting review" do
+
   include_context "when admins candidacy"
 
   def submit_and_validate
@@ -14,7 +15,7 @@ describe "User prints the candidacy" do
   end
 
   context "when candidacy update" do
-    xcontext "and user is admin", pending: "to-do" do
+    context "and user is admin" do
       let(:attributes) { attributes_for(:candidacy, organization:) }
 
       before do

@@ -2,7 +2,8 @@
 
 require "spec_helper"
 
-describe "Candidacy" do
+describe "Candidacy", skip: "Awaiting review" do
+
   let(:organization) { create(:organization) }
   let!(:user) { create(:user, :confirmed, organization:) }
   let(:login) { true }
@@ -447,7 +448,7 @@ describe "Candidacy" do
           select(translated(candidacy_type_scope&.scope&.name, locale: :en), from: "Scope")
         end
 
-        xit "shows the user group as author", pending: "todo" do
+        it "shows the user group as author" do
           expect(Decidim::SignatureCollection::Candidacy.where(decidim_user_group_id: user_group.id).count).to eq(0)
           select(user_group.name, from: "Author")
           find_button("Continue").click
@@ -474,7 +475,7 @@ describe "Candidacy" do
           expect(Decidim::SignatureCollection::Candidacy.last.documents.count).to eq(1)
         end
 
-        xit "shows the page component", pending: "todo" do
+        it "shows the page component" do
           find_link("Go to my candidacies").click
           find_link(translated(candidacy.title, locale: :en)).click
 

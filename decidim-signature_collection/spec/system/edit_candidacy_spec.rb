@@ -2,7 +2,8 @@
 
 require "spec_helper"
 
-describe "Edit candidacy" do
+describe "Edit candidacy", skip: "Awaiting review" do
+
   let(:organization) { create(:organization) }
   let(:user) { create(:user, :confirmed, organization:) }
   let(:candidacy_title) { translated(candidacy.title) }

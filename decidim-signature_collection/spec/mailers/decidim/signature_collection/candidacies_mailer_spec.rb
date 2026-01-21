@@ -2,8 +2,8 @@ require "spec_helper"
 
 module Decidim
   module SignatureCollection
-    # pending: to-do
-    xdescribe CandidaciesMailer do
+    describe CandidaciesMailer, skip: "Awaiting review" do
+
       include Decidim::TranslationsHelper
 
       let(:organization) { create(:organization, host: "1.lvh.me") }

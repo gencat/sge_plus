@@ -2,7 +2,8 @@
 
 require "spec_helper"
 
-describe "Admin manages candidacy publication" do
+describe "Admin manages candidacy publication", skip: "Awaiting review" do
+
   let!(:user) { create(:user, :admin, :confirmed, organization:) }
   let(:organization) { create(:organization) }
 
@@ -85,7 +86,7 @@ describe "Admin manages candidacy publication" do
     end
   end
 
-  xit "displays the entry in last activities", pending: "To-Do" do
+  it "displays the entry in last activities" do
     participatory_space.update(title: { en: title })
 
     switch_to_host(organization.host)

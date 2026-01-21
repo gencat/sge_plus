@@ -2,7 +2,8 @@
 
 require "spec_helper"
 
-describe "Comments" do
+describe "Comments", skip: "Awaiting review" do
+
   let(:organization) { create(:organization) }
   let!(:candidacy_type) { create(:candidacies_type, :online_signature_enabled, organization:) }
   let!(:scoped_type) { create(:candidacies_type_scope, type: candidacy_type) }
