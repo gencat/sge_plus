@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_11_14_102010) do
+ActiveRecord::Schema[7.0].define(version: 2025_12_22_131419) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "ltree"
   enable_extension "pg_trgm"
@@ -1559,19 +1559,18 @@ ActiveRecord::Schema[7.0].define(version: 2025_11_14_102010) do
     t.datetime "signature_period_end"
     t.boolean "published", default: true
     t.integer "minimum_signing_age"
+    t.string "elections", default: "parliament_of_catalonia", null: false
     t.index ["decidim_organization_id"], name: "index_decidim_candidacy_types_on_decidim_organization_id"
   end
 
   create_table "decidim_signature_collection_candidacies_votes", force: :cascade do |t|
     t.bigint "decidim_signature_collection_candidacy_id", null: false
-    t.bigint "decidim_author_id", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.text "encrypted_metadata"
     t.string "timestamp"
     t.string "hash_id"
     t.integer "decidim_scope_id"
-    t.index ["decidim_author_id"], name: "idx_signaturecollect_candidacies_votes_on_author_id"
     t.index ["decidim_signature_collection_candidacy_id"], name: "idx_signaturecollect_candidacies_votes_on_candidacy_id"
     t.index ["hash_id"], name: "idx_signaturecollect_candidacies_votes_on_hash_id"
   end

@@ -51,14 +51,16 @@ es:
         signature_type: Tipo de firma
         title: Título
         undo_online_signatures_enabled: Permitir a las participantes deshacer sus firmas digitales
-        validate_sms_code_on_votes: Añadir paso de validación mediante SMS al proceso de firma
       candidacies_type_scope:
         decidim_scopes_id: Ámbitos
         supports_required: Se requieren apoyos
       candidacies_vote:
         date_of_birth: Fecha de nacimiento
         document_number: Número de documento
-        name_and_surname: Nombre y apellido
+        document_type: Tipo de documento
+        name: Nombre
+        first_surname: Primer apellido
+        second_surname: Segundo apellido
         postal_code: Código postal
       organization_data:
         address: Dirección
@@ -72,7 +74,29 @@ es:
               file: Este archivo es invalido
               needs_to_be_reattached: Es necesario volver a adjuntar el archivo
               title: El título no puede estar vacío
+        candidacies_vote:
+          already_voted_as_user: "Ya has firmado esta candidatura con tu cuenta de usuario"
+          attributes:
+            document_number:
+              invalid_nif_format: "El formato del NIF no es válido. Debe contener 8 dígitos seguidos de una letra (ej: 12345678A)"
+              invalid_nif_letter: "La letra del NIF no es correcta"
+              invalid_nie_format: "El formato del NIE no es válido. Debe empezar con X, Y o Z, seguido de 7 dígitos y una letra (ej: X1234567A)"
+              invalid_nie_letter: "La letra del NIE no es correcta"
   activerecord:
+    attributes:
+      decidim:
+        signature_collection:
+          vote_form:
+            document_types:
+              nif: NIF
+              nie: NIE
+          candidacies_type:
+            elections:
+              congress: Congreso
+              senate: Senado
+              congress_and_senate: Congreso y Senado
+              european_parliament: Parlamento Europeo
+              parliament_of_catalonia: Parlamento de Cataluña
     models:
       decidim/candidacy:
         one: Iniciativa
@@ -155,7 +179,7 @@ es:
             candidacy_start_date: Fecha de inicio
             candidacy_title: Título de la candidatura
             candidacy_type: Tipo de candidatura
-            name_and_surname: Nombre y apellido
+            name_and_surname: Nombre y apellidos
             nickname: Alias
             postal_code: Código postal
             signature_count: Recuento de firmas
@@ -485,12 +509,6 @@ es:
           help: Por favor, rellena los siguientes campos con tus datos personales para firmar la candidatura.
         finish:
           back_to_candidacy: Volver a la candidatura
-        sms_code:
-          continue: Comprueba el código y continúa
-          help: Consulta el SMS recibido en tu móvil
-        sms_phone_number:
-          continue: Envíame un SMS
-          help: Rellena el formulario con tu número de teléfono verificado para solicitar tu código de verificación.
       candidacy_votes:
         create:
           error: Se ha producido un error al firmar la candidatura.
@@ -498,10 +516,6 @@ es:
           success_html: '¡Enhorabuena! Has firmado la candidatura <strong> %{title}</strong> correctamente.'
         personal_data:
           invalid: Los datos personales no son coherentes con los datos proporcionados para la autorización.
-        sms_code:
-          invalid: El código de verificación no coincide con el nuestro. Por favor, vuelve a revisar el SMS que te enviamos.
-        sms_phone:
-          invalid: El número de teléfono no es válido o está pendiente de autorización. Por favor, revisa tus autorizaciones.
       candidacies:
         author_list:
           hidden_authors_count:
@@ -603,14 +617,14 @@ es:
       candidacies_mailer:
         answered_body: 'La candidatura %{title} ha sido respondida. Puedes ver la respuesta aquí: %{answer_url}'
         answered_subject: "Se ha respondido a tu candidatura ciudadana '%{title}'"
-        creation_subject: Se ha creado tu candidatura ciudadana '%{title}'
+        creation_subject: Se ha creado tu candidatura '%{title}'. Todavía puedes revisarla y editarla
         candidacy_link:
-          check_candidacy_details: Puedes ver los detalles de la candidatura
+          check_candidacy_details: 'Comparte el siguiente enlace para convicar a otras personas a formar parte de la Comisión Promotora de tu candidatura:'
           here: aquí
         more_information: Aquí tienes más información sobre el proceso de creación de una candidatura.
         progress_report_body_for: La candidatura %{title} ha alcanzado el %{percentage}% de firmas requeridas.
         progress_report_for: 'Resumen de la candidatura: %{title}'
-        promotal_committee_help: Recuerda que debes invitar al menos a %{member_count} personas a la Comisión Promotora. Reenvia el siguiente enlace para invitarlas.
+        promotal_committee_help: "Recuerda enviarla a <b>Validación Técnica</b> para que una administradora la valide y la publique. Una vez enviada a ya no se podrá volver a editar."
         status_change_body_for: 'La candidatura %{title} ha cambiado su estado a: %{state}'
         status_change_for: La candidatura %{title} ha cambiado su estado
         validation_body: 'Por favor, revise la candidatura y realice la validación técnica necesaria.'
@@ -694,8 +708,6 @@ es:
       candidacy_signature_creation_header:
         fill_personal_data: Completa tus datos
         finish: Terminar
-        sms_code: Verificación por código SMS
-        sms_phone_number: Número de teléfono móvil
         title: Firmar %{candidacy_title}
       candidacies:
         no_candidacies_yet:

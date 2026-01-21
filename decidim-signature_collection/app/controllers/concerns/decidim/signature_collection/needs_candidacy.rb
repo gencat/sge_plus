@@ -23,7 +23,7 @@ module Decidim
         include NeedsOrganization
         include CandidacySlug
 
-        helper_method :current_candidacy, :current_participatory_space, :signature_has_steps?
+        helper_method :current_candidacy, :current_participatory_space
 
         # Public: Finds the current Candidacy given this controller's
         # context.
@@ -34,17 +34,6 @@ module Decidim
         end
 
         alias_method :current_participatory_space, :current_candidacy
-
-        # Public: Whether the current candidacy belongs to an candidacy type
-        # which requires one or more step before creating a signature
-        #
-        # Returns nil if there is no current_candidacy, true or false
-        def signature_has_steps?
-          return false unless current_candidacy
-
-          candidacy_type = current_candidacy.scoped_type.type
-          candidacy_type.collect_user_extra_fields? || candidacy_type.validate_sms_code_on_votes?
-        end
 
         private
 

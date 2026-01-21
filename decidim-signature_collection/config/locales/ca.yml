@@ -51,14 +51,16 @@ ca:
         signature_type: Tipus de signatura
         title: Títol
         undo_online_signatures_enabled: Permetre a les participants desfer les seves signatures digitals
-        validate_sms_code_on_votes: Afegeix el pas de validació mitjançant SMS al procés de signatura
       candidacies_type_scope:
         decidim_scopes_id: Àmbits
         supports_required: Es requereixen suports
       candidacies_vote:
         date_of_birth: Data de naixement
         document_number: Número de document
-        name_and_surname: Nom i cognoms
+        document_type: Tipus de document
+        name: Nom
+        first_surname: Primer cognom
+        second_surname: Segon cognom
         postal_code: Codi postal
       organization_data:
         address: Adreça
@@ -72,7 +74,29 @@ ca:
               file: Aquest arxiu és invàlid
               needs_to_be_reattached: És necessari tornar a adjuntar l'arxiu
               title: El títol no pot quedar buit
+        candidacies_vote:
+          already_voted_as_user: "Ja has signat aquesta candidatura amb el teu compte d'usuari"
+          attributes:
+            document_number:
+              invalid_nif_format: "El format del NIF no és vàlid. Ha de contenir 8 dígits seguits d'una lletra (ex: 12345678A)"
+              invalid_nif_letter: "La lletra del NIF no és correcta"
+              invalid_nie_format: "El format del NIE no és vàlid. Ha de començar amb X, Y o Z, seguit de 7 dígits i una lletra (ex: X1234567A)"
+              invalid_nie_letter: "La lletra del NIE no és correcta"
   activerecord:
+    attributes:
+      decidim:
+        signature_collection:
+          vote_form:
+            document_types:
+              nif: NIF
+              nie: NIE
+          candidacies_type:
+            elections:
+              congress: Congrés
+              senate: Senat
+              congress_and_senate: Congrés i Senat
+              european_parliament: Parlament Europeu
+              parliament_of_catalonia: Parlament de Catalunya
     models:
       decidim/candidacy:
         one: Iniciativa
@@ -479,12 +503,6 @@ ca:
           help: Si us plau, omple els següents camps amb les teves dades personals per signar la candidatura.
         finish:
           back_to_candidacy: Torna a la candidatura
-        sms_code:
-          continue: Comprova el codi i continua
-          help: Consulta el SMS rebut al teu mòbil
-        sms_phone_number:
-          continue: Envia'm un SMS
-          help: Omple el formulari amb el teu número de telèfon mòbil verificat per sol·licitar el teu codi de verificació.
       candidacy_votes:
         create:
           error: S'ha produït un error en signar la candidatura.
@@ -492,10 +510,6 @@ ca:
           success_html: Enhorabona! Has signat la candidatura <strong> %{title}</strong> correctament.
         personal_data:
           invalid: Les dades personals no són coherents amb les dades proporcionades per a l'autorització.
-        sms_code:
-          invalid: El codi de verificació que has introduït no coincideix amb el nostre. Si us plau, torna a revisar l'SMS que t'hem enviat.
-        sms_phone:
-          invalid: El número de telèfon no és vàlid o està pendent d'autorització. Si us plau, consulta les teves autoritzacions.
       candidacies:
         author_list:
           hidden_authors_count:
@@ -596,14 +610,14 @@ ca:
             other: SIGNATURES
       candidacies_mailer:
         answered_subject: "S'ha respost a la teva candidatura ciutadana '%{title}'"
-        creation_subject: S'ha creat la teva candidatura ciutadana '%{title}'
+        creation_subject: S'ha creat la teva candidatura '%{title}'. Encara la pots revisar i editar
         candidacy_link:
-          check_candidacy_details: Pots veure els detalls de la candidatura
+          check_candidacy_details: 'Comparteix el següent enllaç per convicar altres persones a formar part de la Comissió Promotora de la teva candidatura:'
           here: aquí
         more_information: Aquí tens més informació sobre el procés de creació d'candidatures.
         progress_report_body_for: La candidatura %{title} ha arribat al %{percentage}% de les signatures necessàries.
         progress_report_for: 'Resum de la candidatura: %{title}'
-        promotal_committee_help: Recorda que has de convidar almenys a %{member_count} persones a la Comissió Promotora. Reenvia el següent enllaç per convidar-les
+        promotal_committee_help: "Recorda enviar-la a <b>Validació Tècnica</b> per a què una administradora la validi i la publiqui. Un cop enviada a ja no es podrà tornar a editar."
         status_change_body_for: 'La candidatura %{title} ha canviat el seu estat a: %{state}'
         status_change_for: La candidatura %{title} ha canviat el seu estat
         validation_body: 'Si us plau, reviseu la candidatura i feu la validació tècnica necessària.'
@@ -687,8 +701,6 @@ ca:
       candidacy_signature_creation_header:
         fill_personal_data: Completa les teves dades
         finish: Finalitzar
-        sms_code: Verificació per codi SMS
-        sms_phone_number: Número de telèfon mòbil
         title: Signa %{candidacy_title}
       candidacies:
         no_candidacies_yet:

@@ -51,14 +51,16 @@ en:
         signature_type: Signature type
         title: Title
         undo_online_signatures_enabled: Enable participants to undo their online signatures
-        validate_sms_code_on_votes: Add SMS code validation step to signature process
       candidacies_type_scope:
         decidim_scopes_id: Scopes
         supports_required: Supports required
       candidacies_vote:
         date_of_birth: Date of birth
         document_number: Document number
-        name_and_surname: Name and surname
+        document_type: Document type
+        name: Name
+        first_surname: First surname
+        second_surname: Second surname
         postal_code: Postal code
       organization_data:
         address: Address
@@ -72,7 +74,29 @@ en:
               file: File is invalid
               needs_to_be_reattached: Needs to be reattached
               title: Title should not be empty
+        candidacies_vote:
+          already_voted_as_user: "You have already signed this candidacy with your user account"
+          attributes:
+            document_number:
+              invalid_nif_format: "The NIF format is invalid. It must contain 8 digits followed by a letter (e.g: 12345678A)"
+              invalid_nif_letter: "The NIF letter is incorrect"
+              invalid_nie_format: "The NIE format is invalid. It must start with X, Y or Z, followed by 7 digits and a letter (e.g: X1234567A)"
+              invalid_nie_letter: "The NIE letter is incorrect"
   activerecord:
+    attributes:
+      decidim:
+        signature_collection:
+          vote_form:
+            document_types:
+              nif: NIF
+              nie: NIE
+          candidacies_type:
+            elections:
+              congress: Congress
+              senate: Senate
+              congress_and_senate: Congress and Senate
+              european_parliament: European Parliament
+              parliament_of_catalonia: Parliament of Catalonia
     models:
       decidim/candidacy:
         one: Candidacy
@@ -155,7 +179,7 @@ en:
             candidacy_start_date: Start date
             candidacy_title: Candidacy title
             candidacy_type: Candidacy Type
-            name_and_surname: Name and surname
+            name_and_surname: Name and surnames
             nickname: Nickname
             postal_code: Postal code
             signature_count: Signature count
@@ -487,12 +511,6 @@ en:
           help: Please, fill the following fields with your personal data to sign the candidacy.
         finish:
           back_to_candidacy: Back to candidacy
-        sms_code:
-          continue: Check code and continue
-          help: Check the SMS received at your phone
-        sms_phone_number:
-          continue: Send me an SMS
-          help: Fill the form with your verified phone number to request your verification code.
       candidacy_votes:
         create:
           error: There was a problem signing the candidacy.
@@ -500,10 +518,6 @@ en:
           success_html: Congratulations! The <strong> %{title}</strong> candidacy has been successfully signed.
         personal_data:
           invalid: Personal data is not consistent with data provided for authorization.
-        sms_code:
-          invalid: Your verification code does not match ours. Please double-check the SMS we sent you.
-        sms_phone:
-          invalid: The phone number is invalid or pending of authorization. Please, check your authorizations.
       candidacies:
         author_list:
           hidden_authors_count:
@@ -604,15 +618,14 @@ en:
             other: Signatures
       candidacies_mailer:
         answered_subject: "Your candidacy '%{title}' has been answered"
-        creation_subject: Your candidacy '%{title}' has been created
+        creation_subject: Your candidacy '%{title}' has been created. You can still review and edit it.
         candidacy_link:
-          check_candidacy_details: You can see the candidacy details
+          check_candidacy_details: 'Share the following link to convince other people to be part of the Promotion Committee of your candidacy:'
           here: here
         more_information: Here you have more information about the candidacy creation process.
         progress_report_body_for: The candidacy %{title} has reached the %{percentage}% of required signatures.
         progress_report_for: 'Summary about the candidacy: %{title}'
-        promotal_committee_help: Remember that you must invite at least %{member_count} people to promoter committee. Forward the following link to invite people to the promoter committee
-        status_change_body_for: 'The candidacy %{title} has changed its status to: %{state}'
+        promotal_committee_help: "Remember to send it to <b>Technical Validation</b> so that an administrator can validate and publish it. Once sent to, it cannot be edited again."
         status_change_for: The candidacy %{title} has changed its status
         validation_body: 'Please review the candidacy and make the necessary technical validation.'
         validation_subject: "You have a new candidacy to review: '%{title}'"
@@ -695,8 +708,6 @@ en:
       candidacy_signature_creation_header:
         fill_personal_data: Complete your data
         finish: Finish
-        sms_code: SMS code verification
-        sms_phone_number: Mobile phone number
         title: Sign %{candidacy_title}
       candidacies:
         no_candidacies_yet:

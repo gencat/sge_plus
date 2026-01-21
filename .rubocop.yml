@@ -1,6 +1,13 @@
 inherit_gem:
   decidim-dev: rubocop-decidim.yml
 
+# Override inherited require statements to avoid loading extensions
+# that may not be available in all environments
+require:
+  - rubocop-rails
+  - rubocop-rspec
+  - rubocop-faker
+
 AllCops:
   Exclude:
     - 'db/schema.rb'
