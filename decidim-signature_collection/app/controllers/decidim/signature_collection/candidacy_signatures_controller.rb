@@ -31,53 +31,29 @@ module Decidim
       def store_personal_data
         build_vote_form(params)
 
-        if @vote_form.invalid?
-          flash[:alert] = I18n.t("personal_data.invalid", scope: "decidim.signature_collection.candidacy_votes")
-          @form = @vote_form
+        return render_invalid_form if @vote_form.invalid?
+        
+        prepare_vote_form_from_params_or_session
+        
+        VoteCandidacy.call(@vote_form) do
+          on(:ok) do |vote|
+            session[:candidacy_vote_form] = {}
+        
+            result = ValidSignador::SignatureProcessService.new(
+              vote: vote,
+              candidacy: candidacy,
+              session: session,
+              url_helpers: main_app
+            ).call
 
-          render :fill_personal_data
-        else
-          if params.has_key?(:candidacies_vote)
-            build_vote_form(params)
-          else
-            check_session_personal_data
+            byebug
+            
+            redirect_to result[:sign_url], allow_other_host: true
           end
-
-          VoteCandidacy.call(@vote_form) do
-            on(:ok) do |vote|
-              session[:candidacy_vote_form] = {}
-
-              xml_document = vote.encrypted_xml_doc_to_sign
-              decrypted_xml = Decidim::SignatureCollection::DataEncryptor.new(secret: Rails.application.secret_key_base).decrypt(xml_document)
-              base64_xml = Base64.strict_encode64(decrypted_xml)
-      
-              client = ValidSignador::Client.new(session: session)
-              init_response = client.init_process
-              token = init_response["token"]
-
-              vote.update!(signador_token: token)
-
-              client.start_sign_process(
-                token: token,
-                document: base64_xml,
-                options: {
-                  candidacy_id: candidacy.id,
-                  user_id: nil,
-                  final_redirect_url: main_app.valid_signador_callback_url,
-                  description: "Signatura electrònica de la candidatura '#{translated_attribute(candidacy.title)}'",
-                  doc_name: vote.filename,
-                  hash_algorithm: "SHA-256"
-                }
-                )
-
-              redirect_to client.sign_url(token: token), allow_other_host: true
-            end
-
-            on(:invalid) do |vote|
-              logger.fatal "Failed creating signature: #{vote.errors.full_messages.join(", ")}" if vote
-              flash[:alert] = I18n.t("create.invalid", scope: "decidim.signature_collection.candidacy_votes")
-              redirect_to send(:fill_personal_data_path)
-            end 
+          on(:invalid) do |vote| 
+            Rails.logger.error "Failed creating signature: #{vote.errors.full_messages.join(", ")}" if vote
+            flash[:alert] = I18n.t("create.invalid", scope: "decidim.signature_collection.candidacy_votes")
+            redirect_to fill_personal_data_path
           end
         end
       end
@@ -88,28 +64,6 @@ module Decidim
 
       def fill_personal_data_path
         fill_personal_data_candidacy_signatures_path(current_candidacy)
-      end
-
-      def finish_path
-        token = params[:token_id]
-        vote = params[:vote_id]
-
-        client = ValidSignador::Client.new(session: session)
-        token = "1818f392-76c7-4813-9736-4ccb0aa244f3"
-
-        # https://signador-pre.aoc.cat/signador/getSignature?identificador=token
-
-        response = client.get_signature(token: token)
-        
-        if response["status"] == "OK"
-          signed_document = response["signResult"]
-          vote.update(encrypted_xml_doc_signed: Decidim::SignatureCollection::DataEncryptor.new(secret: Rails.application.secret_key_base).encrypt(signed_document))
-
-          finish_candidacy_signatures_path(current_candidacy)
-        else
-          flash[:alert] = "Error obtenint la signatura: #{response['message']}"
-          redirect_to fill_personal_data_path
-        end
       end
 
       def build_vote_form(parameters)
@@ -149,6 +103,16 @@ module Decidim
 
         flash[:alert] = I18n.t("create.error", scope: "decidim.signature_collection.candidacy_votes")
         redirect_to fill_personal_data_path
+      end
+
+      def render_invalid_form
+        flash[:alert] = I18n.t("personal_data.invalid", scope: "decidim.signature_collection.candidacy_votes")
+        @form = @vote_form
+        render :fill_personal_data
+      end
+
+      def prepare_vote_form_from_params_or_session
+        params.has_key?(:candidacies_vote) ? build_vote_form(params) : check_session_personal_data
       end
     end
   end

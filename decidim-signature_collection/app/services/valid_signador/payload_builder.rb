@@ -56,7 +56,7 @@ module ValidSignador
         doc_name: doc_name,
         document_to_sign: encode_document,
         hash_algorithm: hash_algorithm,
-        # xml_cfg: xml_config
+        xml_cfg: xml_config
       }
     end
 

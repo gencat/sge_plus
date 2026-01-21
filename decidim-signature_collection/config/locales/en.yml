@@ -510,6 +510,8 @@ en:
           error: There was a problem signing the candidacy.
           invalid: The data provided to sign the candidacy is not valid.
           success_html: Congratulations! The <strong> %{title}</strong> candidacy has been successfully signed.
+        sign_description: "Electronic signature for candidacy '%{title}'"
+        signature_error: "Error obtaining signature: %{message}"
         personal_data:
           invalid: Personal data is not consistent with data provided for authorization.
       candidacies:

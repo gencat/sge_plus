@@ -513,6 +513,8 @@ es:
           error: Se ha producido un error al firmar la candidatura.
           invalid: Los datos proporcionados para firmar la candidatura no son válidos.
           success_html: '¡Enhorabuena! Has firmado la candidatura <strong> %{title}</strong> correctamente.'
+        sign_description: "Firma electrónica de la candidatura '%{title}'"
+        signature_error: "Error obteniendo la firma: %{message}"
         personal_data:
           invalid: Los datos personales no son coherentes con los datos proporcionados para la autorización.
       candidacies:

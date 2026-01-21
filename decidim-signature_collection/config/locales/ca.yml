@@ -509,6 +509,8 @@ ca:
           error: S'ha produït un error en signar la candidatura.
           invalid: Les dades proporcionades per signar la candidatura no són vàlides.
           success_html: Enhorabona! Has signat la candidatura <strong> %{title}</strong> correctament.
+        sign_description: "Signatura electrònica de la candidatura '%{title}'"
+        signature_error: "Error obtenint la signatura: %{message}"
         personal_data:
           invalid: Les dades personals no són coherents amb les dades proporcionades per a l'autorització.
       candidacies:

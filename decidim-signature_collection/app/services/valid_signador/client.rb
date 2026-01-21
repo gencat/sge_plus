@@ -67,6 +67,7 @@ module ValidSignador
       response = request.get("/signador/getSignature?identificador=#{token}")
 
       validate_response!(response)
+      response
     end
 
     # Build the URL for user to sign the document
@@ -100,7 +101,8 @@ module ValidSignador
 
       if response["status"] == "KO"
         error_message = response["message"] || "Unknown error"
-        raise ApiError, "Signador API error: #{error_message}"
+        Rails.logger.error("Error processing Signador callback: #{error_message}")
+        false
       end
 
       true
