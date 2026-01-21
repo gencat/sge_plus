@@ -32,13 +32,13 @@ module Decidim
         build_vote_form(params)
 
         return render_invalid_form if @vote_form.invalid?
-        
+
         prepare_vote_form_from_params_or_session
-        
+
         VoteCandidacy.call(@vote_form) do
           on(:ok) do |vote|
             session[:candidacy_vote_form] = {}
-        
+
             result = ValidSignador::SignatureProcessService.new(
               vote: vote,
               candidacy: candidacy,
@@ -46,11 +46,9 @@ module Decidim
               url_helpers: main_app
             ).call
 
-            byebug
-            
             redirect_to result[:sign_url], allow_other_host: true
           end
-          on(:invalid) do |vote| 
+          on(:invalid) do |vote|
             Rails.logger.error "Failed creating signature: #{vote.errors.full_messages.join(", ")}" if vote
             flash[:alert] = I18n.t("create.invalid", scope: "decidim.signature_collection.candidacy_votes")
             redirect_to fill_personal_data_path

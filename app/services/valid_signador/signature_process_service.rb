@@ -13,9 +13,9 @@ module ValidSignador
       prepare_document
       init_signador_process
       start_sign_process
-      
+
       { success: true, sign_url: @sign_url }
-    rescue => e
+    rescue StandardError => e
       { success: false, error: e.message }
     end
 

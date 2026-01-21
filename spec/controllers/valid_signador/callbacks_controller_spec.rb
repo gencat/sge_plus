@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ValidSignador::CallbacksController, type: :controller do
+RSpec.describe ValidSignador::CallbacksController do
   describe "POST #create" do
     let(:token) { "test-token-123" }
     let(:signed_result) { Base64.strict_encode64("<xml>Signed document</xml>") }
@@ -82,7 +82,7 @@ RSpec.describe ValidSignador::CallbacksController, type: :controller do
           post :create, params: params, format: :json
 
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(JSON.parse(response.body)["error"]).to include("token no coincideix")
+          expect(response.parsed_body["error"]).to include("token no coincideix")
         end
       end
 
@@ -98,7 +98,7 @@ RSpec.describe ValidSignador::CallbacksController, type: :controller do
           post :create, params: params, format: :json
 
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(JSON.parse(response.body)["error"]).to include("No s'ha rebut el document signat")
+          expect(response.parsed_body["error"]).to include("No s'ha rebut el document signat")
         end
       end
     end
@@ -116,7 +116,7 @@ RSpec.describe ValidSignador::CallbacksController, type: :controller do
         post :create, params: params, format: :json
 
         expect(response).to have_http_status(:not_found)
-        expect(JSON.parse(response.body)["error"]).to include("No s'ha trobat l'estat del procés")
+        expect(response.parsed_body["error"]).to include("No s'ha trobat l'estat del procés")
       end
     end
   end
