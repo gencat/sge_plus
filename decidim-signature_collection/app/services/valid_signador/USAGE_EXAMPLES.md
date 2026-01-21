@@ -5,6 +5,7 @@
 # Aquest fitxer mostra com integrar la signatura electrònica en el flux
 # de creació/gestió de candidatures utilitzant el servei Signador del Consorci AOC.
 
+```ruby
 module Decidim
   module SignatureCollection
     # Exemple de controller que utilitza ValidSignador per signar documents XML
@@ -219,3 +220,4 @@ module Decidim
     end
   end
 end
+```ruby

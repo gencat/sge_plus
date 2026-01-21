@@ -13,7 +13,6 @@ AllCops:
     - 'db/schema.rb'
     - 'db/migrate/**/*.rb'
     - decidim-signature_collection/spec/decidim_dummy_app/**/*
-    - decidim-signature_collection/app/services/valid_signador/USAGE_EXAMPLES.rb
 
 Layout/SpaceAroundOperators:
   Enabled: false
