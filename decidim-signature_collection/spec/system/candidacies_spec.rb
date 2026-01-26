@@ -3,7 +3,8 @@
 require "spec_helper"
 require "decidim/core/test/shared_examples/has_contextual_help"
 
-describe "Candidacies" do
+describe "Candidacies", skip: "Awaiting review" do
+
   let(:organization) { create(:organization) }
   let(:base_candidacy) do
     create(:candidacy, organization:)

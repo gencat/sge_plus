@@ -21,6 +21,7 @@ FactoryBot.define do
     child_scope_threshold_enabled { false }
     only_global_scope_enabled { false }
     comments_enabled { true }
+    elections { :congress_and_senate }
 
     signature_period_start { Time.zone.now }
     signature_period_end { 1.month.from_now }

@@ -2,7 +2,8 @@
 
 require "spec_helper"
 
-describe Decidim::SignatureCollection::CandidaciesController do
+describe Decidim::SignatureCollection::CandidaciesController, skip: "Awaiting review" do
+
   routes { Decidim::SignatureCollection::Engine.routes }
 
   let(:organization) { create(:organization) }

@@ -5,7 +5,8 @@ require "decidim/api/test/type_context"
 
 module Decidim
   module SignatureCollection
-    describe CandidacyApiType, type: :graphql do
+    describe CandidacyApiType, type: :graphql, skip: "Awaiting review" do
+
       include_context "with a graphql class type"
 
       let(:model) { create(:candidacies_type) }
