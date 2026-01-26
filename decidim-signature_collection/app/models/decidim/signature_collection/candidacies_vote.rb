@@ -15,6 +15,8 @@ module Decidim
 
       after_commit :update_counter_cache, on: [:create, :destroy]
 
+      validates :candidacy, uniqueness: { scope: :hash_id }
+
       # Public: Generates a hashed representation of the candidacy support.
       #
       # Used when exporting the votes as CSV.
