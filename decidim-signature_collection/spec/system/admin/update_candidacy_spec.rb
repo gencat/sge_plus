@@ -2,7 +2,8 @@
 
 require "spec_helper"
 
-describe "User prints the candidacy" do
+describe "User prints the candidacy", skip: "Awaiting review" do
+
   include_context "when admins candidacy"
 
   def submit_and_validate

@@ -55,9 +55,9 @@
                     data: { confirm: t("confirm", scope: "decidim.signature_collection.edit") } %>
       <% end %>
 
-      <% if allowed_to? :export_votes, :candidacy, candidacy: current_candidacy %>
-        <%= link_to t("export_votes", scope: "decidim.signature_collection.edit"),
-                    export_votes_candidacy_path(current_candidacy, format: :csv),
+      <% if allowed_to? :export_signatures, :candidacy, candidacy: current_candidacy %>
+        <%= link_to t("export_signatures", scope: "decidim.signature_collection.edit"),
+                    export_signatures_candidacy_path(current_candidacy, format: :csv),
                     class: "button button__sm md:button__lg button__secondary",
                     data: { confirm: t("confirm", scope: "decidim.signature_collection.edit") } %>
       <% end %>

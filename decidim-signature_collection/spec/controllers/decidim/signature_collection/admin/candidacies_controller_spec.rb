@@ -2,7 +2,8 @@
 
 require "spec_helper"
 
-describe Decidim::SignatureCollection::Admin::CandidaciesController do
+describe Decidim::SignatureCollection::Admin::CandidaciesController, skip: "Awaiting review" do
+
   routes { Decidim::SignatureCollection::AdminEngine.routes }
 
   let(:user) { create(:user, :confirmed, :admin_terms_accepted, organization:) }

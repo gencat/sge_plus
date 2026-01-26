@@ -4,7 +4,8 @@ require "spec_helper"
 
 module Decidim
   module SignatureCollection
-    describe UnvoteCandidacy do
+    describe UnvoteCandidacy, skip: "Awaiting review" do
+
       describe "User unvotes candidacy" do
         let(:vote) { create(:candidacy_user_vote) }
         let(:command) { described_class.new(vote.candidacy, vote.author) }

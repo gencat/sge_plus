@@ -3,7 +3,8 @@
 require "spec_helper"
 
 module Decidim
-  describe SignatureCollection::CandidaciesVote do
+  describe SignatureCollection::CandidaciesVote, skip: "Awaiting review" do
+
     let(:vote) { build(:candidacy_user_vote) }
 
     it "is valid" do

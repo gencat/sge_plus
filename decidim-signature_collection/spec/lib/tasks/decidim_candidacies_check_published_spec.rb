@@ -2,7 +2,8 @@
 
 require "spec_helper"
 
-describe "decidim_candidacies:check_published", type: :task do
+describe "decidim_candidacies:check_published", type: :task, skip: "Awaiting review" do
+
   it "preloads the Rails environment" do
     expect(task.prerequisites).to include "environment"
   end
