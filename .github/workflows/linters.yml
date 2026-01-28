@@ -46,5 +46,7 @@ jobs:
           max_attempts: 3
           command: bundle install --jobs 4 --retry 3
 
+      - name: Install rubocop gems
+        run: gem install rubocop
       - name: Rubocop
         run: bundle exec rubocop -P
