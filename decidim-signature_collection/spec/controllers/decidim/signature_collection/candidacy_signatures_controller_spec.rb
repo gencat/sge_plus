@@ -5,13 +5,12 @@ require "spec_helper"
 module Decidim
   module SignatureCollection
     describe CandidacySignaturesController, skip: "Awaiting review" do
-
       routes { Decidim::SignatureCollection::Engine.routes }
 
       let(:organization) { create(:organization) }
       let(:candidacy) { create(:candidacy, organization:) }
       let(:params) do
-        { 
+        {
           candidacy_slug: candidacy.slug,
           document_number: "12345678Z",
           document_type: 1,
@@ -28,13 +27,13 @@ module Decidim
       end
 
       context "when POST create" do
-        context "a logged user" do
+        context "with a logged user" do
           it "can vote" do
             sign_in candidacy.author, scope: :user
 
             expect do
               sign_in candidacy.author, scope: :user
-              post :create, params: params 
+              post :create, params: params
             end.to change { CandidaciesVote.where(candidacy: candidacy).count }.by(1)
           end
         end

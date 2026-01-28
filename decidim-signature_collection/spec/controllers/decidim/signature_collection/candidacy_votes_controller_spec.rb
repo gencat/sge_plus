@@ -5,7 +5,6 @@ require "spec_helper"
 module Decidim
   module SignatureCollection
     describe CandidacyVotesController, skip: "Awaiting review" do
-
       routes { Decidim::SignatureCollection::Engine.routes }
 
       let(:organization) { create(:organization) }

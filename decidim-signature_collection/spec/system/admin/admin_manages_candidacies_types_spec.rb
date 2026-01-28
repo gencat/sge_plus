@@ -3,7 +3,6 @@
 require "spec_helper"
 
 describe "Admin manages candidacies types", skip: "Awaiting review" do
-
   let(:organization) { create(:organization) }
   let(:user) { create(:user, :admin, :confirmed, organization:) }
   let!(:candidacies_type) { create(:candidacies_type, organization:) }

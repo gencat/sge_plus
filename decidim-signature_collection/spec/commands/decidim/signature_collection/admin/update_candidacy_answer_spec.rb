@@ -6,7 +6,6 @@ module Decidim
   module SignatureCollection
     module Admin
       describe UpdateCandidacyAnswer, skip: "Awaiting review" do
-
         let(:form_klass) { Decidim::SignatureCollection::Admin::CandidacyAnswerForm }
 
         context "when valid data" do

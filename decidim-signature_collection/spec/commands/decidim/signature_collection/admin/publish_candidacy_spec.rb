@@ -6,7 +6,6 @@ module Decidim
   module SignatureCollection
     module Admin
       describe PublishCandidacy, skip: "Awaiting review" do
-
         subject { described_class.new(candidacy, user) }
 
         let(:candidacy) { create(:candidacy, :created) }

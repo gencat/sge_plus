@@ -3,7 +3,6 @@
 require "spec_helper"
 
 describe "Filter Candidacies", :slow, skip: "Awaiting review" do
-
   let!(:organization) { create(:organization) }
   let!(:type1) { create(:candidacies_type, organization:) }
   let!(:type2) { create(:candidacies_type, organization:) }

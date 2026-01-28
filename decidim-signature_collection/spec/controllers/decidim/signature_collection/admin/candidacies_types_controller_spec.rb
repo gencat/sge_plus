@@ -6,7 +6,6 @@ module Decidim
   module SignatureCollection
     module Admin
       describe CandidaciesTypesController, skip: "Awaiting review" do
-
         routes { Decidim::SignatureCollection::AdminEngine.routes }
 
         let(:organization) { create(:organization) }

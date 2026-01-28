@@ -3,7 +3,6 @@
 require "spec_helper"
 
 describe "Candidacy", skip: "Awaiting review" do
-
   let(:organization) { create(:organization) }
   let(:state) { :open }
   let(:base_candidacy) do

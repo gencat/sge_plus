@@ -4,7 +4,6 @@ require "spec_helper"
 
 module Decidim::SignatureCollection
   describe OpenDataCandidacySerializer, skip: "Awaiting review" do
-
     subject { described_class.new(candidacy) }
 
     let(:candidacy) { create(:candidacy, :with_area) }

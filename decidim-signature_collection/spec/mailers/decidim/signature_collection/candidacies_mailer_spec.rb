@@ -1,9 +1,10 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 module Decidim
   module SignatureCollection
     describe CandidaciesMailer, skip: "Awaiting review" do
-
       include Decidim::TranslationsHelper
 
       let(:organization) { create(:organization, host: "1.lvh.me") }

@@ -5,7 +5,6 @@ require "spec_helper"
 module Decidim
   module SignatureCollection
     describe VoteForm, skip: "Awaiting review" do
-
       subject { form }
 
       let(:form) { described_class.from_params(attributes).with_context(context) }
