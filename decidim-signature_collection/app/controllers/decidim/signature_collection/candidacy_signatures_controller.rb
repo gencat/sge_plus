@@ -21,63 +21,36 @@ module Decidim
         redirect_to fill_personal_data_path
       end
 
-      # POST /candidacies/:candidacy_id/candidacy_signatures
-      def create
-        enforce_permission_to :vote, :candidacy, candidacy: current_candidacy
-
-        @form = form(Decidim::SignatureCollection::VoteForm)
-                .from_params(
-                  candidacy: current_candidacy,
-                )
-
-        VoteCandidacy.call(@form) do
-          on(:ok) do
-            current_candidacy.reload
-            render :update_buttons_and_counters
-          end
-
-          on(:invalid) do
-            render :error_on_vote, status: :unprocessable_entity
-          end
-        end
-      end
-
       def fill_personal_data
         @form = form(Decidim::SignatureCollection::VoteForm)
                 .from_params(
-                  candidacy: current_candidacy,
+                  candidacy: current_candidacy
                 )
       end
 
       def store_personal_data
         build_vote_form(params)
 
-        if @vote_form.invalid?
-          flash[:alert] = I18n.t("personal_data.invalid", scope: "decidim.signature_collection.candidacy_votes")
-          @form = @vote_form
+        return render_invalid_form if @vote_form.invalid?
 
-          render :fill_personal_data
-        else
-          redirect_to(finish_path)
-        end
-      end
-
-      def finish
-        if params.has_key?(:candidacies_vote)
-          build_vote_form(params)
-        else
-          check_session_personal_data
-        end
+        prepare_vote_form_from_params_or_session
 
         VoteCandidacy.call(@vote_form) do
-          on(:ok) do
+          on(:ok) do |vote|
             session[:candidacy_vote_form] = {}
-          end
 
+            result = ValidSignador::StartSignatureProcess.new(
+              vote: vote,
+              session: session,
+              url_helpers: main_app
+            ).call
+
+            redirect_to result[:sign_url], allow_other_host: true
+          end
           on(:invalid) do |vote|
-            logger.fatal "Failed creating signature: #{vote.errors.full_messages.join(", ")}" if vote
+            Rails.logger.error "Failed creating signature: #{vote.errors.full_messages.join(", ")}" if vote
             flash[:alert] = I18n.t("create.invalid", scope: "decidim.signature_collection.candidacy_votes")
-            redirect_to send(:fill_personal_data_path)
+            redirect_to fill_personal_data_path
           end
         end
       end
@@ -88,10 +61,6 @@ module Decidim
 
       def fill_personal_data_path
         fill_personal_data_candidacy_signatures_path(current_candidacy)
-      end
-
-      def finish_path
-        finish_candidacy_signatures_path(current_candidacy)
       end
 
       def build_vote_form(parameters)
@@ -131,6 +100,16 @@ module Decidim
 
         flash[:alert] = I18n.t("create.error", scope: "decidim.signature_collection.candidacy_votes")
         redirect_to fill_personal_data_path
+      end
+
+      def render_invalid_form
+        flash[:alert] = I18n.t("personal_data.invalid", scope: "decidim.signature_collection.candidacy_votes")
+        @form = @vote_form
+        render :fill_personal_data
+      end
+
+      def prepare_vote_form_from_params_or_session
+        params.has_key?(:candidacies_vote) ? build_vote_form(params) : check_session_personal_data
       end
     end
   end

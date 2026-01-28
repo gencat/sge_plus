@@ -34,7 +34,7 @@ module Decidim
                    pdf_signature_service.new(pdf: pdf_export.read).signed_pdf
                  else
                    pdf_export.read
-                  end
+                 end
 
         respond_to do |format|
           format.pdf do

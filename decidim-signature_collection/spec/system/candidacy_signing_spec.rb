@@ -3,7 +3,6 @@
 require "spec_helper"
 
 describe "Candidacy signing", skip: "Awaiting review" do
-
   let(:organization) { create(:organization, available_authorizations: authorizations) }
   let(:candidacy) do
     create(:candidacy, organization:)

@@ -120,11 +120,11 @@ module Decidim
           layout.text(I18n.t("models.candidacies_votes.fields.signature_count", scope: "decidim.admin"), style: :vote_th),
           layout.text(I18n.t("models.candidacies_votes.fields.nickname", scope: "decidim.admin"), style: :vote_th),
           layout.text(I18n.t("models.candidacies_votes.fields.date_and_time", scope: "decidim.admin"), style: :vote_th),
-          layout.text(I18n.t("models.candidacies_votes.fields.hash", scope: "decidim.admin"), style: :vote_th)
+          layout.text(I18n.t("models.candidacies_votes.fields.hash", scope: "decidim.admin"), style: :vote_th),
           layout.text(I18n.t("models.candidacies_votes.fields.name_and_surname", scope: "decidim.admin"), style: :vote_th),
           layout.text(I18n.t("models.candidacies_votes.fields.document_number", scope: "decidim.admin"), style: :vote_th),
           layout.text(I18n.t("models.candidacies_votes.fields.date_of_birth", scope: "decidim.admin"), style: :vote_th),
-          layout.text(I18n.t("models.candidacies_votes.fields.postal_code", scope: "decidim.admin"), style: :vote_th)
+          layout.text(I18n.t("models.candidacies_votes.fields.postal_code", scope: "decidim.admin"), style: :vote_th),
           layout.text(I18n.t("models.candidacies_votes.fields.timestamp", scope: "decidim.admin"), style: :vote_th)
         ]
       end

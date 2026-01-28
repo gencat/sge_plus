@@ -35,12 +35,7 @@
                         disabled: !@form.area_updatable? %>
 <% end %>
 
-<% signature_type_options = signature_type_options(form.object) %>
-<% if signature_type_options.length == 1 %>
-  <%= form.hidden_field :signature_type %>
-<% else %>
-  <%= form.select :signature_type, [], {}, { disabled: !@form.signature_type_updatable? } %>
-<% end %>
+<%= form.hidden_field :signature_type %>
 
 <% if current_candidacy.type.attachments_enabled? %>
   <%= form.attachment :documents,

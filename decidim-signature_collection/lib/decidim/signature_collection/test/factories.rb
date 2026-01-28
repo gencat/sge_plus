@@ -232,9 +232,7 @@ FactoryBot.define do
       skip_injection { false }
     end
     candidacy { create(:candidacy, skip_injection:) }
-    author { create(:user, :confirmed, organization: candidacy.organization, skip_injection:) }
     hash_id { SecureRandom.uuid }
-    scope { candidacy.scope }
     after(:create) do |vote|
       vote.candidacy.update_online_votes_counters
     end

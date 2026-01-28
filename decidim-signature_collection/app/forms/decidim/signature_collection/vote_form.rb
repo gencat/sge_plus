@@ -16,14 +16,13 @@ module Decidim
       attribute :date_of_birth, Date
 
       attribute :postal_code, String
-      attribute :encrypted_metadata, String
+      attribute :encrypted_xml_doc_signed, String
+      attribute :encrypted_xml_doc_to_sign, String
       attribute :hash_id, String
 
       attribute :candidacy, Decidim::SignatureCollection::Candidacy
 
       validates :candidacy, presence: true
-      # TO REVIEW
-      # validates :authorized_scopes, presence: true
 
       validate :already_voted?
       validate :document_number_format
@@ -36,12 +35,7 @@ module Decidim
         { nif: 1, nie: 2 }
       end
 
-      def encrypted_metadata
-        @encrypted_metadata ||= encryptor.encrypt(metadata)
-      end
-
-      # Public: The hash to uniquely identify an candidacy vote. It uses the
-      # candidacy scope as a default.
+      # Public: The hash to uniquely identify an candidacy vote
       #
       # Returns a String.
       def hash_id
@@ -56,84 +50,31 @@ module Decidim
         )
       end
 
-      # Public: Builds the list of scopes where the user is authorized to vote in. This is used when
-      # the candidacy allows also voting on child scopes, not only the main scope.
-      #
-      # Instead of just listing the children of the main scope, we just want to select the ones that
-      # have been added to the CandidacyType with its voting settings.
-      #
-      def authorized_scopes
-        candidacy.votable_candidacy_type_scopes.select do |candidacy_type_scope|
-          candidacy_type_scope.global_scope? ||
-            candidacy_type_scope.scope == user_authorized_scope ||
-            candidacy_type_scope.scope.ancestor_of?(user_authorized_scope)
-        end.map(&:scope).compact.uniq
+      def filename
+        "#{document_number}.xml"
       end
 
-      # Public: Finds the scope the user has an authorization for, this way the user can vote
-      # on that scope and its parents.
-      #
-      # This is can be used to allow users that are authorized with a children
-      # scope to sign an candidacy with a parent scope.
-      #
-      # As an example: A city (global scope) has many districts (scopes with
-      # parent nil), and each district has different neighbourhoods (with its
-      # parent as a district). If we setup the authorization handler to match
-      # a neighbourhood, the same authorization can be used to participate
-      # in district, neighbourhoods or city candidacies.
-      #
-      # Returns a Decidim::Scope.
-      def user_authorized_scope
-        return scope if handler_name.blank?
-        return scope unless authorized?
-        return scope if authorization.metadata.blank?
+      def encrypted_xml_doc_to_sign
+        xml = Decidim::SignatureCollection::XmlBuilder.new({
+                                                             candidacy:,
+                                                             name:,
+                                                             first_surname:,
+                                                             second_surname:,
+                                                             document_type:,
+                                                             document_number:,
+                                                             date_of_birth:
+                                                           }).build
 
-        @user_authorized_scope ||= authorized_scope_candidates.find do |scope|
-          scope&.id == authorization.metadata.symbolize_keys[:scope_id]
-        end || scope
-      end
-
-      # Public: Builds a list of Decidim::Scopes where the user could have a
-      # valid authorization.
-      #
-      # If the candidacy is set with a global scope (meaning the scope is nil),
-      # all the scopes in the organization are valid.
-      #
-      # Returns an array of Decidim::Scopes.
-      def authorized_scope_candidates
-        authorized_scope_candidates = [candidacy.scope]
-        authorized_scope_candidates += if candidacy.scope.present?
-                                         candidacy.scope.descendants
-                                       else
-                                         candidacy.organization.scopes
-                                       end
-        authorized_scope_candidates.uniq
-      end
-
-      def metadata
-        {
-          name:,
-          first_surname:,
-          second_surname:,
-          document_type:,
-          document_number:,
-          date_of_birth:,
-          postal_code:
-        }
+        encryptor.encrypt(xml)
       end
 
       protected
 
       # Private: Checks if there is any existing vote that matches the user's data.
       def already_voted?
-        return unless hash_id.present?
-        
-        authorized_scopes.each do |authorized_scope|
-          if candidacy.votes.exists?(hash_id: hash_id, scope: authorized_scope)
-            errors.add(:document_number, :taken)
-            break
-          end
-        end
+        return false if hash_id.blank?
+
+        errors.add(:document_number, :taken) if candidacy.votes.exists?(hash_id: hash_id)
       end
 
       def document_number_format
@@ -180,16 +121,16 @@ module Decidim
       def validate_nie_letter
         letters = "TRWAGMYFPDXBNJZSQVHLCKE"
         doc = document_number.to_s.upcase
-        
+
         nie_number = doc.dup
-        nie_number[0] = '0' if doc[0] == 'X'
-        nie_number[0] = '1' if doc[0] == 'Y'
-        nie_number[0] = '2' if doc[0] == 'Z'
-        
+        nie_number[0] = "0" if doc[0] == "X"
+        nie_number[0] = "1" if doc[0] == "Y"
+        nie_number[0] = "2" if doc[0] == "Z"
+
         number = nie_number[0..7].to_i
         letter = doc[8]
         expected_letter = letters[number % 23]
-        
+
         errors.add(:document_number, :invalid_nie_letter) unless letter == expected_letter
       end
 
@@ -258,7 +199,7 @@ module Decidim
       # end
 
       def encryptor
-        @encryptor ||= DataEncryptor.new(secret: "personal user metadata")
+        @encryptor ||= DataEncryptor.new(secret: Rails.application.secret_key_base)
       end
     end
   end

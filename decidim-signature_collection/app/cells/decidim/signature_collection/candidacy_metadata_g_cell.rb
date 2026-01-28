@@ -49,7 +49,7 @@ module Decidim
 
         {
           cell: "decidim/progress_bar",
-          args: [candidacy.supports_count_for(type_scope.scope), {
+          args: [candidacy.supports_count, {
             total: type_scope.supports_required,
             element_id: "candidacy-#{candidacy.id}-votes-count",
             class: "progress-bar__sm"

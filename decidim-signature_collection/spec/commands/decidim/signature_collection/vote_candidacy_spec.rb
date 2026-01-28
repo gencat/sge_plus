@@ -5,7 +5,6 @@ require "spec_helper"
 module Decidim
   module SignatureCollection
     describe VoteCandidacy, skip: "Awaiting review" do
-
       let(:form_klass) { VoteForm }
       let(:organization) { create(:organization) }
       let(:candidacy) { create(:candidacy, organization:) }
@@ -20,7 +19,7 @@ module Decidim
 
       let(:form_params) do
         {
-          candidacy:,
+          candidacy:
         }
       end
 

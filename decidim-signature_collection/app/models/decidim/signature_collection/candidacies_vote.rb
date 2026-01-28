@@ -13,16 +13,11 @@ module Decidim
                  class_name: "Decidim::SignatureCollection::Candidacy",
                  inverse_of: :votes
 
-      belongs_to :scope,
-                 foreign_key: "decidim_scope_id",
-                 class_name: "Decidim::Scope",
-                 optional: true
-
-      validates :candidacy, uniqueness: { scope: [:hash_id, :scope] }
+      scope :with_xml_signed, -> { where.not(encrypted_xml_doc_signed: nil) }
 
       after_commit :update_counter_cache, on: [:create, :destroy]
 
-      scope :for_scope, ->(scope) { where(scope:) }
+      validates :candidacy, uniqueness: { scope: :hash_id }
 
       # Public: Generates a hashed representation of the candidacy support.
       #

@@ -3,7 +3,6 @@
 require "spec_helper"
 
 describe Decidim::SignatureCollection::Engine, skip: "Awaiting review" do
-
   it_behaves_like "clean engine"
 
   it "loads engine mailer previews" do

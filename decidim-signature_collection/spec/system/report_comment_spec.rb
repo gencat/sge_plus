@@ -2,7 +2,6 @@
 
 require "spec_helper"
 describe "Report Comment", skip: "Awaiting review" do
-
   let!(:organization) { create(:organization) }
   let(:user) { create(:user, :confirmed, organization:) }
   let(:participatory_space) { commentable }

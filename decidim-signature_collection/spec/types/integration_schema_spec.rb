@@ -5,7 +5,6 @@ require "decidim/api/test/type_context"
 require "decidim/signature_collection/test/factories"
 
 describe "Decidim::Api::QueryType", skip: "Awaiting review" do
-
   include_context "with a graphql class type"
   let(:schema) { Decidim::Api::Schema }
 
@@ -58,7 +57,7 @@ describe "Decidim::Api::QueryType", skip: "Awaiting review" do
       "signatureType" => candidacy.type.signature_type,
       "title" => { "translation" => candidacy.type.title[locale] },
       "undoOnlineSignaturesEnabled" => candidacy.type.undo_online_signatures_enabled,
-      "updatedAt" => candidacy.type.updated_at.to_time.iso8601,
+      "updatedAt" => candidacy.type.updated_at.to_time.iso8601
     }
   end
 

@@ -3,7 +3,6 @@
 require "spec_helper"
 
 describe "Candidacy", skip: "Awaiting review" do
-
   let(:organization) { create(:organization) }
   let!(:user) { create(:user, :confirmed, organization:) }
   let(:login) { true }
@@ -387,18 +386,6 @@ describe "Candidacy", skip: "Awaiting review" do
             it "shows the area" do
               expect(page).to have_content("Area")
             end
-          end
-
-          context "when rich text editor is enabled for participants" do
-            before do
-              expect(page).to have_content("Create")
-              organization.update(rich_text_editor_in_public_views: true)
-
-              visit current_path
-            end
-
-            # TO-DO
-            # it_behaves_like "having a rich text editor", "new_candidacy_form", "content"
           end
         end
       end

@@ -3,7 +3,6 @@
 require "spec_helper"
 
 describe "Authorized comments", skip: "Awaiting review" do
-
   let!(:candidacy_type) { create(:candidacies_type, :online_signature_enabled, organization:) }
   let!(:scoped_type) { create(:candidacies_type_scope, type: candidacy_type) }
   let(:commentable) { create(:candidacy, author:, scoped_type:, organization:) }
