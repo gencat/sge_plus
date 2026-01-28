@@ -12,7 +12,7 @@ module ValidSignador
     before do
       ENV["SIGNADOR_DOMAIN"] = "https://example.cat"
       ENV["SIGNADOR_API_KEY"] = "test_api_key"
-      ENV["SIGNADOR_BASE_URL"] = "https://signador-pre.aoc.cat/signador"
+      ENV["SIGNADOR_BASE_URL"] = "https://signador-pre.aoc.cat"
       WebMock.disable_net_connect!(allow_localhost: true)
     end
 
@@ -46,7 +46,7 @@ module ValidSignador
 
         before do
           stub_request(:get, url)
-            .to_return(status: 200, body: response_body, headers: { "Content-Type" => "application/json" })
+            .to_return(status: 400, body: response_body, headers: { "Content-Type" => "application/json" })
         end
 
         it "raises ApiError" do

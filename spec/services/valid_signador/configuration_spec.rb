@@ -48,6 +48,7 @@ module ValidSignador
         before do
           ENV["SIGNADOR_DOMAIN"] = "https://example.cat"
           ENV["SIGNADOR_API_KEY"] = "test_api_key"
+          ENV["SIGNADOR_BASE_URL"] = "https://signador-pre.aoc.cat/signador"
           ENV["SIGNADOR_CALLBACK_PATH"] = "/custom/callback"
         end
 

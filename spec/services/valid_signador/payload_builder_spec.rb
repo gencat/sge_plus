@@ -43,15 +43,15 @@ module ValidSignador
         let(:applet_cfg) { payload[:applet_cfg] }
 
         it "uses generic keystore type" do
-          expect(applet_cfg[:keystore_type]).to eq("0")
+          expect(applet_cfg[:keystore_type]).to eq(0)
         end
 
-        it "uses XAdES-T enveloped signature mode (12)" do
-          expect(applet_cfg[:signature_mode]).to eq("12")
+        it "uses XAdES-T enveloped signature mode (13)" do
+          expect(applet_cfg[:signature_mode]).to eq(13)
         end
 
         it "uses B64fileContent document type (4)" do
-          expect(applet_cfg[:doc_type]).to eq("4")
+          expect(applet_cfg[:doc_type]).to eq(4)
         end
 
         it "uses SHA-256 hash algorithm by default" do

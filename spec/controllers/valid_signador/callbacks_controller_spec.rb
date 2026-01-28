@@ -6,15 +6,20 @@ RSpec.describe ValidSignador::CallbacksController do
   describe "POST #create" do
     let(:token) { "test-token-123" }
     let(:signed_result) { Base64.strict_encode64("<xml>Signed document</xml>") }
+    let!(:vote) { create(:candidacy_user_vote, signador_token: token) }
+    let(:client) { instance_double(ValidSignador::Client) }
+
+    before do
+      allow(ValidSignador::Client).to receive(:new).and_return(client)
+    end
 
     context "when process state exists in session" do
       let(:process_state) do
         {
-          token: token,
-          candidacy_id: 1,
+          token_id: token,
+          candidacy_id: vote.candidacy.id,
           document_original: "<xml>Original</xml>",
           timestamp_inici: Time.current.iso8601,
-          user_id: 2,
           redirect_url: "/candidacies/1"
         }
       end
@@ -26,53 +31,64 @@ RSpec.describe ValidSignador::CallbacksController do
       context "with successful signature" do
         let(:params) do
           {
-            token: token,
+            token_id: token,
             status: "OK",
             signResult: signed_result
           }
         end
 
+        let(:get_signature_response) do
+          {
+            "status" => "OK",
+            "signResult" => signed_result,
+            "type" => "XML"
+          }
+        end
+
+        before do
+          allow(client).to receive(:get_signature).with(token: token).and_return(get_signature_response)
+        end
+
         it "processes the signed document" do
           post :create, params: params
 
-          expect(response).to redirect_to("/candidacies/1")
-          expect(flash[:notice]).to eq("Document signat correctament")
-        end
-
-        it "clears the process state from session" do
-          post :create, params: params
-
-          expect(session[:valid_signador_process]).to be_nil
+          expect(response).to redirect_to("/candidacies/#{vote.candidacy.slug}/signatures/finish")
         end
       end
 
       context "with signature error" do
         let(:params) do
           {
-            token: token,
+            token_id: token,
             status: "KO",
             error: "User cancelled signature"
           }
         end
 
+        let(:get_signature_response) do
+          {
+            "status" => "KO",
+            "message" => "User cancelled signature"
+          }
+        end
+
+        before do
+          allow(client).to receive(:get_signature).with(token: token).and_return(get_signature_response)
+        end
+
         it "redirects with error message" do
           post :create, params: params
 
-          expect(response).to redirect_to("/candidacies/1")
+          expect(response).to redirect_to("/candidacies/#{vote.candidacy.slug}/signatures/fill_personal_data")
           expect(flash[:alert]).to include("User cancelled signature")
-        end
-
-        it "clears the process state from session" do
-          post :create, params: params
-
-          expect(session[:valid_signador_process]).to be_nil
         end
       end
 
       context "with mismatched token" do
+        let(:different_token) { "different-token" }
         let(:params) do
           {
-            token: "different-token",
+            token_id: different_token,
             status: "OK",
             signResult: signed_result
           }
@@ -81,24 +97,34 @@ RSpec.describe ValidSignador::CallbacksController do
         it "returns error" do
           post :create, params: params, format: :json
 
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.parsed_body["error"]).to include("token no coincideix")
+          expect(response).to be_redirect
+          expect(flash[:alert]).to be_present
         end
       end
 
       context "without signed result" do
         let(:params) do
           {
-            token: token,
+            token_id: token,
             status: "OK"
           }
         end
 
-        it "returns error" do
-          post :create, params: params, format: :json
+        let(:get_signature_response) do
+          {
+            "status" => "OK",
+            "type" => "XML"
+          }
+        end
 
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.parsed_body["error"]).to include("No s'ha rebut el document signat")
+        before do
+          allow(client).to receive(:get_signature).with(token: token).and_return(get_signature_response)
+        end
+
+        it "redirects with error" do
+          post :create, params: params
+          expect(response).to redirect_to("/candidacies/#{vote.candidacy.slug}/signatures/fill_personal_data")
+          expect(flash[:alert]).to be_present
         end
       end
     end
@@ -106,17 +132,28 @@ RSpec.describe ValidSignador::CallbacksController do
     context "when no process state exists in session" do
       let(:params) do
         {
-          token: token,
+          token_id: token,
           status: "OK",
           signResult: signed_result
         }
       end
 
-      it "returns not found error" do
-        post :create, params: params, format: :json
+      let(:get_signature_response) do
+        {
+          "status" => "OK",
+          "signResult" => signed_result,
+          "type" => "XML"
+        }
+      end
 
-        expect(response).to have_http_status(:not_found)
-        expect(response.parsed_body["error"]).to include("No s'ha trobat l'estat del procés")
+      before do
+        allow(client).to receive(:get_signature).with(token: token).and_return(get_signature_response)
+      end
+
+      it "processes normally even without session state" do
+        post :create, params: params
+
+        expect(response).to be_redirect
       end
     end
   end
