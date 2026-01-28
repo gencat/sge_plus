@@ -41,7 +41,6 @@ module Decidim
 
             result = ValidSignador::SignatureProcessService.new(
               vote: vote,
-              candidacy: candidacy,
               session: session,
               url_helpers: main_app
             ).call

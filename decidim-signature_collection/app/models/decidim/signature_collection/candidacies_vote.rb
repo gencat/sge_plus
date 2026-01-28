@@ -13,6 +13,8 @@ module Decidim
                  class_name: "Decidim::SignatureCollection::Candidacy",
                  inverse_of: :votes
 
+      scope :with_xml_signed, -> { where.not(encrypted_xml_doc_signed: nil) }
+
       after_commit :update_counter_cache, on: [:create, :destroy]
 
       validates :candidacy, uniqueness: { scope: :hash_id }

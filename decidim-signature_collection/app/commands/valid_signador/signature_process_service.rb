@@ -2,9 +2,9 @@
 
 module ValidSignador
   class SignatureProcessService
-    def initialize(vote:, candidacy:, session:, url_helpers:)
+    def initialize(vote:, session:, url_helpers:)
       @vote = vote
-      @candidacy = candidacy
+      @candidacy = vote.candidacy
       @session = session
       @url_helpers = url_helpers
     end
