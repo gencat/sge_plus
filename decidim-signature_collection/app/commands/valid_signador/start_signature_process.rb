@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ValidSignador
-  class SignatureProcessService
+  class StartSignatureProcess
     def initialize(vote:, session:, url_helpers:)
       @vote = vote
       @candidacy = vote.candidacy

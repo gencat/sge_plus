@@ -39,7 +39,7 @@ module Decidim
           on(:ok) do |vote|
             session[:candidacy_vote_form] = {}
 
-            result = ValidSignador::SignatureProcessService.new(
+            result = ValidSignador::StartSignatureProcess.new(
               vote: vote,
               session: session,
               url_helpers: main_app
