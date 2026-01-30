@@ -77,13 +77,12 @@ module Decidim
       end
 
       def signature_column_widths
-        [-0.5, -1, -0.75, -0.75, -0.75, -0.75, -0.75, -0.5, -0.75]
+        [-0.5, -0.75, -0.75, -1, -0.75, -0.75, -0.75]
       end
 
       def vote_row(model, index)
         cell = [
           layout.text((index + 1).to_s, style: :vote_td),
-          layout.text(model.author&.nickname || I18n.t("models.candidacies_votes.fields.no_user", scope: "decidim.admin"), style: :vote_td),
           layout.text(I18n.l(model.created_at, format: "%Y-%m-%d %H:%M:%S %Z"), style: :vote_td),
           layout.text(truncate(model.hash_id), style: :vote_td)
         ]
@@ -99,11 +98,6 @@ module Decidim
           layout.text(date_of_birth, style: :vote_td),
           layout.text(metadata[:postal_code].to_s, style: :vote_td)
         ]
-
-        timestamp_text = model.timestamp ? truncate(model.timestamp.to_s) : ""
-        cell += [
-          layout.text(timestamp_text, style: :vote_td)
-        ]
         [cell]
       end
 
@@ -118,14 +112,12 @@ module Decidim
       def header
         [
           layout.text(I18n.t("models.candidacies_votes.fields.signature_count", scope: "decidim.admin"), style: :vote_th),
-          layout.text(I18n.t("models.candidacies_votes.fields.nickname", scope: "decidim.admin"), style: :vote_th),
           layout.text(I18n.t("models.candidacies_votes.fields.date_and_time", scope: "decidim.admin"), style: :vote_th),
           layout.text(I18n.t("models.candidacies_votes.fields.hash", scope: "decidim.admin"), style: :vote_th),
           layout.text(I18n.t("models.candidacies_votes.fields.name_and_surname", scope: "decidim.admin"), style: :vote_th),
           layout.text(I18n.t("models.candidacies_votes.fields.document_number", scope: "decidim.admin"), style: :vote_th),
           layout.text(I18n.t("models.candidacies_votes.fields.date_of_birth", scope: "decidim.admin"), style: :vote_th),
-          layout.text(I18n.t("models.candidacies_votes.fields.postal_code", scope: "decidim.admin"), style: :vote_th),
-          layout.text(I18n.t("models.candidacies_votes.fields.timestamp", scope: "decidim.admin"), style: :vote_th)
+          layout.text(I18n.t("models.candidacies_votes.fields.postal_code", scope: "decidim.admin"), style: :vote_th)
         ]
       end
 
@@ -139,7 +131,7 @@ module Decidim
       end
 
       def encryptor
-        @encryptor ||= Decidim::SignatureCollection::DataEncryptor.new(secret: "personal user metadata")
+        @encryptor ||= Decidim::SignatureCollection::DataEncryptor.new(secret: Rails.application.secret_key_base)
       end
 
       def truncate(text, length = 50)

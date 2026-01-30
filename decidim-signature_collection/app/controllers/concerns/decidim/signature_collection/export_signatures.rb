@@ -48,20 +48,20 @@ module Decidim
 
         require "zip"
 
-        id_dir = Rails.root.join("storage", "xml_signatures", current_candidacy.id.to_s)
-        slug_dir = Rails.root.join("storage", "xml_signatures", current_candidacy.slug.to_s)
-        candidacy_dir = [id_dir, slug_dir].find { |dir| Dir.exist?(dir) }
-        return render(plain: I18n.t("decidim.signature_collection.export.xml.directory_missing"), status: :not_found) if candidacy_dir.blank?
+        votes_with_xml = current_candidacy.votes.with_xml_signed
+        return render(plain: I18n.t("decidim.signature_collection.export.xml.no_files"), status: :not_found) if votes_with_xml.empty?
 
-        xml_files = Dir.glob(File.join(candidacy_dir, "*.xml"))
-        return render(plain: I18n.t("decidim.signature_collection.export.xml.no_files"), status: :not_found) if xml_files.empty?
+        encryptor = Decidim::SignatureCollection::DataEncryptor.new(secret: Rails.application.secret_key_base)
 
         zip_io = StringIO.new
         Zip::OutputStream.write_buffer(zip_io) do |zos|
-          xml_files.each do |file_path|
-            entry_name = File.basename(file_path)
-            zos.put_next_entry(entry_name)
-            zos.write File.binread(file_path)
+          votes_with_xml.each do |vote|
+            decrypted_xml = encryptor.decrypt(vote.encrypted_xml_doc_signed)
+
+            filename = vote.filename.presence || "vote_#{vote.id}.xml"
+
+            zos.put_next_entry(filename)
+            zos.write decrypted_xml
           end
         end
         zip_io.rewind

@@ -54,6 +54,19 @@ module Decidim
         "#{document_number}.xml"
       end
 
+      def encrypted_metadata
+        metadata = {
+          name:,
+          first_surname:,
+          second_surname:,
+          document_type:,
+          document_number:,
+          date_of_birth:,
+          postal_code:
+        }
+        encryptor.encrypt(metadata)
+      end
+
       def encrypted_xml_doc_to_sign
         xml = Decidim::SignatureCollection::XmlBuilder.new({
                                                              candidacy:,

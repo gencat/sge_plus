@@ -17,7 +17,7 @@ module Decidim
 
       after_commit :update_counter_cache, on: [:create, :destroy]
 
-      validates :candidacy, uniqueness: { scope: :hash_id }
+      validates :candidacy, uniqueness: { scope: :hash_id }, on: :create
 
       # Public: Generates a hashed representation of the candidacy support.
       #

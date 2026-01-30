@@ -46,6 +46,7 @@ module Decidim
         vote = Decidim::SignatureCollection::CandidaciesVote.new(
           candidacy:,
           encrypted_xml_doc_to_sign: form.encrypted_xml_doc_to_sign,
+          encrypted_metadata: form.encrypted_metadata,
           filename: form.filename,
           hash_id: form.hash_id
         )
