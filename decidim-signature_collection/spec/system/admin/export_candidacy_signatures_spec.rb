@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe "Admin export candidacies' signature", skip: "Awaiting review" do
+describe "Admin export candidacies signature" do
   include_context "when admins candidacy"
 
   let!(:votes) { create_list(:candidacy_user_vote, 5, candidacy:) }

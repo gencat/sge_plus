@@ -34,7 +34,11 @@ shared_examples "update an candidacy type" do
         extra_fields_legal_information: Decidim::Faker::Localized.sentence(word_count: 25).except("machine_translations"),
         document_number_authorization_handler: "",
         child_scope_threshold_enabled: false,
-        only_global_scope_enabled: false
+        only_global_scope_enabled: false,
+        signature_period_start: 1.month.from_now,
+        signature_period_end: 2.months.from_now,
+        minimum_signing_age: 16,
+        elections: "congress"
       }
     end
 

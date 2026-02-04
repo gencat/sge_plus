@@ -4,34 +4,4 @@
     candidacy_signatures_path(candidacy_slug: current_candidacy.slug),
     class: "button button__xl w-full button__secondary"
   ) %>
-<% else %>
-  <% if candidacy.voted_by?(current_user) %>
-    <% if allowed_to? :unvote, :candidacy, candidacy: candidacy %>
-      <%= button_to(
-        candidacy_candidacy_vote_path(candidacy_slug: current_candidacy.slug),
-        method: :delete,
-        remote: true,
-        data: { disable: true },
-        class: "button button__xl w-full button__secondary success"
-      ) do %>
-        <%= icon "check-line" %>
-        <%= unvote_label %>
-      <% end %>
-    <% else %>
-      <button class='button button__xl w-full button__secondary success' disabled>
-        <%= icon "check-line" %>
-        <%= unvote_label %>
-      </button>
-    <% end %>
-  <% else %>
-    <%= action_authorized_link_to(
-      :vote,
-      t("vote", scope: "decidim.signature_collection.candidacies.vote_cabin"),
-      candidacy_signatures_path(candidacy_slug: current_candidacy.slug),
-      resource: current_candidacy,
-      permissions_holder: current_candidacy.type,
-      authorizations_modal_path: authorization_sign_modal_candidacy_path(current_candidacy),
-      class: "button button__xl w-full button__secondary"
-    ) %>
-  <% end %>
 <% end %>

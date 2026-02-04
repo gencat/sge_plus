@@ -3,7 +3,7 @@
 require "spec_helper"
 require "decidim/core/test/shared_examples/has_contextual_help"
 
-describe "Candidacies", skip: "Awaiting review" do
+describe "Candidacies" do
   let(:organization) { create(:organization) }
   let(:base_candidacy) do
     create(:candidacy, organization:)
@@ -141,7 +141,7 @@ describe "Candidacies", skip: "Awaiting review" do
         end
       end
 
-      context "when it is an candidacy with card image enabled" do
+      context "when it is an candidacy with card image enabled", skip: "Awaiting review" do
         before do
           candidacy.type.attachments_enabled = true
           candidacy.type.save!
