@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe Decidim::SignatureCollection::Permissions, skip: "Awaiting review" do
+describe Decidim::SignatureCollection::Permissions do
   subject { described_class.new(user, permission_action, context).permissions.allowed? }
 
   let(:user) { create(:user, organization:) }

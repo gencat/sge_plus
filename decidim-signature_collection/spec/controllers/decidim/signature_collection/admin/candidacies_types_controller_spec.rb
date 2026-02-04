@@ -5,7 +5,7 @@ require "spec_helper"
 module Decidim
   module SignatureCollection
     module Admin
-      describe CandidaciesTypesController, skip: "Awaiting review" do
+      describe CandidaciesTypesController do
         routes { Decidim::SignatureCollection::AdminEngine.routes }
 
         let(:organization) { create(:organization) }

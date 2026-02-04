@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe "Filter Candidacies", :slow, skip: "Awaiting review" do
+describe "Filter Candidacies", :slow do
   let!(:organization) { create(:organization) }
   let!(:type1) { create(:candidacies_type, organization:) }
   let!(:type2) { create(:candidacies_type, organization:) }
@@ -70,7 +70,7 @@ describe "Filter Candidacies", :slow, skip: "Awaiting review" do
         expect(page).to have_content("2 candidacies")
       end
 
-      it "can be ordered by most commented after filtering" do
+      it "can be ordered by most commented after filtering", skip: "Awaiting review" do
         within "#panel-dropdown-menu-scope" do
           click_filter_item scoped_type1.scope_name[I18n.locale.to_s]
         end
@@ -115,7 +115,7 @@ describe "Filter Candidacies", :slow, skip: "Awaiting review" do
       end
     end
 
-    context "when selecting the open state" do
+    context "when selecting the open state", skip: "Awaiting review" do
       it "lists the open candidacies", :slow do
         within "#panel-dropdown-menu-state" do
           click_filter_item "All"

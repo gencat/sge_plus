@@ -31,6 +31,19 @@ module Decidim
 
       translatable_fields :title, :description, :answer
 
+      # Override Participable methods to use the correct namespace (SignatureCollection instead of Candidacies)
+      def self.module_name
+        "Decidim::SignatureCollection"
+      end
+
+      def self.admin_module_name
+        "Decidim::SignatureCollection::Admin"
+      end
+
+      def self.admins_query
+        Decidim::SignatureCollection::Admin::AdminUsers
+      end
+
       delegate :type, :scope, :scope_name, :supports_required, to: :scoped_type, allow_nil: true
       delegate :document_number_authorization_handler, :promoting_committee_enabled?, :attachments_enabled?,
                :promoting_committee_enabled?, :custom_signature_end_date_enabled?, :area_enabled?, to: :type
