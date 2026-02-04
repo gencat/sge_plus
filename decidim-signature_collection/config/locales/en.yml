@@ -264,6 +264,7 @@ en:
         answers:
           edit:
             answer: Answer
+            return_to_create_state_help: By checking this option, the candidacy will return to the "Created" state so that the person who submitted it can edit it with the changes requested in this answer.
             title: Answer for %{title}
           info_candidacy:
             created_at: Created at

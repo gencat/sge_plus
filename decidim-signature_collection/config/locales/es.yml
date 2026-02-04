@@ -259,6 +259,7 @@ es:
         answers:
           edit:
             answer: Responder
+            return_to_create_state_help: Marcando esta opción, la candidatura volverá al estado "Creada" para que la persona que la ha presentado pueda editarla con los cambios solicitados en esta respuesta.
             title: Respuesta para %{title}
           info_candidacy:
             created_at: Creada el
