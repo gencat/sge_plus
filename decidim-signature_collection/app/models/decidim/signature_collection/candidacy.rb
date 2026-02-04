@@ -462,10 +462,6 @@ module Decidim
         votes_enabled? && (online_signature_type? || any_signature_type?)
       end
 
-      def accepts_online_unvotes?
-        accepts_online_votes? && type.undo_online_signatures_enabled?
-      end
-
       def minimum_committee_members
         type.minimum_committee_members || Decidim::SignatureCollection.minimum_committee_members
       end
