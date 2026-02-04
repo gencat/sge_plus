@@ -15,9 +15,9 @@ module Decidim
 
       scope :with_xml_signed, -> { where.not(encrypted_xml_doc_signed: nil) }
 
-      after_commit :update_counter_cache, on: [:create, :destroy]
+      after_commit :update_counter_cache, on: [:update, :destroy]
 
-      validates :candidacy, uniqueness: { scope: :hash_id }
+      validates :candidacy, uniqueness: { scope: :hash_id }, on: :create
 
       # Public: Generates a hashed representation of the candidacy support.
       #

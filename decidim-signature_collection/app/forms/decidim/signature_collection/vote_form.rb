@@ -54,6 +54,19 @@ module Decidim
         "#{document_number}.xml"
       end
 
+      def encrypted_metadata
+        metadata = {
+          name:,
+          first_surname:,
+          second_surname:,
+          document_type:,
+          document_number:,
+          date_of_birth:,
+          postal_code:
+        }
+        encryptor.encrypt(metadata)
+      end
+
       def encrypted_xml_doc_to_sign
         xml = Decidim::SignatureCollection::XmlBuilder.new({
                                                              candidacy:,
@@ -133,70 +146,6 @@ module Decidim
 
         errors.add(:document_number, :invalid_nie_letter) unless letter == expected_letter
       end
-
-      def author
-        @author ||= current_organization.users.find_by(id: author_id)
-      end
-
-      # Private: Finds an authorization for the user signing the candidacy and
-      # the configured handler.
-      # def authorization
-      #   return unless signer && handler_name
-
-      #   @authorization ||= Verifications::Authorizations.new(
-      #     organization: signer.organization,
-      #     user: signer,
-      #     name: handler_name
-      #   ).first
-      # end
-
-      # Private: Checks if the authorization has not expired or is invalid.
-      # def authorized?
-      #   authorization_status&.first == :ok
-      # end
-
-      # Private: Builds an authorization handler with the data the user provided
-      # when signing the candidacy.
-      #
-      # This is currently tied to authorization handlers that have, at least, these attributes:
-      #   * document_type
-      #   * document_number
-      #   * name
-      #   * first_surname
-      #   * second_surname
-      #   * date_of_birth
-      #   * postal_code
-      #
-      # Once we have the authorization handler we can use is to compute the
-      # unique_id and compare it to an existing authorization.
-      #
-      # Returns a Decidim::AuthorizationHandler.
-      # def authorization_handler
-      #   return unless document_number && handler_name && signer
-
-      #   @authorization_handler ||= Decidim::AuthorizationHandler.handler_for(handler_name,
-      #                                                                        document_type:,
-      #                                                                        document_number:,
-      #                                                                        name:,
-      #                                                                        first_surname:,
-      #                                                                        second_surname:,
-      #                                                                        date_of_birth:,
-      #                                                                        postal_code:)
-      # end
-
-      # Private: The AuthorizationHandler name used to verify the user's
-      # document number.
-      #
-      # Returns a String.
-      # def handler_name
-      #   candidacy.document_number_authorization_handler
-      # end
-
-      # def authorization_status
-      #   return unless authorization
-
-      #   Decidim::Verifications::Adapter.from_element(handler_name).authorize(authorization, {}, nil, nil)
-      # end
 
       def encryptor
         @encryptor ||= DataEncryptor.new(secret: Rails.application.secret_key_base)

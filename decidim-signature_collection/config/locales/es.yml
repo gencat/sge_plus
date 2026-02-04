@@ -266,9 +266,6 @@ es:
             candidacy_votes_count: Recuento de firmas
             candidacies: Candidaturas
             state: Estado
-        candidacies:
-          index:
-            actions_title: Acción
         committee_requests:
           index:
             approve: Aprobar
@@ -288,7 +285,6 @@ es:
           candidacies: Candidaturas
         export:
           xml:
-            directory_missing: No se ha encontrado el directorio de XML de firmas para esta candidatura.
             no_files: No se han encontrado ficheros XML para esta candidatura.
         index:
           candidacies_types:
