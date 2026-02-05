@@ -6,12 +6,12 @@ ca:
         answer: Resposta
         answer_url: URL de la resposta
         area_id: Àrea
-        decidim_scope_id: Àmbit
+        decidim_scope_id: Circumscripció
         decidim_user_group_id: Autora
-        description: Descripció
+        description: Programa abreujat de la candidatura
         offline_votes: Signatures presencials
         offline_votes_for_scope: Signatures presencials per a %{scope_name}
-        scope_id: Àmbit
+        scope_id: Circumscripció
         return_to_create_state: Tornar a l'estat de creació
         signature_end_date: Fi del període de recollida de signatures
         signature_start_date: Inici del període de recollida de signatures
@@ -21,7 +21,7 @@ ca:
           offline: Presencial
           online: Digital
         state: Estat
-        title: Títol
+        title: Nom i sigles de la candidatura a avalar
         type_id: Tipus
       candidacies_committee_member:
         user: Membre del comitè
@@ -419,21 +419,20 @@ ca:
         fill_data:
           back: Torna
           continue: Continua
-          fill_data_help: "<ul> <li>Revisa el contingut de la teva candidatura. El títol és fàcil d'entendre? L'objectiu de la teva candidatura és clar?</li> <li>Has d'escollir el tipus de signatura. Presencial, digital o una combinació de totes dues.</li> <li>Quin és l'àmbit geogràfic de la candidatura?</li> </ul>"
+          fill_data_help: "Recorda que, previ a l’inici de la recollida de signatures, cal que, en el cas d’eleccions a Parlament, comuniqueu a la junta electoral competent el sistema de signatura electrònica que s’utilitza; i en el cas d’eleccions municipals, verifiqueu que l’ajuntament reconegui com a vàlid aquest sistema de recollida de signatures electròniques."
           more_information: "(Més informació)"
           select_area: Selecciona una àrea
           select_scope: Selecciona un àmbit d'aplicació
         finish:
           back: Torna
           back_to_candidacies: Torna a candidatures
-          callout_text: Enhorabona! La teva candidatura s'ha creat correctament.
-          confirm: Estàs a punt d'enviar la candidatura perquè una administradora la revisi i la publiqui. Un cop publicada no la podràs editar. Segur?
-          edit_my_candidacy: Editar la meva candidatura
-          go_to_my_candidacies: Ves a les meves candidatures
+          callout_text: Enhorabona! El tràmit s'ha iniciat correctament. Recorda que has d'enviar la candidatura a <b>Validació Tècnica</b> per iniciar la recollida de signatures.
+          confirm: Estàs a punt d’enviar la candidatura per a revisió i publicació. Un cop publicada no la podràs editar.
+          edit_my_candidacy: Editar candidatura
           more_information: "(Més informació)"
-          send_my_candidacy: Enviar la meva candidatura a validació tècnica
+          send_my_candidacy: Enviar candidatura a validació tècnica
         finish_help:
-          publish_helper_text: Recorda que per publicar la teva candidatura has de completar la informació requerida i <strong>enviar-la a la validació tècnica</strong> perquè una administradora la revisi.
+          publish_helper_text: Encara pots revisar i editar la informació de la candidatura. Un cop l'enviïs a validaciò tècnica ja no es podrà modificar. Recorda que, previ a l’inici de la recollida de signatures, cal que, en el cas d’eleccions a Parlament, comuniqueu a la junta electoral competent el sistema de signatura electrònica que s’utilitza; i en el cas d’eleccions municipals, verifiqueu que l’ajuntament reconegui com a vàlid aquest sistema de recollida de signatures electròniques.
         previous_form:
           back: Torna
           continue: Continua
@@ -444,7 +443,7 @@ ca:
           back: Torna
           choose_html: Vull <strong>%{title}</strong>
           more_information: (Més informació)
-          new: Crea una nova candidatura
+          new: Iniciar una nova candidatura a avalar
           select: Vull promoure aquesta candidatura
           select_candidacy_type_help: Les candidatures són un mitjà pel qual les participants poden intervenir perquè l'organització pugui emprendre accions en defensa de l'interès general. Quina candidatura vols iniciar?
           select_candidacy_type: Impulsa la candidatura
@@ -538,7 +537,7 @@ ca:
           state: Estat
           type: Tipus
         index_header:
-          new_candidacy: Nova candidatura
+          new_candidacy: Nova candidatura a avalar
         candidacies:
           closed_candidacies_warning: Actualment no hi ha candidatures obertes, però aquí pots trobar el llistat de totes les candidatures tancades.
           no_candidacies_warning: No hi ha candidatures que coincideixin amb el teu criteri de cerca.
@@ -580,7 +579,7 @@ ca:
         show:
           area: Àrea
           before_send_to_technical_validation_announcement: 'Abans d''enviar la teva candidatura a validació tècnica, has d''afegir %{count} membres més a la comissió promotora.<br/><br/>Comparteix aquest enllaç amb les persones que vulguis que siguin part de la comissió: %{href}'
-          confirm: Estàs a punt d'enviar la candidatura perquè una administradora la revisi i la publiqui. Un cop publicada no la podràs editar. Segur?
+          confirm: Estàs a punt d’enviar la candidatura per a revisió i publicació. Un cop publicada no la podràs editar.
           edit: Editar
           export_signatures: Exportar signatures
           candidacy_actions: Accions de la comissió promotora
