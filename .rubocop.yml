@@ -8,6 +8,9 @@ require:
   - rubocop-rspec
   - rubocop-faker
 
+rake:
+  Enabled: false
+
 AllCops:
   Exclude:
     - 'db/schema.rb'
