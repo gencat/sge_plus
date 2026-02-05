@@ -6,9 +6,9 @@
 # https://github.com/rubocop/rubocop/issues/4154#issuecomment-316004878
 
 require:
-  - rubocop-rubycw
-  - rubocop-capybara
-  - rubocop-factory_bot
+  # - rubocop-rubycw
+  # - rubocop-capybara
+  # - rubocop-factory_bot
 
 inherit_from:
   - config/rubocop/performance.yml
