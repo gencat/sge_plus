@@ -8,14 +8,16 @@ require:
   - rubocop-rspec
   - rubocop-faker
 
-rake:
-  Enabled: false
-
 AllCops:
   Exclude:
     - 'db/schema.rb'
     - 'db/migrate/**/*.rb'
     - decidim-signature_collection/spec/decidim_dummy_app/**/*
+  DisabledByDefault: false
+
+inherit_mode:
+  merge:
+    - Exclude
 
 Layout/SpaceAroundOperators:
   Enabled: false
