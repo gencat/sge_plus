@@ -1,33 +1,27 @@
+inherit_from: .rubocop_todo.yml
+
 inherit_gem:
   decidim-dev: rubocop-decidim.yml
 
-# Override inherited require statements to avoid loading extensions
-# that may not be available in all environments
-require:
-  - rubocop-rails
-  - rubocop-rspec
-  - rubocop-faker
+inherit_mode:
+  merge:
+    - Exclude
 
 AllCops:
+  Include:
+    - "**/*.rb"
+    - "**/*.rake"
+    - "**/*.ru"
+    - "**/Gemfile"
+    - "**/Rakefile"
   Exclude:
-    - 'db/schema.rb'
-    - 'db/migrate/**/*.rb'
+    - "spec/decidim_dummy_app/**/*"
+    - "**/spec/decidim_dummy_app/**/*"
+    - "bin/**/*"
+    - "node_modules/**/*"
+    - "**/node_modules/**/*"
+    - "db/schema.rb"
+    - "db/migrate/*"
+    - "vendor/**/*"
+    - "**/vendor/**/*"
     - decidim-signature_collection/spec/decidim_dummy_app/**/*
-
-Layout/SpaceAroundOperators:
-  Enabled: false
-
-Rails/BulkChangeTable:
-  Enabled: false
-
-Rails/ThreeStateBooleanColumn:
-  Enabled: false
-
-Style/FetchEnvVar:
-  Enabled: false
-
-RSpec/DescribeClass:
-  Enabled: false
-
-RSpec/NoExpectationExample:
-  Enabled: false

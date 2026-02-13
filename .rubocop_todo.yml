@@ -1,0 +1,20 @@
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - 'app/permissions/concerns/decidim/initiatives/admin/permissions_override.rb'
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - 'app/permissions/concerns/decidim/initiatives/admin/permissions_override.rb'
+
+RSpec/DescribeClass:
+  Exclude:
+    - 'decidim-census_sms/spec/system/census_sms_authorization_spec.rb'
+    - 'spec/system/census16_authorization_spec.rb'
+
+RSpec/PendingWithoutReason:
+  Exclude:
+    - 'spec/system/budget_spec.rb'
+
+Layout/LineLength:
+  Exclude:
+    - 'lib/tasks/proposals_translations.rake'
