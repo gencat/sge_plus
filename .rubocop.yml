@@ -24,4 +24,3 @@ AllCops:
     - "db/migrate/*"
     - "vendor/**/*"
     - "**/vendor/**/*"
-    - decidim-signature_collection/spec/decidim_dummy_app/**/*
