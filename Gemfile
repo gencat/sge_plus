@@ -31,10 +31,7 @@ group :development, :test do
   gem "decidim-dev", DECIDIM_VERSION
   gem "net-imap", "~> 0.5.0"
   gem "net-pop", "~> 0.1.1"
-  gem 'rubocop-rake', require: false
-  gem 'rubocop-rubycw', require: false
-  gem 'rubocop-capybara', require: false
-  gem 'rubocop-factory_bot', require: false
+  gem "rubocop-rake", "~> 0.6"
 end
 
 group :development do
