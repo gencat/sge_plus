@@ -55,6 +55,7 @@ describe "User prints the candidacy", skip: "Awaiting review" do
             select "In-person", from: "candidacy_signature_type"
           end
           submit_and_validate
+          expect(candidacy.reload.signature_type).to eq("in_person")
         end
 
         it "displays candidacy attachments" do
@@ -77,6 +78,7 @@ describe "User prints the candidacy", skip: "Awaiting review" do
             select "In-person", from: "candidacy_signature_type"
           end
           submit_and_validate
+          expect(candidacy.reload.signature_type).to eq("in_person")
         end
 
         it "displays candidacy attachments" do
