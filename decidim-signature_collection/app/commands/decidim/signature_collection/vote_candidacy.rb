@@ -43,14 +43,12 @@ module Decidim
       delegate :candidacy, to: :form
 
       def create_vote
-        vote = candidacy.votes.create!(
+        candidacy.votes.create!(
           encrypted_xml_doc_to_sign: form.encrypted_xml_doc_to_sign,
           encrypted_metadata: form.encrypted_metadata,
           filename: form.filename,
           hash_id: form.hash_id
         )
-
-        vote
       end
 
       def timestamp

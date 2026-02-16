@@ -106,6 +106,10 @@ describe "Candidacy signing", skip: "Awaiting review" do
 
         it "votes as themselves" do
           vote_candidacy
+
+          within ".candidacy__aside" do
+            expect(page).to have_content(signature_text(1))
+          end
         end
       end
     end
@@ -150,6 +154,10 @@ describe "Candidacy signing", skip: "Awaiting review" do
 
         it "adds the signature" do
           vote_candidacy
+
+          within ".candidacy__aside" do
+            expect(page).to have_content(signature_text(1))
+          end
         end
       end
 
