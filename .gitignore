@@ -39,6 +39,7 @@
 .env
 .envrc
 .rbenv-vars
+docker/*.env
 
 # Ignore the files and folders generated through Webpack
 /public/decidim-packs
