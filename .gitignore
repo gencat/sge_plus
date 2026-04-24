@@ -47,6 +47,7 @@ docker/*.env
 /public/packs-test
 /public/sw.js
 /public/sw.js.*
+/public/sw.js*
 
 # Ignore node modules
 /node_modules
