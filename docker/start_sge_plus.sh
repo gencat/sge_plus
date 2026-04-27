@@ -1,39 +1,46 @@
 #!/bin/sh
-# Script de despliegue PRODUCCIÓN (servidor Linux).
-# Uso: sh docker/start_sge_plus.sh
+# PRODUCTION deployment script (Linux server).
+# Usage: sh docker/start_sge_plus.sh
 #
-# Prerequisitos en el servidor:
-#   - Código clonado en APP_DIR (git clone / git pull)
-#   - Fichero ENV_FILE relleno con credenciales reales
-#   - Directorios STORAGE_DIR y LOG_DIR creados
+# Prerequisites on the server:
+#   - Code cloned in APP_DIR (git clone / git pull)
+#   - ENV_FILE filled with real credentials
+#   - STORAGE_DIR and LOG_DIR directories created
 set -e
 
 IMAGE="sge_plus:latest"
-CONTAINER="sge_plus"
-APP_DIR="/srv/sge_plus/app"
-ENV_FILE="/srv/sge_plus/prod.env"
-STORAGE_DIR="/srv/sge_plus/storage"
-LOG_DIR="/srv/sge_plus/log"
-OFELIA_INI="/srv/sge_plus/ofelia.ini"
+WEB_CONTAINER="sge_plus"
+WORKER_CONTAINER="sge_plus_worker"
+APP_DIR="/var/www/sge_plus"
+ENV_FILE="/var/www/sge_plus/prod.env"
+STORAGE_DIR="/var/www/sge_plus/storage"
+LOG_DIR="/var/www/sge_plus/log"
+OFELIA_INI="/var/www/sge_plus/ofelia.ini"
 
-echo "=== Construyendo imagen (compilando assets) ==="
+echo "=== Building image (compiling assets) ==="
 docker build -t "$IMAGE" "$APP_DIR"
 
-echo "=== Ejecutando migraciones ==="
-docker run --rm \
+echo "=== Stopping old containers (if exist) ==="
+docker stop "$WEB_CONTAINER"    2>/dev/null || true
+docker rm   "$WEB_CONTAINER"    2>/dev/null || true
+docker stop "$WORKER_CONTAINER" 2>/dev/null || true
+docker rm   "$WORKER_CONTAINER" 2>/dev/null || true
+
+echo "=== Starting worker container (migrations + delayed_jobs) ==="
+docker run -d \
+  --name "$WORKER_CONTAINER" \
+  --restart unless-stopped \
   --network host \
   --env-file "$ENV_FILE" \
   -e RAILS_ENV=production \
+  -v "$STORAGE_DIR:/var/www/sge_plus/storage" \
+  -v "$LOG_DIR:/var/www/sge_plus/log" \
   "$IMAGE" \
-  bundle exec rails db:migrate
+  /bin/sh docker/run-worker.sh
 
-echo "=== Parando contenedor antiguo (si existe) ==="
-docker stop "$CONTAINER" 2>/dev/null || true
-docker rm   "$CONTAINER" 2>/dev/null || true
-
-echo "=== Arrancando contenedor web ==="
+echo "=== Starting web container (puma) ==="
 docker run -d \
-  --name "$CONTAINER" \
+  --name "$WEB_CONTAINER" \
   --restart unless-stopped \
   --network host \
   --env-file "$ENV_FILE" \
@@ -42,9 +49,9 @@ docker run -d \
   -v "$STORAGE_DIR:/var/www/sge_plus/storage" \
   -v "$LOG_DIR:/var/www/sge_plus/log" \
   "$IMAGE" \
-  /bin/sh -c "docker/run-web_service.sh"
+  /bin/sh docker/run-web_service.sh
 
-echo "=== Reiniciando Ofelia ==="
+echo "=== Restarting Ofelia ==="
 docker stop ofelia 2>/dev/null || true
 docker rm   ofelia 2>/dev/null || true
 
@@ -57,6 +64,7 @@ docker run -d \
   daemon --config=/etc/ofelia/config.ini
 
 echo ""
-echo "=== Listo ==="
-echo "Logs web:   docker logs -f $CONTAINER"
-echo "Logs crons: docker logs -f ofelia"
+echo "=== Ready ==="
+echo "Web logs:    docker logs -f $WEB_CONTAINER"
+echo "Worker logs: docker logs -f $WORKER_CONTAINER"
+echo "Crons logs:  docker logs -f ofelia"

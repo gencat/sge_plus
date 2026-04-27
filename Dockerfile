@@ -61,12 +61,6 @@ RUN curl -L -o wkhtmltox.deb https://github.com/wkhtmltopdf/packaging/releases/d
 VOLUME $APP_HOME/storage
 VOLUME $APP_HOME/log
 
-# Configure init scripts
-RUN mkdir -p /etc/my_init.d
-ADD docker/init.d/fix_permissions.sh /etc/my_init.d/fix_permissions.sh
-##########ADD docker/init.d/delayed_job.sh /etc/my_init.d/delayed_job.sh
-RUN chmod +x /etc/my_init.d/*.sh
-
 ##############################
 # Update Ruby ecosystem
 ##############################
