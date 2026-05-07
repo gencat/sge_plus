@@ -1,13 +1,4 @@
-ARG OS_VERSION=slim-bookworm
-ARG RUBY_IMAGE_VERSION=3.3.4
-
-FROM ruby:${RUBY_IMAGE_VERSION}-${OS_VERSION}
-
-ARG RUBYGEMS_VERSION=3.3.22
-ARG BUNDLER_VERSION=2.6.5
-ARG NODE_VERSION=18.17.1
-
-ENV DEBIAN_FRONTEND=noninteractive
+FROM ruby:3.3.11-trixie
 
 ENV HOME=/var/www
 ENV APP_HOME=$HOME/sge_plus
@@ -64,14 +55,14 @@ VOLUME $APP_HOME/log
 ##############################
 # Update Ruby ecosystem
 ##############################
-RUN gem update --system $RUBYGEMS_VERSION && update_rubygems
-RUN gem install bundler:$BUNDLER_VERSION \
+RUN gem update --system 3.3.22 && update_rubygems
+RUN gem install bundler:2.6.8 \
  && gem install stringio:3.1.7
 
 ##############################
 # Install NodeJs & Yarn
 ##############################
-ENV NODE_VERSION=${NODE_VERSION}
+ENV NODE_VERSION=18.17.1
 RUN apt update
 RUN apt -y install curl gnupg
 RUN curl -fsSL https://deb.nodesource.com/node_18.x/pool/main/n/nodejs/nodejs_18.17.1-1nodesource1_amd64.deb -o nodejs_18.17.1.deb \
