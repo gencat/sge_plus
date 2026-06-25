@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_01_28_131233) do
+ActiveRecord::Schema[7.0].define(version: 2026_06_25_074626) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "ltree"
   enable_extension "pg_trgm"
@@ -341,7 +341,7 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_28_131233) do
     t.jsonb "title"
     t.integer "weight", default: 0, null: false
     t.jsonb "description"
-    t.integer "total_budget", default: 0
+    t.bigint "total_budget", default: 0
     t.integer "decidim_component_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -1186,7 +1186,8 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_28_131233) do
     t.index ["privatable_to_type", "privatable_to_id"], name: "space_privatable_to_privatable_id"
   end
 
-  create_table "decidim_private_exports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "decidim_private_exports", force: :cascade do |t|
+    t.uuid "uuid", null: false
     t.string "export_type", null: false
     t.string "attached_to_type"
     t.integer "attached_to_id"
@@ -1197,6 +1198,7 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_28_131233) do
     t.jsonb "metadata", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["uuid"], name: "index_decidim_private_exports_on_uuid", unique: true
   end
 
   create_table "decidim_proposals_collaborative_draft_collaborator_requests", force: :cascade do |t|
@@ -1483,6 +1485,7 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_28_131233) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.integer "decidim_user_group_id"
+    t.string "hashtag"
     t.integer "scoped_type_id"
     t.datetime "first_progress_notification_at", precision: nil
     t.datetime "second_progress_notification_at", precision: nil
