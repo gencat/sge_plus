@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_04_24_100904) do
+ActiveRecord::Schema[7.0].define(version: 2026_06_25_074626) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "ltree"
   enable_extension "pg_trgm"
@@ -1486,6 +1486,7 @@ ActiveRecord::Schema[7.0].define(version: 2026_04_24_100904) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.integer "decidim_user_group_id"
+    t.string "hashtag"
     t.integer "scoped_type_id"
     t.datetime "first_progress_notification_at", precision: nil
     t.datetime "second_progress_notification_at", precision: nil
