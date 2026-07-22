@@ -16,5 +16,6 @@ elsif env.test? && !ENV["CI"]
 elsif env.preprod? || env.production?
   Figjam.require_keys(
     "DATABASE_URL"
+    "MEMCACHE_URL"
   )
 end

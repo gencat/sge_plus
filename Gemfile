@@ -22,7 +22,13 @@ gem "puma", ">= 6.3.1"
 # https://github.com/hlascelles/figjam
 gem "figjam", "2.0.0"
 
-gem "deface"
+gem "solid_queue", ">= 1.2.0"
+
+# Memcached client for Ruby. It is used by Rails to cache data in Memcached.
+gem "dalli", "~> 5.0.5"
+
+# for monitoring
+gem "prometheus_exporter", "~> 2.3.1"
 
 group :development, :test do
   gem "byebug", "~> 11.0", platform: :mri

@@ -141,6 +141,8 @@ GEM
     css_parser (1.21.1)
       addressable
     csv (3.3.5)
+    dalli (5.0.5)
+      logger
     date (3.4.1)
     date_validator (0.12.0)
       activemodel (>= 3)
@@ -329,12 +331,6 @@ GEM
     declarative-builder (0.2.0)
       trailblazer-option (~> 0.1.0)
     declarative-option (0.1.0)
-    deface (1.9.0)
-      actionview (>= 5.2)
-      nokogiri (>= 1.6)
-      polyglot
-      railties (>= 5.2)
-      rainbow (>= 2.1.0)
     devise (4.9.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -584,7 +580,6 @@ GEM
     pg_search (2.3.7)
       activerecord (>= 6.1)
       activesupport (>= 6.1)
-    polyglot (0.3.5)
     premailer (1.27.0)
       addressable
       css_parser (>= 1.19.0)
@@ -594,6 +589,8 @@ GEM
       net-smtp
       premailer (~> 1.7, >= 1.7.9)
     prism (1.4.0)
+    prometheus_exporter (2.3.1)
+      webrick
     public_suffix (6.0.2)
     puma (6.6.1)
       nio4r (~> 2.0)
@@ -814,6 +811,7 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
+    webrick (1.9.2)
     websocket (1.2.11)
     websocket-driver (0.8.0)
       base64
@@ -832,17 +830,18 @@ DEPENDENCIES
   bootsnap (~> 1.7)
   brakeman (~> 7.0)
   byebug (~> 11.0)
+  dalli (~> 5.0.5)
   decidim (= 0.30.9)
   decidim-cdtb (~> 0.5.5)
   decidim-core (= 0.30.9)
   decidim-dev (= 0.30.9)
   decidim-signature_collection!
-  deface
   figjam (= 2.0.0)
   letter_opener_web (~> 2.0)
   listen (~> 3.1)
   net-imap (~> 0.5.0)
   net-pop (~> 0.1.1)
+  prometheus_exporter (~> 2.3.1)
   puma (>= 6.3.1)
   web-console (~> 4.2)
 
