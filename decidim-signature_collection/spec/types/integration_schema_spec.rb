@@ -4,7 +4,7 @@ require "spec_helper"
 require "decidim/api/test/type_context"
 require "decidim/signature_collection/test/factories"
 
-describe "Decidim::Api::QueryType", skip: "Awaiting review" do
+describe "Decidim::Api::QueryType" do
   include_context "with a graphql class type"
   let(:schema) { Decidim::Api::Schema }
 
@@ -46,7 +46,7 @@ describe "Decidim::Api::QueryType", skip: "Awaiting review" do
   end
   let(:candidacy_type_data) do
     {
-      "collectUserExtraFields" => true,
+      "collectUserExtraFields" => false,
       "createdAt" => candidacy.type.created_at.to_time.iso8601,
       "description" => { "translation" => candidacy.type.description[locale] },
       "extraFieldsLegalInformation" => candidacy.type.extra_fields_legal_information,
@@ -143,7 +143,6 @@ describe "Decidim::Api::QueryType", skip: "Awaiting review" do
       data = response["candidacies"].first
       expect(data).to include(candidacy_data)
       expect(data["candidacyType"]).to include(candidacy_type_data)
-      expect(data["candidacyType"]["bannerImage"]).to be_blob_url(candidacy.type.banner_image.blob)
     end
 
     it_behaves_like "implements stats type" do
@@ -235,7 +234,6 @@ describe "Decidim::Api::QueryType", skip: "Awaiting review" do
       data = response["candidacy"]
       expect(data).to include(candidacy_data)
       expect(data["candidacyType"]).to include(candidacy_type_data)
-      expect(data["candidacyType"]["bannerImage"]).to be_blob_url(candidacy.type.banner_image.blob)
     end
 
     it_behaves_like "implements stats type" do

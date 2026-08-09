@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe Decidim::SignatureCollection::Permissions, skip: "Awaiting review" do
+describe Decidim::SignatureCollection::Permissions do
   subject { described_class.new(user, permission_action, context).permissions.allowed? }
 
   let(:user) { create(:user, organization:) }
@@ -540,54 +540,6 @@ describe Decidim::SignatureCollection::Permissions, skip: "Awaiting review" do
           it { is_expected.to be false }
         end
       end
-    end
-  end
-
-  context "when unvoting an candidacy" do
-    let(:action) do
-      { scope: :public, action: :unvote, subject: :candidacy }
-    end
-    let(:candidacy) { create(:candidacy, organization:) }
-    let(:context) do
-      { candidacy: }
-    end
-    let(:votes_enabled?) { true }
-    let(:accepts_online_unvotes?) { true }
-
-    before do
-      allow(candidacy).to receive(:votes_enabled?).and_return(votes_enabled?)
-      allow(candidacy).to receive(:accepts_online_unvotes?).and_return(accepts_online_unvotes?)
-    end
-
-    context "when candidacy has votes disabled" do
-      let(:votes_enabled?) { false }
-
-      it { is_expected.to be false }
-    end
-
-    context "when candidacy has unvotes disabled" do
-      let(:accepts_online_unvotes?) { false }
-
-      it { is_expected.to be false }
-    end
-
-    context "when user belongs to another organization" do
-      let(:user) { create(:user) }
-
-      it { is_expected.to be false }
-    end
-
-    context "when user has not voted the candidacy" do
-      it { is_expected.to be false }
-    end
-
-    context "when user has verified user groups" do
-      before do
-        create(:user_group, :verified, users: [user], organization: user.organization)
-        create(:candidacy_user_vote, candidacy:, author: user)
-      end
-
-      it { is_expected.to be true }
     end
   end
 

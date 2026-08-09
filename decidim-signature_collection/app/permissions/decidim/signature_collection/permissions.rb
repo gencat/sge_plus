@@ -24,8 +24,6 @@ module Decidim
         update_public_candidacy?
         print_candidacy?
 
-        unvote_candidacy?
-
         candidacy_attachment?
 
         candidacy_committee_action?
@@ -134,17 +132,6 @@ module Decidim
         return false unless resource || permissions_holder
 
         ActionAuthorizer.new(user, permission_action, permissions_holder, resource).authorize.ok?
-      end
-
-      def unvote_candidacy?
-        return false unless permission_action.action == :unvote &&
-                            permission_action.subject == :candidacy
-
-        can_unvote = candidacy.accepts_online_unvotes? &&
-                     candidacy.organization&.id == user.organization&.id &&
-                     candidacy.votes.where(author: user).any?
-
-        toggle_allow(can_unvote)
       end
 
       def candidacy_attachment?

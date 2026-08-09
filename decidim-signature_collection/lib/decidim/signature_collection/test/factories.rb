@@ -166,6 +166,11 @@ FactoryBot.define do
       state { "rejected" }
     end
 
+    trait :answered do
+      answer { generate_localized_description(:candidacy_answer, skip_injection:) }
+      answered_at { Time.current }
+    end
+
     trait :online do
       signature_type { "online" }
     end

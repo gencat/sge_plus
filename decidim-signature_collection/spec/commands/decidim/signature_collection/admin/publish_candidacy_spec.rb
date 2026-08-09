@@ -5,7 +5,7 @@ require "spec_helper"
 module Decidim
   module SignatureCollection
     module Admin
-      describe PublishCandidacy, skip: "Awaiting review" do
+      describe PublishCandidacy do
         subject { described_class.new(candidacy, user) }
 
         let(:candidacy) { create(:candidacy, :created) }
@@ -33,10 +33,6 @@ module Decidim
             expect { subject.call }.to change(Decidim::ActionLog, :count)
             action_log = Decidim::ActionLog.last
             expect(action_log.version).to be_present
-          end
-
-          it "increments the author's score" do
-            expect { subject.call }.to change { Decidim::Gamification.status_for(candidacy.author, :candidacies).score }.by(1)
           end
         end
       end

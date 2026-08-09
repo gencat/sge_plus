@@ -20,6 +20,7 @@
             <% if current_candidacy.validating? %>
               <div class="row column">
                 <%= f.check_box :return_to_create_state, id: :candidacy_return_to_create_state %>
+                <p class="help-text"><%= t(".return_to_create_state_help") %></p>
               </div>
             <% end %>
 

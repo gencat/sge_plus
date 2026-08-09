@@ -5,7 +5,7 @@ require "spec_helper"
 module Decidim
   module SignatureCollection
     module Admin
-      describe CreateCandidacyType, skip: "Awaiting review" do
+      describe CreateCandidacyType do
         let(:form_klass) { CandidacyTypeForm }
 
         describe "successful creation" do

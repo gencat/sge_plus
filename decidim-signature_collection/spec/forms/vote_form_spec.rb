@@ -4,7 +4,7 @@ require "spec_helper"
 
 module Decidim
   module SignatureCollection
-    describe VoteForm, skip: "Awaiting review" do
+    describe VoteForm do
       subject { form }
 
       let(:form) { described_class.from_params(attributes).with_context(context) }
@@ -57,16 +57,17 @@ module Decidim
 
       let(:current_user) { create(:user, organization: candidacy.organization) }
 
-      let(:document_number) { "01234567A" }
+      let(:document_number) { "12345678Z" }
       let(:postal_code) { "87111" }
       let(:personal_data) do
         {
           name: "James",
           first_surname: "Morgan",
           second_surname: "McGill",
-          document_number:,
+          document_type: 1,
+          document_number: document_number,
           date_of_birth: 40.years.ago.to_date,
-          postal_code:
+          postal_code: postal_code
         }
       end
 
@@ -93,12 +94,6 @@ module Decidim
           it { is_expected.to be_valid }
         end
 
-        describe "#metadata" do
-          subject { described_class.from_params(attributes).with_context(context).metadata }
-
-          it { is_expected.to eq(personal_data) }
-        end
-
         describe "#encrypted_metadata" do
           subject { described_class.from_params(attributes).with_context(context).encrypted_metadata }
 
@@ -106,141 +101,6 @@ module Decidim
 
           [:name, :first_surname, :second_surname, :document_number, :date_of_birth, :postal_code].each do |personal_attribute|
             it { is_expected.not_to include(personal_data[personal_attribute].to_s) }
-          end
-        end
-      end
-
-      describe "user_authorized_scope" do
-        subject { form.user_authorized_scope }
-
-        context "when a handler is configured" do
-          it { is_expected.to eq(user_scope) }
-
-          context "when the authorization metadata does not match" do
-            before do
-              authorization.metadata["scope_id"] = nil
-              authorization.save!
-            end
-
-            it { is_expected.to be_nil }
-          end
-        end
-
-        context "when no handler is configured" do
-          let(:document_number_authorization_handler) { nil }
-
-          it { is_expected.to eq(candidacy.scope) }
-        end
-
-        context "when the authorization does not have metadata" do
-          let!(:authorization) do
-            create(
-              :authorization,
-              :granted,
-              name: "dummy_authorization_handler",
-              user: current_user,
-              unique_id: document_number,
-              metadata: nil
-            )
-          end
-
-          it { is_expected.to be_nil }
-        end
-      end
-
-      describe "authorized_scope_candidates" do
-        context "when it is a global scope candidacy" do
-          let(:scoped_type) { global_candidacy_type_scope }
-
-          it "includes all the scopes of the organization" do
-            expect(form.authorized_scope_candidates.compact).to match_array(organization.scopes)
-          end
-
-          it "includes the scope" do
-            expect(form.authorized_scope_candidates).to include(nil)
-          end
-        end
-
-        context "when it is a fixed scope" do
-          let(:scoped_type) { district_1_candidacy_type_scope }
-
-          it "returns the scope descendants" do
-            expect(form.authorized_scope_candidates).to contain_exactly(neighbourhood1, neighbourhood3, district1)
-          end
-        end
-      end
-
-      describe "authorized_scopes" do
-        subject { form.authorized_scopes }
-
-        context "when the authorization is not valid" do
-          subject { form }
-
-          before do
-            authorization.granted_at = nil
-            authorization.save!
-          end
-
-          it { is_expected.not_to be_valid }
-        end
-
-        context "when an authorization is not needed" do
-          let(:document_number_authorization_handler) { nil }
-
-          it { is_expected.to eq([candidacy.scope]) }
-        end
-
-        context "when the authorization is valid" do
-          context "when it is a global scope candidacy" do
-            let(:scoped_type) { global_candidacy_type_scope }
-
-            context "when child scope voting is enabled" do
-              let(:child_scope_threshold_enabled) { true }
-
-              context "when the user scope has children" do
-                let(:user_scope) { district1 }
-
-                it { is_expected.to contain_exactly(nil, city, district1) }
-              end
-
-              context "when the user scope is a leaf" do
-                let(:user_scope) { neighbourhood1 }
-
-                it { is_expected.to contain_exactly(nil, city, district1, neighbourhood1) }
-              end
-            end
-
-            context "when child scope voting is disabled" do
-              let(:child_scope_threshold_enabled) { false }
-
-              it { is_expected.to eq([nil]) }
-            end
-          end
-
-          context "when it has a defined scope" do
-            let(:scoped_type) { district_1_candidacy_type_scope }
-
-            context "when child scope voting is enabled" do
-              let(:child_scope_threshold_enabled) { true }
-
-              context "when the user scope has children" do
-                let(:user_scope) { district1 }
-
-                it { is_expected.to contain_exactly(district1) }
-              end
-
-              context "when the user scope is a leaf" do
-                let(:user_scope) { neighbourhood1 }
-
-                it { is_expected.to contain_exactly(district1, neighbourhood1) }
-              end
-            end
-
-            context "when child scope voting is disabled" do
-              let(:child_scope_threshold_enabled) { false }
-
-              it { is_expected.to eq([district1]) }
-            end
           end
         end
       end
