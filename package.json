@@ -1,5 +1,5 @@
 {
-  "name": "decidim-development-app",
+  "name": "decidim-signature_collection-app",
   "private": true,
   "dependencies": {
     "@decidim/browserslist-config": "^0.30.9",
