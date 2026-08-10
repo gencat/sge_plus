@@ -14,6 +14,7 @@ ActiveRecord::Schema[7.0].define(version: 2026_06_25_074626) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "ltree"
   enable_extension "pg_trgm"
+  enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
   create_table "active_storage_attachments", force: :cascade do |t|

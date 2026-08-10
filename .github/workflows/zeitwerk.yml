@@ -9,7 +9,7 @@ on:
   pull_request:
 
 env:
-  RUBY_VERSION: 3.3.4
+  RUBY_VERSION: 3.3.11
   DB_DATABASE: app
   DB_USERNAME: postgres
   DB_PASSWORD: postgres
