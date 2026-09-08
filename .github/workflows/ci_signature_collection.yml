@@ -40,6 +40,8 @@ jobs:
       DATABASE_PASSWORD: postgres
       DATABASE_HOST: localhost
       TEST_TYPE: ${{ matrix.test_type }}
+      DECIDIM_AVAILABLE_LOCALES: "ca,es,oc,en"
+
     steps:
       - uses: actions/checkout@v4
         with:

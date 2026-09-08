@@ -629,6 +629,7 @@ en:
         progress_report_body_for: The candidacy %{title} has reached the %{percentage}% of required signatures.
         progress_report_for: 'Summary about the candidacy: %{title}'
         promotal_committee_help: "Remember to send it to <b>Technical Validation</b> so that an administrator can validate and publish it. Once sent to, it cannot be edited again."
+        status_change_body_for: 'The candidacy %{title} has changed its status to: %{state}'
         status_change_for: The candidacy %{title} has changed its status
         validation_body: 'Please review the candidacy and make the necessary technical validation.'
         validation_subject: "You have a new candidacy to review: '%{title}'"

@@ -21,6 +21,7 @@ module Decidim
       attribute :scope_id, Integer
 
       attachments_attribute :documents
+      attachments_attribute :attachments
 
       validates :title, :description, presence: true
       validates :title, length: { maximum: 150 }

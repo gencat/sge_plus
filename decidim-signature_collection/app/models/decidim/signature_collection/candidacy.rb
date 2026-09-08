@@ -164,6 +164,10 @@ module Decidim
         Decidim::SignatureCollection::AdminLog::CandidacyPresenter
       end
 
+      def presenter
+        Decidim::SignatureCollection::CandidacyPresenter.new(self)
+      end
+
       def self.ransackable_attributes(auth_object = nil)
         base = %w(search_text title description id id_string supports_count author_name author_nickname)
 
