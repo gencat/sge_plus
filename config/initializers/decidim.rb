@@ -19,7 +19,7 @@ Decidim.configure do |config|
   # Sets the default locale for new organizations. When creating a new
   # organization from the System area, system admins will be able to overwrite
   # this value for that specific organization.
-  config.default_locale = ENV.fetch("DECIDIM_DEFAULT_LOCALE", "en").to_sym
+  config.default_locale = ENV.fetch("DECIDIM_DEFAULT_LOCALE", "ca").to_sym
 
   # Custom HTML Header snippets
   #
