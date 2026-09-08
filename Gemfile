@@ -19,10 +19,10 @@ gem "decidim-cdtb", "~> 0.5.5"
 gem "bootsnap", "~> 1.7"
 gem "puma", ">= 6.3.1"
 
-gem "deface" "~> 1.9.0"
+gem "deface", "~> 1.9.0"
 
 # https://github.com/bkeepers/dotenv
-gem "dotenv", "~> 3.2"
+gem "dotenv", "~> 3.2.0"
 
 gem "solid_queue", ">= 1.2.0"
 
