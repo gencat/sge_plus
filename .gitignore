@@ -36,6 +36,8 @@
 
 # Ignore env configuration files
 .env
+.env.test
+.env.production
 .envrc
 .rbenv-vars
 docker/*.env
