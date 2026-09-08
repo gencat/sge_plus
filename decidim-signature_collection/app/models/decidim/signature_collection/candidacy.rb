@@ -66,8 +66,8 @@ module Decidim
                dependent: :destroy,
                as: :participatory_space
 
-      enum signature_type: [:online, :offline, :any], _suffix: true
-      enum state: [:created, :validating, :discarded, :open, :rejected, :accepted]
+      enum :signature_type, [:online, :offline, :any], suffix: true
+      enum :state, [:created, :validating, :discarded, :open, :rejected, :accepted]
 
       validates :title, :description, :state, :signature_type, presence: true
       validate :signature_type_allowed
@@ -395,9 +395,7 @@ module Decidim
       def update_online_votes_counters
         online_votes = { global: 0, total: votes.with_xml_signed.count }
 
-        # rubocop:disable Rails/SkipsModelValidations
-        update_column("online_votes", online_votes)
-        # rubocop:enable Rails/SkipsModelValidations
+        update_column("online_votes", online_votes) # rubocop:disable Rails/SkipsModelValidations
       end
 
       def set_offline_votes_total

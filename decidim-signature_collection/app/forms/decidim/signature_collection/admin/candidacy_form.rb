@@ -65,15 +65,17 @@ module Decidim
         end
 
         def area
-          @area ||= current_organization.areas.find_by(id: area_id)
+          return @area if defined?(@area)
+
+          @area = current_organization.areas.find_by(id: area_id)
         end
 
         private
 
         # Private: set the in-person signatures to zero for every scope
         def zero_offline_votes_with_scopes_names(model)
-          model.votable_candidacy_type_scopes.each_with_object({}) do |candidacy_scope_type, all_votes|
-            all_votes[candidacy_scope_type.decidim_scopes_id || "global"] = [0, candidacy_scope_type.scope_name]
+          model.votable_candidacy_type_scopes.to_h do |candidacy_scope_type|
+            [candidacy_scope_type.decidim_scopes_id || "global", [0, candidacy_scope_type.scope_name]]
           end
         end
 

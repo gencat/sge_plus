@@ -2,10 +2,10 @@
 
 Decidim.configure do |config|
   # The name of the application
-  config.application_name = ENV["DECIDIM_APPLICATION_NAME"]
+  config.application_name = ENV.fetch("DECIDIM_APPLICATION_NAME", nil)
 
   # The email that will be used as sender in all emails from Decidim
-  config.mailer_sender = ENV["DECIDIM_MAILER_SENDER"]
+  config.mailer_sender = ENV.fetch("DECIDIM_MAILER_SENDER", nil)
 
   # Sets the list of available locales for the whole application.
   #
@@ -116,17 +116,17 @@ Decidim.configure do |config|
   # }
   if ENV["DECIDIM_MAPS_STATIC_PROVIDER"].present?
     static_provider = ENV["DECIDIM_MAPS_STATIC_PROVIDER"]
-    dynamic_provider = ENV["DECIDIM_MAPS_DYNAMIC_PROVIDER"]
-    dynamic_url = ENV["DECIDIM_MAPS_DYNAMIC_URL"]
-    static_url = ENV["DECIDIM_MAPS_STATIC_URL"]
+    dynamic_provider = ENV.fetch("DECIDIM_MAPS_DYNAMIC_PROVIDER", nil)
+    dynamic_url = ENV.fetch("DECIDIM_MAPS_DYNAMIC_URL", nil)
+    static_url = ENV.fetch("DECIDIM_MAPS_STATIC_URL", nil)
     static_url = "https://image.maps.hereapi.com/mia/v3/base/mc/overlay" if static_provider == "here"
     config.maps = {
       provider: static_provider,
-      api_key: ENV["DECIDIM_MAPS_STATIC_API_KEY"],
+      api_key: ENV.fetch("DECIDIM_MAPS_STATIC_API_KEY", nil),
       static: { url: static_url },
       dynamic: {
         provider: dynamic_provider,
-        api_key: ENV["DECIDIM_MAPS_DYNAMIC_API_KEY"]
+        api_key: ENV.fetch("DECIDIM_MAPS_DYNAMIC_API_KEY", nil)
       }
     }
     config.maps[:geocoding] = { host: ENV["DECIDIM_MAPS_GEOCODING_HOST"], use_https: true } if ENV["DECIDIM_MAPS_GEOCODING_HOST"].present?
@@ -288,8 +288,8 @@ Decidim.configure do |config|
   if ENV["DECIDIM_ETHERPAD_SERVER"].present?
     config.etherpad = {
       server: ENV["DECIDIM_ETHERPAD_SERVER"],
-      api_key: ENV["DECIDIM_ETHERPAD_API_KEY"],
-      api_version: ENV["DECIDIM_ETHERPAD_API_VERSION"]
+      api_key: ENV.fetch("DECIDIM_ETHERPAD_API_KEY", nil),
+      api_version: ENV.fetch("DECIDIM_ETHERPAD_API_VERSION", nil)
     }
   end
 
@@ -397,9 +397,7 @@ Decidim.configure do |config|
   config.stats_cache_expiry_time = ENV["DECIDIM_STATS_CACHE_EXPIRY_TIME"].to_i.minutes if ENV["DECIDIM_STATS_CACHE_EXPIRY_TIME"].present?
   config.expire_session_after = ENV["DECIDIM_EXPIRE_SESSION_AFTER"].to_i.minutes if ENV["DECIDIM_EXPIRE_SESSION_AFTER"].present?
   config.enable_remember_me = ENV["DECIDIM_ENABLE_REMEMBER_ME"].present? unless ENV["DECIDIM_ENABLE_REMEMBER_ME"] == "auto"
-  if ENV["DECIDIM_SESSION_TIMEOUT_INTERVAL"].present?
-    config.session_timeout_interval = ENV["DECIDIM_SESSION_TIMEOUT_INTERVAL"].to_i.seconds
-  end
+  config.session_timeout_interval = ENV["DECIDIM_SESSION_TIMEOUT_INTERVAL"].to_i.seconds if ENV["DECIDIM_SESSION_TIMEOUT_INTERVAL"].present?
   config.follow_http_x_forwarded_host = ENV["DECIDIM_FOLLOW_HTTP_X_FORWARDED_HOST"].present?
   config.maximum_conversation_message_length = ENV["DECIDIM_MAXIMUM_CONVERSATION_MESSAGE_LENGTH"].to_i
   config.password_similarity_length = ENV["DECIDIM_PASSWORD_SIMILARITY_LENGTH"] if ENV["DECIDIM_PASSWORD_SIMILARITY_LENGTH"].present?
@@ -426,20 +424,14 @@ end
 if Decidim.module_installed? :meetings
   Decidim::Meetings.configure do |config|
     config.upcoming_meeting_notification = ENV["DECIDIM_MEETINGS_UPCOMING_MEETING_NOTIFICATION"].to_i.days
-    if ENV["DECIDIM_MEETINGS_EMBEDDABLE_SERVICES"].present?
-      config.embeddable_services = ENV["DECIDIM_MEETINGS_EMBEDDABLE_SERVICES"]
-    end
-    unless ENV["DECIDIM_MEETINGS_ENABLE_PROPOSAL_LINKING"] == "auto"
-      config.enable_proposal_linking = ENV["DECIDIM_MEETINGS_ENABLE_PROPOSAL_LINKING"].present?
-    end
+    config.embeddable_services = ENV["DECIDIM_MEETINGS_EMBEDDABLE_SERVICES"] if ENV["DECIDIM_MEETINGS_EMBEDDABLE_SERVICES"].present?
+    config.enable_proposal_linking = ENV["DECIDIM_MEETINGS_ENABLE_PROPOSAL_LINKING"].present? unless ENV["DECIDIM_MEETINGS_ENABLE_PROPOSAL_LINKING"] == "auto"
   end
 end
 
 if Decidim.module_installed? :budgets
   Decidim::Budgets.configure do |config|
-    unless ENV["DECIDIM_BUDGETS_ENABLE_PROPOSAL_LINKING"] == "auto"
-      config.enable_proposal_linking = ENV["DECIDIM_BUDGETS_ENABLE_PROPOSAL_LINKING"].present?
-    end
+    config.enable_proposal_linking = ENV["DECIDIM_BUDGETS_ENABLE_PROPOSAL_LINKING"].present? unless ENV["DECIDIM_BUDGETS_ENABLE_PROPOSAL_LINKING"] == "auto"
   end
 end
 
@@ -459,9 +451,7 @@ if Decidim.module_installed? :signature_collection
     config.second_notification_percentage = ENV["DECIDIM_SIGNATURE_COLLECTION_SECOND_NOTIFICATION_PERCENTAGE"].presence || 66
     config.stats_cache_expiration_time = ENV["DECIDIM_SIGNATURE_COLLECTION_STATS_CACHE_EXPIRATION_TIME"].to_i.minutes
     config.max_time_in_validating_state = ENV["DECIDIM_SIGNATURE_COLLECTION_MAX_TIME_IN_VALIDATING_STATE"].to_i.days
-    unless ENV["DECIDIM_SIGNATURE_COLLECTION_PRINT_ENABLED"] == "auto"
-      config.print_enabled = ENV["DECIDIM_SIGNATURE_COLLECTION_PRINT_ENABLED"].present?
-    end
+    config.print_enabled = ENV["DECIDIM_SIGNATURE_COLLECTION_PRINT_ENABLED"].present? unless ENV["DECIDIM_SIGNATURE_COLLECTION_PRINT_ENABLED"] == "auto"
     config.do_not_require_authorization = ENV["DECIDIM_SIGNATURE_COLLECTION_DO_NOT_REQUIRE_AUTHORIZATION"].present?
   end
 end
@@ -474,9 +464,7 @@ if Decidim.module_installed? :signature_collection
     config.second_notification_percentage = ENV["DECIDIM_CANDIDACIES_SECOND_NOTIFICATION_PERCENTAGE"].presence || 66
     config.stats_cache_expiration_time = ENV["DECIDIM_CANDIDACIES_STATS_CACHE_EXPIRATION_TIME"].to_i.minutes
     config.max_time_in_validating_state = ENV["DECIDIM_CANDIDACIES_MAX_TIME_IN_VALIDATING_STATE"].to_i.days
-    unless ENV["DECIDIM_CANDIDACIES_PRINT_ENABLED"] == "auto"
-      config.print_enabled = ENV["DECIDIM_CANDIDACIES_PRINT_ENABLED"].present?
-    end
+    config.print_enabled = ENV["DECIDIM_CANDIDACIES_PRINT_ENABLED"].present? unless ENV["DECIDIM_CANDIDACIES_PRINT_ENABLED"] == "auto"
     config.do_not_require_authorization = ENV["DECIDIM_CANDIDACIES_DO_NOT_REQUIRE_AUTHORIZATION"].present?
   end
 end

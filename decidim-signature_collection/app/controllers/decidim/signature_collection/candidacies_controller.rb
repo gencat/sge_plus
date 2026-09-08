@@ -188,7 +188,9 @@ module Decidim
       end
 
       def set_candidacies_settings
-        @candidacies_settings ||= Decidim::SignatureCollection::CandidaciesSettings.find_by(organization: current_organization)
+        return @candidacies_settings if defined?(@candidacies_settings)
+
+        @candidacies_settings = Decidim::SignatureCollection::CandidaciesSettings.find_by(organization: current_organization)
       end
     end
   end

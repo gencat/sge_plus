@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_09_08_091402) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_08_094510) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "ltree"
   enable_extension "pg_trgm"
@@ -1509,6 +1509,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_08_091402) do
     t.integer "state", default: 0, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["decidim_signature_collection_candidacy_id", "decidim_users_id"], name: "idx_uniq_committee_members_candidacy_user", unique: true
     t.index ["decidim_signature_collection_candidacy_id"], name: "idx_decidim_committee_members_candidacy"
     t.index ["decidim_users_id"], name: "idx_decidim_committee_members_user"
     t.index ["state"], name: "idx_decidim_committee_members_name"
@@ -1529,6 +1530,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_08_091402) do
     t.datetime "updated_at", precision: nil, null: false
     t.bigint "decidim_taxonomy_id"
     t.index ["decidim_scopes_id"], name: "idx_scoped_candidacy_type_scope"
+    t.index ["decidim_signature_collection_candidacies_type_id", "decidim_scopes_id"], name: "idx_uniq_type_scopes_type_scope", unique: true
     t.index ["decidim_signature_collection_candidacies_type_id"], name: "idx_scoped_candidacy_type_type"
     t.index ["decidim_taxonomy_id"], name: "index_candidacies_type_scopes_on_taxonomy_id"
   end
@@ -1572,6 +1574,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_08_091402) do
     t.string "filename"
     t.text "signador_token"
     t.text "encrypted_metadata"
+    t.index ["decidim_signature_collection_candidacy_id", "hash_id"], name: "idx_uniq_votes_candidacy_hash", unique: true
     t.index ["decidim_signature_collection_candidacy_id"], name: "idx_signaturecollect_candidacies_votes_on_candidacy_id"
     t.index ["hash_id"], name: "idx_signaturecollect_candidacies_votes_on_hash_id"
   end

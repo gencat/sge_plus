@@ -25,14 +25,14 @@ module Decidim
                through: :scopes,
                class_name: "Decidim::SignatureCollection::Candidacy"
 
-      enum signature_type: [:online, :offline, :any], _suffix: true
-      enum elections: {
+      enum :signature_type, [:online, :offline, :any], suffix: true
+      enum :elections, {
         congress: "congress",
         senate: "senate",
         congress_and_senate: "congress_and_senate",
         european_parliament: "european_parliament",
         parliament_of_catalonia: "parliament_of_catalonia"
-      }, _prefix: true
+      }, prefix: true
 
       validates :title, :description, :signature_type, presence: true
       validates :document_number_authorization_handler, presence: true, if: ->(form) { form.collect_user_extra_fields? }

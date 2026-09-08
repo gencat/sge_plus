@@ -6,6 +6,7 @@ module Decidim
 
     module CandidacyTypeInterface
       include Decidim::Api::Types::BaseInterface
+
       description "An interface that can be used in Candidacy objects."
 
       field :candidacy_type, Decidim::SignatureCollection::CandidacyApiType, "The object's candidacy type", null: true, method: :type
