@@ -38,6 +38,7 @@ jobs:
       DB_PASSWORD: postgres
       DB_HOST: localhost
       SECRET_KEY_BASE: "secret_key_base"
+      DECIDIM_AVAILABLE_LOCALES: "ca,es,oc,en"
 
     steps:
       - name: Wait for Postgres
