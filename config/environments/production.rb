@@ -82,7 +82,7 @@ end
   # config.cache_store = :mem_cache_store
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
-  config.active_job.queue_adapter = ENV['QUEUE_ADAPTER'] if ENV['QUEUE_ADAPTER'].present?
+  config.active_job.queue_adapter = :solid_queue
   # config.active_job.queue_name_prefix = "decidim_development_app_production"
 
   # Disable caching for Action Mailer templates even if Action Controller
