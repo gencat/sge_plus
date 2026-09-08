@@ -2,10 +2,10 @@
 
 Decidim.configure do |config|
   # The name of the application
-  config.application_name = ENV["DECIDIM_APPLICATION_NAME"]
+  config.application_name = ENV.fetch("DECIDIM_APPLICATION_NAME", nil)
 
   # The email that will be used as sender in all emails from Decidim
-  config.mailer_sender = ENV["DECIDIM_MAILER_SENDER"]
+  config.mailer_sender = ENV.fetch("DECIDIM_MAILER_SENDER", nil)
 
   # Sets the list of available locales for the whole application.
   #
@@ -40,14 +40,14 @@ Decidim.configure do |config|
   config.track_newsletter_links = ENV["DECIDIM_TRACK_NEWSLETTER_LINKS"].present? unless ENV["DECIDIM_TRACK_NEWSLETTER_LINKS"] == "auto"
 
   # Map and Geocoder configuration
-  #config.maps = {
+  # config.maps = {
   #  provider: :here,
   #  api_key: ENV["HERE_API_KEY"],
   #  static: { url: 'https://image.maps.hereapi.com/mia/v3/base/mc/overlay' }
-  #}
+  # }
   config.maps = {
     provider: :here,
-    api_key: ENV["HERE_API_KEY"],
+    api_key: ENV.fetch("HERE_API_KEY", nil),
     static: false,
     dynamic: false,
     autocomplete: false,
@@ -94,4 +94,4 @@ Rails.application.config.i18n.available_locales = Decidim.available_locales
 Rails.application.config.i18n.default_locale = Decidim.default_locale
 
 # Inform Decidim about the assets folder
-Decidim.register_assets_path File.expand_path('app/packs', Rails.application.root)
+Decidim.register_assets_path File.expand_path("app/packs", Rails.application.root)

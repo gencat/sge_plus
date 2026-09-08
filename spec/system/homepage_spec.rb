@@ -33,7 +33,7 @@ describe "Homepage" do
       expect(page).to have_content("Benvinguda a SGE+")
     end
   end
-  
+
   context "when having homepage anchors" do
     %w(hero sub_hero).each do |anchor|
       it { expect(page).to have_css("[id^=#{anchor}]", visible: :all) }
