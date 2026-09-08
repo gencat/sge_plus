@@ -10,7 +10,7 @@ on:
 
 env:
   RUBY_VERSION: 3.3.11
-  NODE_VERSION: 18.17.1
+  NODE_VERSION: 22.14.0
 
 jobs:
   main:
@@ -96,9 +96,6 @@ jobs:
 
       - name: Disable Spring
         run: echo "DISABLE_SPRING=1" >> $GITHUB_ENV
-
-      - name: Create empty application.yml
-        run: touch config/application.yml
 
       - name: Generate signature_collection test app
         run: |

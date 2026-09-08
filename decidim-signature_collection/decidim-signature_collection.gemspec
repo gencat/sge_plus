@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
     "homepage_uri" => "https://github.com/gencat/sge_plus",
     "source_code_uri" => "https://github.com/gencat/sge_plus"
   }
-  s.required_ruby_version = "~> 3.3.4"
+  s.required_ruby_version = "~> 3.3.11"
 
   s.name = "decidim-signature_collection"
   s.summary = "Decidim signature collection module"

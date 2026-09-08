@@ -8,7 +8,7 @@ This is the open-source repository for SGE+. SGE+ is based on [Decidim](https://
 
 ```bash
 bundle install
-nvm use 18.17.1
+nvm use 22.14.0
 npm install
 bin/rails db:create db:schema:load
 bin/rails db:seed
