@@ -21,9 +21,7 @@ class AllowMultipleCandidacyVotesCounterCaches < ActiveRecord::Migration[5.2]
         counters["total"] = count
       end
 
-      # rubocop:disable Rails/SkipsModelValidations
-      candidacy.update_column("online_votes", online_votes)
-      # rubocop:enable Rails/SkipsModelValidations
+      candidacy.update_column("online_votes", online_votes) # rubocop:disable Rails/SkipsModelValidations
     end
 
     remove_column :decidim_signature_collection_candidacies, :candidacy_supports_count

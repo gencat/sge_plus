@@ -104,10 +104,10 @@ module Decidim
           candidacy.promoting_committee_enabled? &&
           !candidacy.has_authorship?(user) &&
           (
-          Decidim::SignatureCollection.do_not_require_authorization ||
-              UserAuthorizations.for(user).any? ||
-              Decidim::UserGroups::ManageableUserGroups.for(user).verified.any?
-        )
+            Decidim::SignatureCollection.do_not_require_authorization ||
+                UserAuthorizations.for(user).any? ||
+                Decidim::UserGroups::ManageableUserGroups.for(user).verified.any?
+          )
       end
 
       def print_candidacy?
@@ -173,9 +173,9 @@ module Decidim
 
       def can_user_support?(candidacy)
         !candidacy.offline_signature_type? && (
-        Decidim::SignatureCollection.do_not_require_authorization ||
-            UserAuthorizations.for(user).any?
-      )
+          Decidim::SignatureCollection.do_not_require_authorization ||
+              UserAuthorizations.for(user).any?
+        )
       end
 
       def user_can_preview_space?
@@ -209,9 +209,9 @@ module Decidim
 
       def allowed_to_send_to_technical_validation?
         candidacy.created? && (
-        !candidacy.created_by_individual? ||
-            candidacy.enough_committee_members?
-      )
+          !candidacy.created_by_individual? ||
+              candidacy.enough_committee_members?
+        )
       end
 
       def authorship_or_admin?

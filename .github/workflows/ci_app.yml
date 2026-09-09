@@ -10,7 +10,7 @@ on:
 
 env:
   RUBY_VERSION: 3.3.11
-  NODE_VERSION: 18.17.1
+  NODE_VERSION: 22.14.0
 
 jobs:
   test:
@@ -38,6 +38,7 @@ jobs:
       DB_PASSWORD: postgres
       DB_HOST: localhost
       SECRET_KEY_BASE: "secret_key_base"
+      DECIDIM_AVAILABLE_LOCALES: "ca,es,oc,en"
 
     steps:
       - name: Wait for Postgres
@@ -104,8 +105,6 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - run: npm install
-      - name: Create empty application.yml
-        run: touch config/application.yml
       - run: bundle exec rake db:test:prepare
         name: Setup database
       - run: bundle exec rspec

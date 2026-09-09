@@ -6,15 +6,15 @@ Aquest client permet integrar el servei de signatura electrònica Signador del C
 
 ### Variables d'entorn
 
-Afegiu les següents variables al fitxer `config/application.yml`:
+Afegiu les següents variables al fitxer `.env`:
 
-```yaml
+```
 # Signador configuration (Consorci AOC)
-SIGNADOR_DOMAIN: "https://your-domain.cat"
-SIGNADOR_API_KEY: "your_api_key_from_signador"
-SIGNADOR_BASE_URL: "https://signador-pre.aoc.cat/signador"
-SIGNADOR_LOGO_URL: "" # Optional: URL to your logo (max 300x100)
-SIGNADOR_CALLBACK_PATH: "/valid_signador/callback"
+SIGNADOR_DOMAIN=https://your-domain.cat
+SIGNADOR_API_KEY=your_api_key_from_signador
+SIGNADOR_BASE_URL=https://signador-pre.aoc.cat/signador
+SIGNADOR_LOGO_URL= # Optional: URL to your logo (max 300x100)
+SIGNADOR_CALLBACK_PATH=/valid_signador/callback
 ```
 
 ### Entorns

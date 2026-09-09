@@ -6,6 +6,7 @@ module Decidim
   module SignatureCollection
     class ApplicationFormPDF
       include Decidim::OrganizationHelper
+
       def initialize(candidacy)
         @candidacy = candidacy
       end

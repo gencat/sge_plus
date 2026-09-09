@@ -7,6 +7,7 @@ module Decidim
     class UpdateCandidacy < Decidim::Command
       include ::Decidim::MultipleAttachmentsMethods
       include CurrentLocale
+
       delegate :current_user, to: :form
 
       # Public: Initializes the command.

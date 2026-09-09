@@ -515,6 +515,8 @@ en:
           error: There was a problem signing the candidacy.
           invalid: The data provided to sign the candidacy is not valid.
           success_html: Congratulations! The <strong> %{title}</strong> candidacy has been successfully signed.
+        invalid_vote: The provided vote is not valid.
+        missing_signature: No signature was received.
         sign_description: "Electronic signature for candidacy '%{title}'"
         signature_error: "Error obtaining signature: %{message}"
         personal_data:
@@ -627,6 +629,7 @@ en:
         progress_report_body_for: The candidacy %{title} has reached the %{percentage}% of required signatures.
         progress_report_for: 'Summary about the candidacy: %{title}'
         promotal_committee_help: "Remember to send it to <b>Technical Validation</b> so that an administrator can validate and publish it. Once sent to, it cannot be edited again."
+        status_change_body_for: 'The candidacy %{title} has changed its status to: %{state}'
         status_change_for: The candidacy %{title} has changed its status
         validation_body: 'Please review the candidacy and make the necessary technical validation.'
         validation_subject: "You have a new candidacy to review: '%{title}'"

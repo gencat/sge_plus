@@ -121,11 +121,15 @@ module Decidim
       end
 
       def current_candidacy
-        @current_candidacy ||= Candidacy.where(organization: current_organization).find_by(id: session[:candidacy_id] || nil)
+        return @current_candidacy if defined?(@current_candidacy)
+
+        @current_candidacy = Candidacy.where(organization: current_organization).find_by(id: session[:candidacy_id] || nil)
       end
 
       def candidacy_type
-        @candidacy_type ||= CandidaciesType.where(organization: current_organization).find_by(id: candidacy_type_id)
+        return @candidacy_type if defined?(@candidacy_type)
+
+        @candidacy_type = CandidaciesType.where(organization: current_organization).find_by(id: candidacy_type_id)
       end
 
       def promotal_committee_required?

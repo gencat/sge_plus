@@ -10,7 +10,7 @@ on:
 
 env:
   RUBY_VERSION: 3.3.11
-  NODE_VERSION: 18.17.1
+  NODE_VERSION: 22.14.0
 
 jobs:
   main:
@@ -40,6 +40,8 @@ jobs:
       DATABASE_PASSWORD: postgres
       DATABASE_HOST: localhost
       TEST_TYPE: ${{ matrix.test_type }}
+      DECIDIM_AVAILABLE_LOCALES: "ca,es,oc,en"
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -96,9 +98,6 @@ jobs:
 
       - name: Disable Spring
         run: echo "DISABLE_SPRING=1" >> $GITHUB_ENV
-
-      - name: Create empty application.yml
-        run: touch config/application.yml
 
       - name: Generate signature_collection test app
         run: |

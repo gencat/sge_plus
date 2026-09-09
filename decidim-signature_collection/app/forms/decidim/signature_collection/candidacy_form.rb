@@ -21,6 +21,7 @@ module Decidim
       attribute :scope_id, Integer
 
       attachments_attribute :documents
+      attachments_attribute :attachments
 
       validates :title, :description, presence: true
       validates :title, length: { maximum: 150 }
@@ -60,7 +61,9 @@ module Decidim
       end
 
       def area
-        @area ||= current_organization.areas.find_by(id: area_id)
+        return @area if defined?(@area)
+
+        @area = current_organization.areas.find_by(id: area_id)
       end
 
       def candidacy_type
