@@ -22,6 +22,7 @@ module Decidim
 
         edit_public_candidacy?
         update_public_candidacy?
+        discard_candidacy?
         print_candidacy?
 
         unvote_candidacy?
@@ -82,6 +83,13 @@ module Decidim
         toggle_allow(candidacy&.created? && authorship_or_admin?)
       end
 
+      def discard_candidacy?
+        return false unless permission_action.subject == :candidacy &&
+                            permission_action.action == :discard
+
+        toggle_allow(candidacy&.created? && authorship_or_admin?)
+      end
+
       def request_membership?
         return false unless permission_action.subject == :candidacy &&
                             permission_action.action == :request_membership
@@ -105,8 +113,7 @@ module Decidim
           !candidacy.has_authorship?(user) &&
           (
             Decidim::SignatureCollection.do_not_require_authorization ||
-                UserAuthorizations.for(user).any? ||
-                Decidim::UserGroups::ManageableUserGroups.for(user).verified.any?
+                UserAuthorizations.for(user).any?
           )
       end
 

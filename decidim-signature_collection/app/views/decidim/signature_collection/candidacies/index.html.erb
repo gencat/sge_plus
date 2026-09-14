@@ -22,6 +22,14 @@ edit_link(
 <%= render layout: "layouts/decidim/shared/layout_two_col" do %>
   <%= participatory_space_floating_help %>
 
+  <% if pending_candidacies.any? %>
+    <div class="pending-candidacies">
+      <section id="pending_candidacies" class="layout-main__section layout-main__heading">
+        <%= render partial: "pending_candidacies" %>
+      </section>
+    </div>
+  <% end %>
+
   <section id="candidacies" class="layout-main__section layout-main__heading">
     <%= render partial: "candidacies" %>
   </section>

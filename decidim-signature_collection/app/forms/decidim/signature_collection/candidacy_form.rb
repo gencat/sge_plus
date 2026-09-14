@@ -21,7 +21,12 @@ module Decidim
       attribute :scope_id, Integer
 
       attachments_attribute :documents
-      attachments_attribute :attachments
+
+      # Decidim::MultipleAttachmentsMethods (included by CreateCandidacy/UpdateCandidacy)
+      # always reads/appends to `add_attachments`/`attachments`, regardless of the
+      # attachments_attribute name.
+      alias add_attachments add_documents
+      alias attachments documents
 
       validates :title, :description, presence: true
       validates :title, length: { maximum: 150 }

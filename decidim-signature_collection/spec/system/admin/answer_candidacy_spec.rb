@@ -21,8 +21,10 @@ describe "User answers the candidacy" do
     end
 
     it "answer is allowed" do
-      expect(page).to have_css(".action-icon--answer")
-      page.find(".action-icon--answer").click
+      within("tr", text: translated(candidacy.title)) do
+          find("button[data-controller='dropdown']").click
+          click_on "Answer"
+        end
 
       within ".edit_candidacy_answer" do
         fill_in_i18n_editor(
@@ -34,7 +36,11 @@ describe "User answers the candidacy" do
         )
       end
 
-      submit_and_validate("The candidacy has been successfully updated")
+      within "[data-content]" do
+        find("*[type=submit]").click
+      end
+
+      expect(page).to have_admin_callout("The candidacy has been successfully updated")
     end
 
     context "when candidacy is in published state" do
@@ -44,7 +50,10 @@ describe "User answers the candidacy" do
 
       context "and signature dates are editable" do
         it "can be edited in answer" do
-          page.find(".action-icon--answer").click
+          within("tr", text: translated(candidacy.title)) do
+            find("button[data-controller='dropdown']").click
+            click_on "Answer"
+          end
 
           within ".edit_candidacy_answer" do
             fill_in_i18n_editor(
@@ -65,7 +74,10 @@ describe "User answers the candidacy" do
 
         context "when dates are invalid" do
           it "returns an error message" do
-            page.find(".action-icon--answer").click
+            within("tr", text: translated(candidacy.title)) do
+              find("button[data-controller='dropdown']").click
+              click_on "Answer"
+            end
 
             within ".edit_candidacy_answer" do
               fill_in_i18n_editor(
@@ -95,7 +107,10 @@ describe "User answers the candidacy" do
       end
 
       it "signature dates are not displayed" do
-        page.find(".action-icon--answer").click
+        within("tr", text: translated(candidacy.title)) do
+          find("button[data-controller='dropdown']").click
+          click_on "Answer"
+        end
 
         within ".edit_candidacy_answer" do
           expect(page).to have_no_css("#candidacy_signature_start_date_date")
@@ -104,7 +119,10 @@ describe "User answers the candidacy" do
       end
 
       it "shows the return_to_create_state checkbox" do
-        page.find(".action-icon--answer").click
+        within("tr", text: translated(candidacy.title)) do
+          find("button[data-controller='dropdown']").click
+          click_on "Answer"
+        end
 
         within ".edit_candidacy_answer" do
           expect(page).to have_content("Return to creation state")

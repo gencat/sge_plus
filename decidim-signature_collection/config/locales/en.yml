@@ -155,6 +155,9 @@ en:
             state: Status
             supports_count: Signatures
             title: Candidacies
+        candidacies_committee_member:
+          fields:
+            actions: Actions
         candidacies_type_scope:
           fields:
             scope: Scope
@@ -261,6 +264,9 @@ en:
       actions:
         answer: Answer
       admin:
+        actions:
+          export_all: Export all
+          export_selection: Export selection
         answers:
           edit:
             answer: Answer
@@ -313,6 +319,7 @@ en:
             success: The candidacy has been sent to technical validation.
             update: Update
           form:
+            attachments_title: Attachments
             settings: Settings
             title: General information
           index:

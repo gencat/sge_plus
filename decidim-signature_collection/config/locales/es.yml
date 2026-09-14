@@ -155,6 +155,9 @@ es:
             state: Estado
             supports_count: Firmas
             title: Candidaturas
+        candidacies_committee_member:
+          fields:
+            actions: Acciones
         candidacies_type_scope:
           fields:
             scope: Ámbito
@@ -256,6 +259,9 @@ es:
       actions:
         answer: Responder
       admin:
+        actions:
+          export_all: Exportar todo
+          export_selection: Exportar selección
         answers:
           edit:
             answer: Responder
@@ -309,6 +315,7 @@ es:
             success: La candidatura se ha enviado a validación técnica.
             update: Actualizar
           form:
+            attachments_title: Adjuntos
             settings: Ajustes
             title: Información general
           index:

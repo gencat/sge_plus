@@ -155,6 +155,9 @@ ca:
             state: Estat
             supports_count: Signatures
             title: Candidatures
+        candidacies_committee_member:
+          fields:
+            actions: Accions
         candidacies_type_scope:
           fields:
             scope: Àmbit
@@ -254,6 +257,9 @@ ca:
       actions:
         answer: Resposta
       admin:
+        actions:
+          export_all: Exportar tot
+          export_selection: Exportar selecció
         answers:
           edit:
             answer: Resposta
@@ -306,6 +312,7 @@ ca:
             success: La candidatura s'ha enviat a validació tècnica.
             update: Actualitzar
           form:
+            attachments_title: Adjunts
             settings: Configuració
             title: Informació general
           index:
