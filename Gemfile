@@ -39,6 +39,8 @@ group :development, :test do
   gem "decidim-dev", DECIDIM_VERSION
   gem "net-imap", "~> 0.5.0"
   gem "net-pop", "~> 0.1.1"
+  # Set faker in order to fix db:seeds
+  gem "faker", "~> 3.8.0"
 end
 
 group :development do
