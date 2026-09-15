@@ -8,11 +8,7 @@ module Decidim
       private
 
       def resource_path
-        if resource.state == "created" || resource.state == "validating"
-          Decidim::SignatureCollection::Engine.routes.url_helpers.load_candidacy_draft_create_candidacy_index_path(candidacy_id: resource.id)
-        else
-          Decidim::SignatureCollection::Engine.routes.url_helpers.candidacy_path(model)
-        end
+        Decidim::SignatureCollection::Engine.routes.url_helpers.candidacy_path(model)
       end
 
       def image

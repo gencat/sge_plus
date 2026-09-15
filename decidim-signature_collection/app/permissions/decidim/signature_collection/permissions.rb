@@ -22,7 +22,6 @@ module Decidim
 
         edit_public_candidacy?
         update_public_candidacy?
-        discard_candidacy?
         print_candidacy?
 
         unvote_candidacy?
@@ -79,13 +78,6 @@ module Decidim
       def update_public_candidacy?
         return false unless permission_action.subject == :candidacy &&
                             permission_action.action == :update
-
-        toggle_allow(candidacy&.created? && authorship_or_admin?)
-      end
-
-      def discard_candidacy?
-        return false unless permission_action.subject == :candidacy &&
-                            permission_action.action == :discard
 
         toggle_allow(candidacy&.created? && authorship_or_admin?)
       end
