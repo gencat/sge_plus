@@ -25,7 +25,7 @@ describe "Admin exports candidacies" do
     it "shows the export dropdown" do
       visit decidim_admin_candidacies.candidacies_path
 
-      expect(page).to have_content("Export all")
+      expect(page).to have_content("Export")
       expect(page).to have_no_content("Export selection")
     end
   end
@@ -36,7 +36,7 @@ describe "Admin exports candidacies" do
     end
 
     it "shows the export formats" do
-      find("span", text: "Export all").click
+      click_on "Export"
 
       expect(page).to have_content("Candidacies as CSV")
       expect(page).to have_content("Candidacies as JSON")
@@ -46,7 +46,7 @@ describe "Admin exports candidacies" do
   context "when clicking the export link" do
     before do
       visit decidim_admin_candidacies.candidacies_path
-      find("span", text: "Export all").click
+      click_on "Export all"
     end
 
     it "displays success message" do
@@ -74,7 +74,7 @@ describe "Admin exports candidacies" do
       end
 
       it "shows the export formats" do
-        find("span", text: "Export selection").click
+        click_on "Export all"
 
         expect(page).to have_content("Candidacies as CSV")
         expect(page).to have_content("Candidacies as JSON")
@@ -85,7 +85,7 @@ describe "Admin exports candidacies" do
       before do
         visit decidim_admin_candidacies.candidacies_path
         apply_filter("State", "Created")
-        find("span", text: "Export selection").click
+        click_on "Export selection"
       end
 
       it "displays success message" do

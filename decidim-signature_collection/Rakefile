@@ -15,9 +15,19 @@ def seed_db(path)
   end
 end
 
+# The --demo flag used by decidim:generate_external_test_app always copies boilerplate
+# classes that subclass Decidim::Initiatives::* (DummySignatureHandler, DummySmsMobilePhoneValidator),
+# regardless of whether the module under test depends on decidim-initiatives.
+# This module doesn't, so those classes break eager_load; remove them.
+def remove_initiatives_demo_boilerplate(path)
+  FileUtils.rm_f(File.join(path, "app/services/dummy_signature_handler.rb"))
+  FileUtils.rm_f(File.join(path, "app/services/dummy_sms_mobile_phone_validator.rb"))
+end
+
 desc "Generates a dummy app for testing"
 task test_app: "decidim:generate_external_test_app" do
   ENV["RAILS_ENV"] = "test"
+  remove_initiatives_demo_boilerplate("spec/decidim_dummy_app")
   install_module("spec/decidim_dummy_app")
 end
 

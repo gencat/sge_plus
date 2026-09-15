@@ -11,6 +11,7 @@ set -e
 IMAGE="sge_plus:latest"
 WEB_CONTAINER="sge_plus"
 WORKER_CONTAINER="sge_plus_worker"
+EXPORTER_CONTAINER="sge_plus_exporter"
 APP_DIR="/var/www/sge_plus"
 ENV_FILE="/var/www/sge_plus/prod.env"
 STORAGE_DIR="/var/www/sge_plus/storage"
@@ -21,12 +22,14 @@ echo "=== Building image (compiling assets) ==="
 docker build -t "$IMAGE" "$APP_DIR"
 
 echo "=== Stopping old containers (if exist) ==="
-docker stop "$WEB_CONTAINER"    2>/dev/null || true
-docker rm   "$WEB_CONTAINER"    2>/dev/null || true
-docker stop "$WORKER_CONTAINER" 2>/dev/null || true
-docker rm   "$WORKER_CONTAINER" 2>/dev/null || true
+docker stop "$WEB_CONTAINER"      2>/dev/null || true
+docker rm   "$WEB_CONTAINER"      2>/dev/null || true
+docker stop "$WORKER_CONTAINER"   2>/dev/null || true
+docker rm   "$WORKER_CONTAINER"   2>/dev/null || true
+docker stop "$EXPORTER_CONTAINER" 2>/dev/null || true
+docker rm   "$EXPORTER_CONTAINER" 2>/dev/null || true
 
-echo "=== Starting worker container (migrations + delayed_jobs) ==="
+echo "=== Starting worker container (migrations + Solid Queue) ==="
 docker run -d \
   --name "$WORKER_CONTAINER" \
   --restart unless-stopped \
@@ -51,6 +54,16 @@ docker run -d \
   "$IMAGE" \
   /bin/sh docker/run-web_service.sh
 
+echo "=== Starting Prometheus Exporter container ==="
+docker run -d \
+  --name "$EXPORTER_CONTAINER" \
+  --restart unless-stopped \
+  --network host \
+  --env-file "$ENV_FILE" \
+  -e RAILS_ENV=production \
+  "$IMAGE" \
+  /bin/sh docker/run-exporter.sh
+
 echo "=== Restarting Ofelia ==="
 docker stop ofelia 2>/dev/null || true
 docker rm   ofelia 2>/dev/null || true
@@ -65,6 +78,8 @@ docker run -d \
 
 echo ""
 echo "=== Ready ==="
-echo "Web logs:    docker logs -f $WEB_CONTAINER"
-echo "Worker logs: docker logs -f $WORKER_CONTAINER"
-echo "Crons logs:  docker logs -f ofelia"
+echo "Web logs:      docker logs -f $WEB_CONTAINER"
+echo "Worker logs:   docker logs -f $WORKER_CONTAINER"
+echo "Exporter logs: docker logs -f $EXPORTER_CONTAINER"
+echo "Metrics:       http://localhost:9394/metrics"
+echo "Crons logs:    docker logs -f ofelia"

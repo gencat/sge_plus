@@ -14,7 +14,10 @@ describe "User previews candidacy" do
 
     it "shows the details of the given candidacy" do
       preview_window = window_opened_by do
-        page.find(".action-icon--preview").click
+        within("tr", text: translated(candidacy.title)) do
+          find("button[data-controller='dropdown']").click
+          click_on "Preview"
+        end
       end
 
       within_window(preview_window) do

@@ -9,5 +9,5 @@ rm -f "$APP_DIR/tmp/pids/server.pid"
 echo "[run-worker] Running migrations..."
 bundle exec rails db:migrate
 
-echo "[run-worker] Starting delayed_jobs..."
-exec bundle exec rails jobs:work
+echo "[run-worker] Starting Solid Queue..."
+exec bin/jobs
