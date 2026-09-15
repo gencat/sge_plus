@@ -22,9 +22,9 @@ describe "User answers the candidacy" do
 
     it "answer is allowed" do
       within("tr", text: translated(candidacy.title)) do
-          find("button[data-controller='dropdown']").click
-          click_on "Answer"
-        end
+        find("button[data-controller='dropdown']").click
+        click_on "Answer"
+      end
 
       within ".edit_candidacy_answer" do
         fill_in_i18n_editor(
