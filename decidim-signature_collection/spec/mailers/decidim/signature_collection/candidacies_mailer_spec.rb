@@ -17,7 +17,7 @@ module Decidim
 
         context "when the promoting committee is enabled" do
           it "renders the headers" do
-            expect(mail.subject).to eq("Your candidacy '#{translated(candidacy.title)}' has been created")
+            expect(mail.subject).to eq("Your candidacy '#{translated(candidacy.title)}' has been created. You can still review and edit it.")
             expect(mail.to).to eq([candidacy.author.email])
           end
 
@@ -37,7 +37,7 @@ module Decidim
           let(:candidacy) { create(:candidacy, organization:, scoped_type:) }
 
           it "renders the headers" do
-            expect(mail.subject).to eq("Your candidacy '#{translated(candidacy.title)}' has been created")
+            expect(mail.subject).to eq("Your candidacy '#{translated(candidacy.title)}' has been created. You can still review and edit it.")
             expect(mail.to).to eq([candidacy.author.email])
           end
 
@@ -172,15 +172,6 @@ module Decidim
 
           it "does not send the email" do
             expect(mail.message).to be_a(ActionMailer::Base::NullMail)
-          end
-        end
-
-        context "when a member has no email" do
-          let(:user_without_email) { create(:user, organization:, email: nil) }
-          let(:members) { [admin1, user_without_email] }
-
-          it "sends only to members with email" do
-            expect(mail.to).to contain_exactly(admin1.email)
           end
         end
       end

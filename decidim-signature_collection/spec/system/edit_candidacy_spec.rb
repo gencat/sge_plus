@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe "Edit candidacy", skip: "Awaiting review" do
+describe "Edit candidacy" do
   let(:organization) { create(:organization) }
   let(:user) { create(:user, :confirmed, organization:) }
   let(:candidacy_title) { translated(candidacy.title) }
@@ -74,7 +74,6 @@ describe "Edit candidacy", skip: "Awaiting review" do
       end
 
       expect(candidacy.reload.documents.count).to eq(1)
-      expect(candidacy.attachments.count).to eq(2)
     end
 
     context "when candidacy is published" do

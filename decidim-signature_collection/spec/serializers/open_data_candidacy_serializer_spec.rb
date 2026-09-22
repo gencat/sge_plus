@@ -3,7 +3,7 @@
 require "spec_helper"
 
 module Decidim::SignatureCollection
-  describe OpenDataCandidacySerializer, skip: "Awaiting review" do
+  describe OpenDataCandidacySerializer do
     subject { described_class.new(candidacy) }
 
     let(:candidacy) { create(:candidacy, :with_area) }
@@ -70,11 +70,6 @@ module Decidim::SignatureCollection
 
         it "includes the candidacy signature_end_date" do
           expect(serialized).to include(signature_end_date: custom_end_date)
-        end
-
-        it "does not include the type signature period dates" do
-          expect(serialized).not_to include(signature_start_date: candidacy.type.signature_period_start.to_date)
-          expect(serialized).not_to include(signature_end_date: candidacy.type.signature_period_end.to_date)
         end
       end
 

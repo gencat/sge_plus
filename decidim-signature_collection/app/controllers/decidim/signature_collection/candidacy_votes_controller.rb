@@ -32,18 +32,6 @@ module Decidim
           end
         end
       end
-
-      # DELETE /candidacies/:candidacy_id/candidacy_vote
-      def destroy
-        enforce_permission_to :unvote, :candidacy, candidacy: current_candidacy
-
-        UnvoteCandidacy.call(current_candidacy, current_user) do
-          on(:ok) do
-            current_candidacy.reload
-            render :update_buttons_and_counters
-          end
-        end
-      end
     end
   end
 end

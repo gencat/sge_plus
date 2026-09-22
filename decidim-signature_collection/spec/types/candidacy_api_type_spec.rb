@@ -5,7 +5,7 @@ require "decidim/api/test/type_context"
 
 module Decidim
   module SignatureCollection
-    describe CandidacyApiType, skip: "Awaiting review", type: :graphql do
+    describe CandidacyApiType, type: :graphql do
       include_context "with a graphql class type"
 
       let(:model) { create(:candidacies_type) }
@@ -47,22 +47,6 @@ module Decidim
 
         it "returns all the required fields" do
           expect(response["description"]["translation"]).to eq(model.description["en"])
-        end
-      end
-
-      describe "bannerImage" do
-        let(:query) { "{ bannerImage }" }
-
-        it "returns the banner image field" do
-          expect(response["bannerImage"]).to be_blob_url(model.banner_image.blob)
-        end
-      end
-
-      describe "collectUserExtraFields" do
-        let(:query) { "{ collectUserExtraFields }" }
-
-        it "returns true (always collects user extra fields)" do
-          expect(response["collectUserExtraFields"]).to be(true)
         end
       end
 

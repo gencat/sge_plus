@@ -5,7 +5,7 @@ require "spec_helper"
 module Decidim
   module SignatureCollection
     module Admin
-      describe UpdateCandidacyAnswer, skip: "Awaiting review" do
+      describe UpdateCandidacyAnswer do
         let(:form_klass) { Decidim::SignatureCollection::Admin::CandidacyAnswerForm }
 
         context "when valid data" do
@@ -60,11 +60,11 @@ module Decidim
 
             let(:command) { described_class.new(candidacy, form) }
 
-            it "sets candidacy state to created (0)" do
+            it "sets candidacy state to created" do
               command.call
               candidacy.reload
 
-              expect(candidacy.state).to eq(0)
+              expect(candidacy.state).to eq("created")
             end
           end
         end
