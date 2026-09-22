@@ -1,0 +1,45 @@
+# Git internals
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+LICENSE-AGPLv3.txt
+
+# Development and CI tooling
+spec/
+decidim-signature_collection/spec/
+.github/
+Procfile.dev
+docker-compose*.yml
+
+# Secrets — must NEVER be baked into the image
+config/application.yml
+config/master.key
+.env
+*.env
+
+# Pre-built JS assets — rebuilt fresh inside the Dockerfile
+/public/decidim-packs/
+/public/packs-test/
+/public/sw.js
+/public/sw.js.gz
+/public/sw.js.map
+
+# Bundler and gem cache from local development / CI
+.bundle/
+vendor/bundle/
+
+# Node modules (reinstalled inside the Dockerfile)
+node_modules/
+
+# Runtime data
+/log/*
+!/log/.keep
+/tmp/*
+!/tmp/.keep
+!/tmp/pids/
+!/tmp/pids/.keep
+/storage/*
+!/storage/.keep

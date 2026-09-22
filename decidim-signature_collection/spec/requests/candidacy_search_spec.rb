@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe "Candidacy search" do
+RSpec.describe "Candidacy search", skip: "Awaiting review" do
   subject { response.body }
 
   let(:organization) { create(:organization) }

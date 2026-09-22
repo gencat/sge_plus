@@ -5,7 +5,7 @@ require "spec_helper"
 describe Decidim::SignatureCollection::ExtendCandidacyEvent do
   include_context "when a simple event"
 
-  let(:event_name) { "decidim.events.signature_collection.candidacy_extended" }
+  let(:event_name) { "decidim.events.candidacy_extended" }
   let(:resource) { create(:candidacy) }
   let(:participatory_space) { resource }
 

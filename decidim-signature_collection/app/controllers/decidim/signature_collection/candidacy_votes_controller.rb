@@ -16,8 +16,7 @@ module Decidim
         enforce_permission_to :vote, :candidacy, candidacy: current_candidacy
 
         @form = form(Decidim::SignatureCollection::VoteForm).from_params(
-          candidacy: current_candidacy,
-          signer: current_user
+          candidacy: current_candidacy
         )
 
         VoteCandidacy.call(@form) do

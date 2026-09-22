@@ -46,10 +46,6 @@ module Decidim
             collection do
               get :fill_personal_data
               put :fill_personal_data, to: "candidacy_signatures#store_personal_data"
-              get :sms_phone_number
-              put :sms_phone_number, to: "candidacy_signatures#store_sms_phone_number"
-              get :sms_code
-              put :sms_code, to: "candidacy_signatures#store_sms_code"
               get :finish
               put :finish, to: "candidacy_signatures#store_finish"
             end

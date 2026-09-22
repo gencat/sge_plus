@@ -21,6 +21,7 @@ FactoryBot.define do
     child_scope_threshold_enabled { false }
     only_global_scope_enabled { false }
     comments_enabled { true }
+    elections { :congress_and_senate }
 
     signature_period_start { Time.zone.now }
     signature_period_end { 1.month.from_now }
@@ -82,10 +83,6 @@ FactoryBot.define do
       collect_user_extra_fields { true }
       extra_fields_legal_information { generate_localized_description(:candidacies_type_extra_fields_legal_information, skip_injection:) }
       document_number_authorization_handler { "dummy_authorization_handler" }
-    end
-
-    trait :with_sms_code_validation do
-      validate_sms_code_on_votes { true }
     end
 
     trait :child_scope_threshold_enabled do
@@ -235,9 +232,7 @@ FactoryBot.define do
       skip_injection { false }
     end
     candidacy { create(:candidacy, skip_injection:) }
-    author { create(:user, :confirmed, organization: candidacy.organization, skip_injection:) }
     hash_id { SecureRandom.uuid }
-    scope { candidacy.scope }
     after(:create) do |vote|
       vote.candidacy.update_online_votes_counters
     end

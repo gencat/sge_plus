@@ -8,200 +8,147 @@ module Decidim
 
       mimic :candidacies_vote
 
-      attribute :name_and_surname, String
+      attribute :name, String
+      attribute :first_surname, String
+      attribute :second_surname, String
+      attribute :document_type, Integer
       attribute :document_number, String
       attribute :date_of_birth, Date
 
       attribute :postal_code, String
-      attribute :encrypted_metadata, String
+      attribute :encrypted_xml_doc_signed, String
+      attribute :encrypted_xml_doc_to_sign, String
       attribute :hash_id, String
 
       attribute :candidacy, Decidim::SignatureCollection::Candidacy
-      attribute :signer, Decidim::User
 
-      validates :candidacy, :signer, presence: true
+      validates :candidacy, presence: true
 
-      validates :authorized_scopes, presence: true
+      validate :already_voted?
+      validate :document_number_format
 
-      with_options if: :required_personal_data? do
-        validates :name_and_surname, :document_number, :date_of_birth, :postal_code, :encrypted_metadata, :hash_id, presence: true
-        validate :document_number_authorized?
-        validate :already_voted?
-      end
+      validates :name, :first_surname, :document_type, :document_number, :date_of_birth, :postal_code, presence: true
 
       delegate :scope, to: :candidacy
 
-      def encrypted_metadata
-        return unless required_personal_data?
-
-        @encrypted_metadata ||= encryptor.encrypt(metadata)
+      def self.document_types
+        { nif: 1, nie: 2 }
       end
 
-      # Public: The hash to uniquely identify an candidacy vote. It uses the
-      # candidacy scope as a default.
+      # Public: The hash to uniquely identify an candidacy vote
       #
       # Returns a String.
       def hash_id
-        return unless candidacy && (document_number || signer)
+        return unless candidacy && document_number
 
         @hash_id ||= Digest::MD5.hexdigest(
           [
             candidacy.id,
-            document_number || signer.id,
+            document_number,
             Rails.application.secret_key_base
           ].compact.join("-")
         )
       end
 
-      # Public: Builds the list of scopes where the user is authorized to vote in. This is used when
-      # the candidacy allows also voting on child scopes, not only the main scope.
-      #
-      # Instead of just listing the children of the main scope, we just want to select the ones that
-      # have been added to the CandidacyType with its voting settings.
-      #
-      def authorized_scopes
-        candidacy.votable_candidacy_type_scopes.select do |candidacy_type_scope|
-          candidacy_type_scope.global_scope? ||
-            candidacy_type_scope.scope == user_authorized_scope ||
-            candidacy_type_scope.scope.ancestor_of?(user_authorized_scope)
-        end.flat_map(&:scope)
+      def filename
+        "#{document_number}.xml"
       end
 
-      # Public: Finds the scope the user has an authorization for, this way the user can vote
-      # on that scope and its parents.
-      #
-      # This is can be used to allow users that are authorized with a children
-      # scope to sign an candidacy with a parent scope.
-      #
-      # As an example: A city (global scope) has many districts (scopes with
-      # parent nil), and each district has different neighbourhoods (with its
-      # parent as a district). If we setup the authorization handler to match
-      # a neighbourhood, the same authorization can be used to participate
-      # in district, neighbourhoods or city candidacies.
-      #
-      # Returns a Decidim::Scope.
-      def user_authorized_scope
-        return scope if handler_name.blank?
-        return unless authorized?
-        return if authorization.metadata.blank?
-
-        @user_authorized_scope ||= authorized_scope_candidates.find do |scope|
-          scope&.id == authorization.metadata.symbolize_keys[:scope_id]
-        end
-      end
-
-      # Public: Builds a list of Decidim::Scopes where the user could have a
-      # valid authorization.
-      #
-      # If the candidacy is set with a global scope (meaning the scope is nil),
-      # all the scopes in the organization are valid.
-      #
-      # Returns an array of Decidim::Scopes.
-      def authorized_scope_candidates
-        authorized_scope_candidates = [candidacy.scope]
-        authorized_scope_candidates += if candidacy.scope.present?
-                                         candidacy.scope.descendants
-                                       else
-                                         candidacy.organization.scopes
-                                       end
-        authorized_scope_candidates.uniq
-      end
-
-      def metadata
-        {
-          name_and_surname:,
+      def encrypted_metadata
+        metadata = {
+          name:,
+          first_surname:,
+          second_surname:,
+          document_type:,
           document_number:,
           date_of_birth:,
           postal_code:
         }
+        encryptor.encrypt(metadata)
+      end
+
+      def encrypted_xml_doc_to_sign
+        xml = Decidim::SignatureCollection::XmlBuilder.new({
+                                                             candidacy:,
+                                                             name:,
+                                                             first_surname:,
+                                                             second_surname:,
+                                                             document_type:,
+                                                             document_number:,
+                                                             date_of_birth:
+                                                           }).build
+
+        encryptor.encrypt(xml)
       end
 
       protected
 
-      # Private: Whether the personal data given when signing the candidacy should
-      # be stored together with the vote or not.
-      #
-      # Returns a Boolean.
-      def required_personal_data?
-        @required_personal_data ||= candidacy&.type&.collect_user_extra_fields?
-      end
-
-      # Private: Checks that the unique hash computed from the authorization
-      # and the user provided data match.
-      #
-      # This prevents users that know partial data from another user to sign
-      # candidacies with someone elses identity.
-      def document_number_authorized?
-        return false if candidacy.document_number_authorization_handler.blank?
-
-        errors.add(:document_number, :invalid) unless authorized? && authorization_handler && authorization.unique_id == authorization_handler.unique_id
-      end
-
       # Private: Checks if there is any existing vote that matches the user's data.
       def already_voted?
-        errors.add(:document_number, :taken) if candidacy.votes.exists?(hash_id:, scope:)
+        return false if hash_id.blank?
+
+        errors.add(:document_number, :taken) if candidacy.votes.exists?(hash_id: hash_id)
       end
 
-      def author
-        @author ||= current_organization.users.find_by(id: author_id)
+      def document_number_format
+        return if document_number.blank? || document_type.blank?
+
+        case document_type
+        when self.class.document_types[:nif]
+          validate_nif_format
+        when self.class.document_types[:nie]
+          validate_nie_format
+        end
       end
 
-      # Private: Finds an authorization for the user signing the candidacy and
-      # the configured handler.
-      def authorization
-        return unless signer && handler_name
+      def validate_nif_format
+        nif_regex = /\A\d{8}[A-Z]\z/i
+        unless document_number.to_s.upcase.match?(nif_regex)
+          errors.add(:document_number, :invalid_nif_format)
+          return
+        end
 
-        @authorization ||= Verifications::Authorizations.new(
-          organization: signer.organization,
-          user: signer,
-          name: handler_name
-        ).first
+        validate_nif_letter
       end
 
-      # Private: Checks if the authorization has not expired or is invalid.
-      def authorized?
-        authorization_status&.first == :ok
+      def validate_nie_format
+        nie_regex = /\A[XYZ]\d{7}[A-Z]\z/i
+        unless document_number.to_s.upcase.match?(nie_regex)
+          errors.add(:document_number, :invalid_nie_format)
+          return
+        end
+
+        validate_nie_letter
       end
 
-      # Private: Builds an authorization handler with the data the user provided
-      # when signing the candidacy.
-      #
-      # This is currently tied to authorization handlers that have, at least, these attributes:
-      #   * document_number
-      #   * name_and_surname
-      #   * date_of_birth
-      #   * postal_code
-      #
-      # Once we have the authorization handler we can use is to compute the
-      # unique_id and compare it to an existing authorization.
-      #
-      # Returns a Decidim::AuthorizationHandler.
-      def authorization_handler
-        return unless document_number && handler_name
+      def validate_nif_letter
+        letters = "TRWAGMYFPDXBNJZSQVHLCKE"
+        doc = document_number.to_s.upcase
+        number = doc[0..7].to_i
+        letter = doc[8]
+        expected_letter = letters[number % 23]
 
-        @authorization_handler ||= Decidim::AuthorizationHandler.handler_for(handler_name,
-                                                                             document_number:,
-                                                                             name_and_surname:,
-                                                                             date_of_birth:,
-                                                                             postal_code:)
+        errors.add(:document_number, :invalid_nif_letter) unless letter == expected_letter
       end
 
-      # Private: The AuthorizationHandler name used to verify the user's
-      # document number.
-      #
-      # Returns a String.
-      def handler_name
-        candidacy.document_number_authorization_handler
-      end
+      def validate_nie_letter
+        letters = "TRWAGMYFPDXBNJZSQVHLCKE"
+        doc = document_number.to_s.upcase
 
-      def authorization_status
-        return unless authorization
+        nie_number = doc.dup
+        nie_number[0] = "0" if doc[0] == "X"
+        nie_number[0] = "1" if doc[0] == "Y"
+        nie_number[0] = "2" if doc[0] == "Z"
 
-        Decidim::Verifications::Adapter.from_element(handler_name).authorize(authorization, {}, nil, nil)
+        number = nie_number[0..7].to_i
+        letter = doc[8]
+        expected_letter = letters[number % 23]
+
+        errors.add(:document_number, :invalid_nie_letter) unless letter == expected_letter
       end
 
       def encryptor
-        @encryptor ||= DataEncryptor.new(secret: "personal user metadata")
+        @encryptor ||= DataEncryptor.new(secret: Rails.application.secret_key_base)
       end
     end
   end

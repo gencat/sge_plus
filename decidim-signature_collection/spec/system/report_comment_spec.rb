@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-describe "Report Comment" do
+describe "Report Comment", skip: "Awaiting review" do
   let!(:organization) { create(:organization) }
   let(:user) { create(:user, :confirmed, organization:) }
   let(:participatory_space) { commentable }

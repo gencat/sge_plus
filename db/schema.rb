@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_12_19_102109) do
+ActiveRecord::Schema[7.0].define(version: 2026_06_25_074626) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "ltree"
   enable_extension "pg_trgm"
+  enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
   create_table "active_storage_attachments", force: :cascade do |t|
@@ -341,7 +342,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_12_19_102109) do
     t.jsonb "title"
     t.integer "weight", default: 0, null: false
     t.jsonb "description"
-    t.integer "total_budget", default: 0
+    t.bigint "total_budget", default: 0
     t.integer "decidim_component_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -1186,7 +1187,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_12_19_102109) do
     t.index ["privatable_to_type", "privatable_to_id"], name: "space_privatable_to_privatable_id"
   end
 
-  create_table "decidim_private_exports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "decidim_private_exports", force: :cascade do |t|
+    t.uuid "uuid", null: false
     t.string "export_type", null: false
     t.string "attached_to_type"
     t.integer "attached_to_id"
@@ -1197,6 +1199,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_12_19_102109) do
     t.jsonb "metadata", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["uuid"], name: "index_decidim_private_exports_on_uuid", unique: true
   end
 
   create_table "decidim_proposals_collaborative_draft_collaborator_requests", force: :cascade do |t|
@@ -1483,6 +1486,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_12_19_102109) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.integer "decidim_user_group_id"
+    t.string "hashtag"
     t.integer "scoped_type_id"
     t.datetime "first_progress_notification_at", precision: nil
     t.datetime "second_progress_notification_at", precision: nil
@@ -1565,14 +1569,14 @@ ActiveRecord::Schema[7.0].define(version: 2025_12_19_102109) do
 
   create_table "decidim_signature_collection_candidacies_votes", force: :cascade do |t|
     t.bigint "decidim_signature_collection_candidacy_id", null: false
-    t.bigint "decidim_author_id", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.text "encrypted_metadata"
-    t.string "timestamp"
     t.string "hash_id"
-    t.integer "decidim_scope_id"
-    t.index ["decidim_author_id"], name: "idx_signaturecollect_candidacies_votes_on_author_id"
+    t.text "encrypted_xml_doc_to_sign"
+    t.text "encrypted_xml_doc_signed"
+    t.string "filename"
+    t.text "signador_token"
+    t.text "encrypted_metadata"
     t.index ["decidim_signature_collection_candidacy_id"], name: "idx_signaturecollect_candidacies_votes_on_candidacy_id"
     t.index ["hash_id"], name: "idx_signaturecollect_candidacies_votes_on_hash_id"
   end

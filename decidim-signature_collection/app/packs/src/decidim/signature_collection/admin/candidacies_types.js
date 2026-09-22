@@ -22,12 +22,6 @@
     } else {
       $("#candidacies_type_undo_online_signatures_enabled").parent().parent().show();
     }
-
-    if ($collectUserDataCheckbox.is(":checked")) {
-      $("#candidacies_type-extra_fields_legal_information-tabs").parent().parent().show()
-    } else {
-      $("#candidacies_type-extra_fields_legal_information-tabs").parent().parent().hide()
-    }
   };
 
   $($promotingCommitteeCheckbox).click(() => toggleVisibility());

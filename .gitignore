@@ -39,6 +39,7 @@
 .env
 .envrc
 .rbenv-vars
+docker/*.env
 
 # Ignore the files and folders generated through Webpack
 /public/decidim-packs
@@ -46,6 +47,7 @@
 /public/packs-test
 /public/sw.js
 /public/sw.js.*
+/public/sw.js*
 
 # Ignore node modules
 /node_modules

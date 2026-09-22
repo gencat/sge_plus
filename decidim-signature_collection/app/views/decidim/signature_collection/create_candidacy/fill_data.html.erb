@@ -18,11 +18,7 @@
     <%= text_editor_for(f, :description, lines: 8, toolbar: :content, value: translated_attribute(f.object.description)) %>
 
     <% signature_type_options = signature_type_options(f.object) %>
-    <% if signature_type_options.length == 1 %>
-      <%= f.hidden_field :signature_type, value: signature_type_options.first.last %>
-    <% else %>
-      <%= f.select :signature_type, signature_type_options %>
-    <% end %>
+    <%= f.hidden_field :signature_type, value: signature_type_options.first.last %>
 
     <% if scopes.length == 1 %>
       <%= f.hidden_field :scope_id, value: scopes.first.scope&.id %>

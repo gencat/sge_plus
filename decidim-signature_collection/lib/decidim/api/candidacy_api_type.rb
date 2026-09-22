@@ -19,7 +19,6 @@ module Decidim
       field :signature_type, GraphQL::Types::String, "Signature type of the candidacy", null: true
       field :title, Decidim::Core::TranslatedFieldType, "Candidacy type name", null: true
       field :undo_online_signatures_enabled, GraphQL::Types::Boolean, "Enable participants to undo their online signatures", null: true
-      field :validate_sms_code_on_votes, GraphQL::Types::Boolean, "Add SMS code validation step to signature process", null: true
 
       def banner_image
         object.attached_uploader(:banner_image).url
