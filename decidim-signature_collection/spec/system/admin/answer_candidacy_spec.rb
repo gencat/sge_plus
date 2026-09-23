@@ -108,6 +108,7 @@ describe "User answers the candidacy" do
 
         within ".edit_candidacy_answer" do
           expect(page).to have_content("Return to creation state")
+          expect(page).to have_content(I18n.t("decidim.signature_collection.admin.answers.edit.return_to_create_state_help"))
         end
       end
     end

@@ -16,6 +16,8 @@ module ValidSignador
 
       { success: true, sign_url: @sign_url }
     rescue StandardError => e
+      # The vote was created before starting the process, so it is removed if the process cannot start
+      @vote.destroy
       { success: false, error: e.message }
     end
 
