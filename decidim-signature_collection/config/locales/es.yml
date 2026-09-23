@@ -155,6 +155,9 @@ es:
             state: Estado
             supports_count: Firmas
             title: Candidaturas
+        candidacies_committee_member:
+          fields:
+            actions: Acciones
         candidacies_type_scope:
           fields:
             scope: Ámbito
@@ -256,6 +259,9 @@ es:
       actions:
         answer: Responder
       admin:
+        actions:
+          export_all: Exportar todo
+          export_selection: Exportar selección
         answers:
           edit:
             answer: Responder
@@ -310,6 +316,7 @@ es:
             success: La candidatura se ha enviado a validación técnica.
             update: Actualizar
           form:
+            attachments_title: Adjuntos
             settings: Ajustes
             title: Información general
           index:
@@ -511,6 +518,8 @@ es:
           error: Se ha producido un error al firmar la candidatura.
           invalid: Los datos proporcionados para firmar la candidatura no son válidos.
           success_html: '¡Enhorabuena! Has firmado la candidatura <strong> %{title}</strong> correctamente.'
+        invalid_vote: El voto proporcionado no es válido.
+        missing_signature: No se ha recibido ninguna firma.
         sign_description: "Firma electrónica de la candidatura '%{title}'"
         signature_error: "Error obteniendo la firma: %{message}"
         personal_data:

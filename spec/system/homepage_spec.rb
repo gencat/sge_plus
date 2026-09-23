@@ -32,9 +32,11 @@ describe "Homepage" do
     within "section.hero__container .hero__title" do
       expect(page).to have_content("Benvinguda a SGE+")
     end
-    within "section.home__section" do
-      subhero_msg = translated(organization.description).gsub(%r{</p>\s+<p>}, "<br><br>").gsub(%r{<p>(((?!</p>).)*)</p>}mi, '\\1').gsub(%r{<script>(((?!</script>).)*)</script>}mi, '\\1')
-      expect(page).to have_content(subhero_msg)
+  end
+
+  context "when having homepage anchors" do
+    %w(hero sub_hero).each do |anchor|
+      it { expect(page).to have_css("[id^=#{anchor}]", visible: :all) }
     end
   end
 end

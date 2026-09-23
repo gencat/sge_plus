@@ -33,10 +33,11 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
-/config/application.yml
 
 # Ignore env configuration files
 .env
+.env.test
+.env.production
 .envrc
 .rbenv-vars
 docker/*.env
@@ -65,5 +66,4 @@ decidim-signature_collection/spec/decidim_dummy_app/
 .rspec-failures
 .byebug_history
 .DS_Store
-
-/config/application.yml
+/public/sw.js*

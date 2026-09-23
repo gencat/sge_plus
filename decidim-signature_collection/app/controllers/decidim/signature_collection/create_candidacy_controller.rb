@@ -14,6 +14,7 @@ module Decidim
       helper Decidim::Admin::IconLinkHelper
       helper CandidacyHelper
       helper SignatureTypeOptionsHelper
+      helper Decidim::ActionAuthorizationHelper
 
       helper_method :scopes
       helper_method :areas
@@ -87,8 +88,7 @@ module Decidim
       def ensure_user_can_create_candidacy
         @current_candidacies_settings ||= Decidim::SignatureCollection::CandidaciesSettings.find_or_create_by!(organization: current_organization)
 
-        @current_candidacies_settings.creation_enabled? &&
-          Decidim::UserGroups::ManageableUserGroups.for(current_user).verified.any?
+        @current_candidacies_settings.creation_enabled?
       end
 
       def candidacy_type_id
@@ -121,11 +121,15 @@ module Decidim
       end
 
       def current_candidacy
-        @current_candidacy ||= Candidacy.where(organization: current_organization).find_by(id: session[:candidacy_id] || nil)
+        return @current_candidacy if defined?(@current_candidacy)
+
+        @current_candidacy = Candidacy.where(organization: current_organization).find_by(id: session[:candidacy_id] || nil)
       end
 
       def candidacy_type
-        @candidacy_type ||= CandidaciesType.where(organization: current_organization).find_by(id: candidacy_type_id)
+        return @candidacy_type if defined?(@candidacy_type)
+
+        @candidacy_type = CandidaciesType.where(organization: current_organization).find_by(id: candidacy_type_id)
       end
 
       def promotal_committee_required?

@@ -135,7 +135,7 @@ module Decidim
           end
         end
 
-        # GET /admin/candidacies/export
+        # POST /admin/candidacies/export
         def export
           enforce_permission_to :export, :candidacies
 
@@ -143,12 +143,12 @@ module Decidim
             current_user,
             current_organization,
             params[:format] || default_format,
-            params[:collection_ids].presence&.map(&:to_i)
+            params[:collection_ids].presence&.split(",")&.map(&:to_i)
           )
 
           flash[:notice] = t("decidim.admin.exports.notice")
 
-          redirect_back(fallback_location: candidacies_path)
+          redirect_back_or_to(candidacies_path)
         end
 
         private

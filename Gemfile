@@ -4,7 +4,7 @@ source "https://rubygems.org"
 
 ruby RUBY_VERSION
 
-DECIDIM_VERSION = "0.30.9"
+DECIDIM_VERSION = "0.31.7"
 
 gem "decidim", DECIDIM_VERSION
 gem "decidim-core", DECIDIM_VERSION
@@ -19,10 +19,18 @@ gem "decidim-cdtb", "~> 0.5.5"
 gem "bootsnap", "~> 1.7"
 gem "puma", ">= 6.3.1"
 
-# https://github.com/hlascelles/figjam
-gem "figjam", "2.0.0"
+gem "deface", "~> 1.9.0"
 
-gem "deface"
+# https://github.com/bkeepers/dotenv
+gem "dotenv", "~> 3.2.0"
+
+gem "solid_queue", ">= 1.2.0"
+
+# Memcached client for Ruby. It is used by Rails to cache data in Memcached.
+gem "dalli", "~> 5.0.5"
+
+# for monitoring
+gem "prometheus_exporter", "~> 2.3.1"
 
 group :development, :test do
   gem "byebug", "~> 11.0", platform: :mri
@@ -31,6 +39,8 @@ group :development, :test do
   gem "decidim-dev", DECIDIM_VERSION
   gem "net-imap", "~> 0.5.0"
   gem "net-pop", "~> 0.1.1"
+  # Set faker in order to fix db:seeds
+  gem "faker", "~> 3.8.0"
 end
 
 group :development do
