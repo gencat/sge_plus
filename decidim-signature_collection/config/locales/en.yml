@@ -264,6 +264,7 @@ en:
         answers:
           edit:
             answer: Answer
+            return_to_create_state_help: By selecting this option, the application will revert to the "Created" status so that the person who submitted it can edit it to incorporate the changes requested in this response.
             title: Answer for %{title}
           info_candidacy:
             created_at: Created at
