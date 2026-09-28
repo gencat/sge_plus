@@ -48,6 +48,9 @@ end
 # cannot share connections between processes.
 on_worker_boot do
   ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
+
+  require "prometheus_exporter/instrumentation"
+  PrometheusExporter::Instrumentation::Puma.start unless PrometheusExporter::Instrumentation::Puma.started?
 end
 
 # Allow puma to be restarted by `rails restart` command.

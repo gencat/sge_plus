@@ -31,8 +31,8 @@
         <tbody>
         <% @candidacies.each do |candidacy| %>
           <tr>
-            <td><%= candidacy.id %></td>
-            <td class="!text-left">
+            <td data-label="<%= t("models.candidacies.fields.id", scope: "decidim.admin") %>"><%= candidacy.id %></td>
+            <td class="!text-left" data-label="<%= t("models.candidacies.fields.title", scope: "decidim.admin") %>">
               <% if allowed_to? :edit, :candidacy, candidacy: candidacy %>
                 <%= link_to translated_attribute(candidacy.title),
                             decidim_admin_candidacies.edit_candidacy_path(candidacy.to_param) %>
@@ -40,56 +40,85 @@
                 <%= translated_attribute(candidacy.title) %>
               <% end %>
             </td>
-            <td><%= humanize_admin_state candidacy.state %></td>
-            <td><%= candidacy.supports_count %>/<%= candidacy.scoped_type.supports_required %></td>
+            <td data-label="<%= t("models.candidacies.fields.state", scope: "decidim.admin") %>"><%= humanize_admin_state candidacy.state %></td>
+            <td data-label="<%= t("models.candidacies.fields.supports_count", scope: "decidim.admin") %>"><%= candidacy.supports_count %>/<%= candidacy.scoped_type.supports_required %></td>
             <td class="table-list__date"><%= l candidacy.created_at, format: :short %></td>
             <td class="table-list__date"><%= candidacy.published_at? ? l(candidacy.published_at, format: :short) : "" %></td>
             <td class="table-list__actions">
+              <button type="button" data-controller="dropdown" data-target="actions-candidacy-<%= candidacy.id %>" aria-label="<%= t("decidim.admin.actions.actions_label", resource: translated_attribute(candidacy.title)) %>">
+                <%= icon "more-fill", class: "text-secondary" %>
+              </button>
 
-              <% if allowed_to? :read, :share_tokens, current_participatory_space: candidacy %>
-                <%= icon_link_to "share-line", decidim_admin_candidacies.candidacy_share_tokens_path(candidacy), t("actions.share_tokens", scope: "decidim.admin"), class: "action-icon--new" %>
-              <% else %>
-                <span class="action-space icon"></span>
-              <% end %>
+              <div class="inline-block relative">
+                <ul id="actions-candidacy-<%= candidacy.id %>" class="dropdown dropdown__action" aria-hidden="true">
+                  <% if allowed_to? :edit, :candidacy, candidacy: candidacy %>
+                    <li class="dropdown__item">
+                      <%= link_to decidim_admin_candidacies.edit_candidacy_path(candidacy.to_param), class: "dropdown__button" do %>
+                        <%= icon "pencil-line" %>
+                        <%= t("actions.edit", scope: "decidim.admin") %>
+                      <% end %>
+                    </li>
+                  <% end %>
 
-              <% if allowed_to? :edit, :candidacy, candidacy: candidacy %>
-                <%= icon_link_to "pencil-line",
-                                 decidim_admin_candidacies.edit_candidacy_path(candidacy.to_param),
-                                 t("actions.configure", scope: "decidim.admin"),
-                                 class: "action-icon--edit" %>
-              <% else %>
-                <span class="action-space icon"></span>
-              <% end %>
+                  <hr>
 
-              <% if allowed_to?(:answer, :candidacy, candidacy: candidacy) %>
-                <%= icon_link_to "chat-1-line", edit_candidacy_answer_path(candidacy.slug), t("actions.answer", scope: "decidim.signature_collection"), class: "action-icon action-icon--answer" %>
-              <% else %>
-                <%= icon "chat-1-line", scope: "decidim.admin", class: "action-icon action-icon--disabled", role: "img", "aria-hidden": true %>
-              <% end %>
+                  <% if allowed_to?(:answer, :candidacy, candidacy: candidacy) %>
+                    <li class="dropdown__item">
+                      <%= link_to edit_candidacy_answer_path(candidacy.slug), class: "dropdown__button" do %>
+                        <%= icon "chat-1-line" %>
+                        <%= t("actions.answer", scope: "decidim.candidacies") %>
+                      <% end %>
+                    </li>
+                  <% else %>
+                    <li class="dropdown__item">
+                      <div class="dropdown__button-disabled">
+                        <%= with_tooltip(t("actions.cannot_answer", scope: "decidim.admin"), class: :left) do %>
+                          <%= icon "chat-1-line", class: "text-gray" %>
+                          <span><%= t("actions.answer", scope: "decidim.candidacies") %></span>
+                        <% end %>
+                      </div>
+                    </li>
+                  <% end %>
 
-              <% if allowed_to? :print, :candidacy, candidacy: candidacy %>
-                <%= icon_link_to "printer-line",
-                                 decidim_candidacies.print_candidacy_path(candidacy),
-                                 t(".print"),
-                                 class: "action-icon--print",
-                                 target: "_blank",
-                                 data: { "external-link": false } %>
-              <% else %>
-                <span class="action-space icon"></span>
-              <% end %>
+                  <% if allowed_to? :print, :candidacy, candidacy: candidacy %>
+                    <li class="dropdown__item">
+                      <%= link_to decidim_candidacies.print_candidacy_path(candidacy), class: "dropdown__button", target: "_blank", data: { "external-link": false } do %>
+                        <%= icon "printer-line" %>
+                        <%= t(".print") %>
+                      <% end %>
+                    </li>
+                  <% end %>
 
-              <% if allowed_to? :preview, :candidacy, candidacy: candidacy %>
-                <%= icon_link_to "eye-line",
-                                 decidim_candidacies.candidacy_path(candidacy.to_param),
-                                 t(".preview"),
-                                 class: "action-icon--preview",
-                                 target: "_blank",
-                                 data: { "external-link": false } %>
-              <% else %>
-                <span class="action-space icon"></span>
-              <% end %>
+                  <hr>
 
-              <%= free_resource_permissions_link(candidacy) || content_tag(:span, nil, class: "action-space icon") %>
+                  <% if allowed_to? :preview, :candidacy, candidacy: candidacy %>
+                    <li class="dropdown__item">
+                      <%= link_to decidim_candidacies.candidacy_path(candidacy.to_param), class: "dropdown__button", target: "_blank", data: { "external-link": false } do %>
+                        <%= icon "eye-line" %>
+                        <%= t(".preview") %>
+                      <% end %>
+                    </li>
+                  <% end %>
+
+                  <% if allowed_to? :read, :share_token, current_participatory_space: candidacy %>
+                    <li class="dropdown__item">
+                      <%= link_to decidim_admin_candidacies.candidacy_share_tokens_path(candidacy), class: "dropdown__button" do %>
+                        <%= icon "share-line" %>
+                        <%= t("actions.share_tokens", scope: "decidim.admin") %>
+                      <% end %>
+                    </li>
+
+                    <hr>
+                  <% end %>
+
+                  <% if (link = free_resource_permissions_link(candidacy)) %>
+                    <li class="dropdown__item">
+                      <%= link %>
+                    </li>
+                  <% end %>
+                </ul>
+              </div>
+
             </td>
           </tr>
         <% end %>

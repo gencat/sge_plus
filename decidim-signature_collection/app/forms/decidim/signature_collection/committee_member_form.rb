@@ -23,7 +23,9 @@ module Decidim
       private
 
       def candidacy
-        @candidacy ||= Decidim::SignatureCollection::Candidacy.find_by(id: candidacy_id)
+        return @candidacy if defined?(@candidacy)
+
+        @candidacy = Decidim::SignatureCollection::Candidacy.find_by(id: candidacy_id)
       end
     end
   end

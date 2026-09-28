@@ -15,7 +15,6 @@ Procfile.dev
 docker-compose*.yml
 
 # Secrets — must NEVER be baked into the image
-config/application.yml
 config/master.key
 .env
 *.env

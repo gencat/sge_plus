@@ -22,6 +22,12 @@ module Decidim
 
       attachments_attribute :documents
 
+      # Decidim::MultipleAttachmentsMethods (included by CreateCandidacy/UpdateCandidacy)
+      # always reads/appends to `add_attachments`/`attachments`, regardless of the
+      # attachments_attribute name.
+      alias add_attachments add_documents
+      alias attachments documents
+
       validates :title, :description, presence: true
       validates :title, length: { maximum: 150 }
       validates :type_id, presence: true
@@ -60,7 +66,9 @@ module Decidim
       end
 
       def area
-        @area ||= current_organization.areas.find_by(id: area_id)
+        return @area if defined?(@area)
+
+        @area = current_organization.areas.find_by(id: area_id)
       end
 
       def candidacy_type

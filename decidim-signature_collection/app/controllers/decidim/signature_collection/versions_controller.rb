@@ -6,6 +6,7 @@ module Decidim
     # has been updated through time.
     class VersionsController < Decidim::SignatureCollection::ApplicationController
       include ParticipatorySpaceContext
+
       helper CandidacyHelper
 
       include NeedsCandidacy

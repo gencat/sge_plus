@@ -20,7 +20,7 @@ describe Decidim::SignatureCollection::EndorseCandidacyEvent do
   let(:email_subject) { "Candidacy endorsed by @#{candidacy_author.nickname}" }
   let(:email_intro) { "#{candidacy_author.name} @#{candidacy_author.nickname}, who you are following, has endorsed the following candidacy, maybe you want to contribute to the conversation:" }
   let(:email_outro) { "You have received this notification because you are following @#{candidacy_author.nickname}. You can stop receiving notifications following the previous link." }
-  let(:notification_title) { <<-EOTITLE.squish }
+  let(:notification_title) { <<~EOTITLE.squish }
     The <a href="#{resource_path}">#{resource_title}</a> candidacy was endorsed by
     <a href="/profiles/#{candidacy_author.nickname}">#{candidacy_author.name} @#{candidacy_author.nickname}</a>.
   EOTITLE

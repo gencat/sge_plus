@@ -43,3 +43,8 @@ pidfile ENV.fetch("PIDFILE", "tmp/pids/server.pid")
 
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart
+
+# Report Puma stats to the prometheus_exporter server process. Single mode
+# here (no `workers` above), so this runs once at boot instead of per-worker.
+require "prometheus_exporter/instrumentation"
+PrometheusExporter::Instrumentation::Puma.start unless PrometheusExporter::Instrumentation::Puma.started?

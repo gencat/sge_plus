@@ -7,15 +7,17 @@
 <% end %>
 
 <%= cell("decidim/announcement", { body: announcement_body }, callout_class: "secondary") %>
-<%= decidim_form_for(@form, url: fill_data_create_candidacy_index_path, method: :put, html: { class: "form-defaults new_candidacy_form", novalidate: false }) do |f| %>
+<%= decidim_form_for(@form, url: fill_data_create_candidacy_index_path, method: :put, html: { class: "form-defaults new_candidacy_form" }) do |f| %>
   <div class="form__wrapper">
     <%= form_required_explanation %>
 
     <%= f.hidden_field :type_id %>
 
-    <%= f.text_field :title, autofocus: true, value: translated_attribute(f.object.title) %>
+    <%= f.text_field :title,
+                     value: translated_attribute(f.object.title),
+                     data: { controller: "character-counter" } %>
 
-    <%= text_editor_for(f, :description, lines: 8, toolbar: :content, value: translated_attribute(f.object.description)) %>
+    <%= text_editor_for(f, :description, lines: 20, toolbar: :content, value: translated_attribute(f.object.description)) %>
 
     <% signature_type_options = signature_type_options(f.object) %>
     <%= f.hidden_field :signature_type, value: signature_type_options.first.last %>
@@ -34,12 +36,8 @@
       <%= f.areas_select :area_id, areas_for_select(current_organization), prompt: t(".select_area") %>
     <% end %>
 
-    <% if Decidim::UserGroups::ManageableUserGroups.for(current_user).verified.any? %>
-      <%= f.select :decidim_user_group_id, Decidim::UserGroups::ManageableUserGroups.for(current_user).verified.map { |g| [g.name, g.id] }, include_blank: current_user.name %>
-    <% end %>
-
     <% if candidacy_type.attachments_enabled? %>
-      <%= f.attachment :documents,
+      <%= f.attachment :attachments,
                        multiple: true,
                        label: t("decidim.signature_collection.form.add_attachments"),
                        button_label: t("decidim.signature_collection.form.add_attachments"),
@@ -53,11 +51,17 @@
     <% end %>
 
     <div class="form__wrapper-block flex-col-reverse md:flex-row justify-between">
-      <%= link_to :back, class: "button button__sm md:button__lg button__text-secondary" do %>
-        <%= icon "arrow-left-line", class: "fill-current" %>
-        <%= t(".back") %>
+      <% if current_candidacy %>
+        <%= link_to discard_candidacy_path(current_candidacy), class: "button button__sm md:button__lg button__text-secondary", method: :delete, data: { confirm: t(".confirm_discard") } do %>
+          <%= icon "delete-bin-line", class: "fill-current" %>
+          <%= t(".discard") %>
+        <% end %>
       <% end %>
-      <%= f.submit t(".continue"), class: "button button__sm md:button__lg button__secondary", data: { disable_with: true } %>
+
+      <button type="submit" class="button button__sm md:button__lg button__secondary">
+        <span><%= t(".continue") %></span>
+      </button>
+
     </div>
   </div>
 <% end %>

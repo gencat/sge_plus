@@ -53,8 +53,7 @@ module Decidim
             context "with a specific scope" do
               context "when there are no votes" do
                 it "returns the correct offline_votes" do
-                  scope_name = scope.scope_name["en"]
-                  expected = { candidacy.scope.id.to_s.to_sym => [0, { "ca" => scope_name, "en" => scope_name, "es" => scope_name }] }
+                  expected = { candidacy.scope.id.to_s.to_sym => [0, scope.scope_name] }
                   expect(subject.offline_votes).to eq expected
                 end
               end
@@ -63,8 +62,7 @@ module Decidim
                 before { candidacy.update!(offline_votes: { "total" => "100", candidacy.scope.id.to_s => "100" }) }
 
                 it "returns the correct offline_votes" do
-                  scope_name = scope.scope_name["en"]
-                  expected = { candidacy.scope.id.to_s.to_sym => ["100", { "ca" => scope_name, "en" => scope_name, "es" => scope_name }] }
+                  expected = { candidacy.scope.id.to_s.to_sym => ["100", scope.scope_name] }
                   expect(subject.offline_votes).to eq expected
                 end
               end

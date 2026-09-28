@@ -1,0 +1,12 @@
+# Minimal Prometheus config for local development.
+# Scrapes the app's prometheus_exporter process (see docker/run-exporter.sh
+# and config/puma.rb) exposed at http://localhost:9394/metrics.
+#
+# Usage: see the "Metrics (Prometheus)" section in README.md.
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "sge_plus"
+    static_configs:
+      - targets: ["localhost:9394"]

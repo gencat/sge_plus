@@ -22,34 +22,52 @@
       <tbody>
         <% @candidacies_types.each do |candidacy_type| %>
         <tr>
-          <td>
+          <td data-label="<%= t("models.candidacies_types.fields.title", scope: "decidim.admin") %>">
             <% if allowed_to? :update, :candidacy_type, candidacy_type: candidacy_type %>
               <%= link_to translated_attribute(candidacy_type.title), edit_candidacies_type_path(candidacy_type) %>
             <% else %>
               <%= translated_attribute candidacy_type.title %></td>
             <% end %>
-          <td><%= l candidacy_type.created_at, format: :short %></td>
-          <td>
+          <td data-label="<%= t("models.candidacies_types.fields.created_at", scope: "decidim.admin") %>"><%= l candidacy_type.created_at, format: :short %></td>
+          <td data-label="<%= t("models.candidacies_types.fields.published", scope: "decidim.admin") %>">
             <% if candidacy_type.published %>
               <span class="label success !text-sm"><%= t("participatory_processes.index.published", scope: "decidim.admin") %></span>
             <% else %>
               <span class="label alert !text-sm"><%= t("participatory_processes.index.unpublished", scope: "decidim.admin") %></span>
             <% end %>
           </td>
-          <td class="table-list__actions">
-            <% if allowed_to? :update, :candidacy_type, candidacy_type: candidacy_type %>
-              <%= icon_link_to "pencil-line", edit_candidacies_type_path(candidacy_type), t("actions.configure", scope: "decidim.admin"), class: "action-icon--edit" %>
-            <% else %>
-              <span class="action-space icon"></span>
-            <% end %>
+          <td class="table-list__actions" data-label="<%= t("candidacies_type.actions.title", scope: "decidim.resources") %>">
+            <button type="button" data-controller="dropdown" data-target="actions-candidacy-type-<%= candidacy_type.id %>" aria-label="<%= t("decidim.admin.actions.actions_label", resource: candidacy_type.title) %>">
+              <%= icon "more-fill", class: "text-secondary" %>
+            </button>
 
-            <%= free_resource_permissions_link(candidacy_type) %>
+            <div class="inline-block relative">
+              <ul id="actions-candidacy-type-<%= candidacy_type.id %>" class="dropdown dropdown__action" aria-hidden="true">
+                <% if allowed_to? :update, :candidacy_type, candidacy_type: candidacy_type %>
+                  <li class="dropdown__item">
+                    <%= link_to edit_candidacies_type_path(candidacy_type), class: "dropdown__button" do %>
+                      <%= icon "pencil-line" %>
+                      <%= t("actions.configure", scope: "decidim.admin") %>
+                    <% end %>
+                  </li>
+                <% end %>
 
-            <% if allowed_to? :destroy, :candidacy_type, candidacy_type: candidacy_type %>
-              <%= icon_link_to "delete-bin-line", candidacy_type, t("actions.destroy", scope: "decidim.admin"), class: "action-icon--remove", method: :delete, data: { confirm: t("actions.confirm_destroy", scope: "decidim.admin") } %>
-            <% else %>
-              <span class="action-space icon"></span>
-            <% end %>
+                <li class="dropdown__item">
+                  <%= free_resource_permissions_link(candidacy_type) %>
+                </li>
+
+                <% if allowed_to? :destroy, :candidacy_type, candidacy_type: candidacy_type %>
+                  <hr>
+
+                  <li class="dropdown__item">
+                    <%= link_to candidacy_type, method: :delete, data: { confirm: t("actions.confirm_destroy", scope: "decidim.admin") }, class: "dropdown__button" do %>
+                      <%= icon "delete-bin-line" %>
+                      <%= t("actions.destroy", scope: "decidim.admin") %>
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
           </td>
         </tr>
         <% end %>
