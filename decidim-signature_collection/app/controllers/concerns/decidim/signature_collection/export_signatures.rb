@@ -10,7 +10,7 @@ module Decidim
       def export_votes
         enforce_permission_to :export_votes, :candidacy, candidacy: current_candidacy
 
-        votes = current_candidacy.votes.map(&:sha1)
+        votes = current_candidacy.votes.with_xml_signed.map(&:sha1)
         csv_data = CSV.generate(headers: false) do |csv|
           votes.each do |sha1|
             csv << [sha1]
@@ -25,7 +25,7 @@ module Decidim
       def export_pdf_signatures
         enforce_permission_to :export_pdf_signatures, :candidacy, candidacy: current_candidacy
 
-        @votes = current_candidacy.votes
+        @votes = current_candidacy.votes.with_xml_signed
 
         serializer = Decidim::Forms::UserAnswersSerializer
         pdf_export = Decidim::Exporters::CandidacyVotesPDF.new(@votes, current_candidacy, serializer).export

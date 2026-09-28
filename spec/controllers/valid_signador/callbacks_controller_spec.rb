@@ -54,6 +54,11 @@ RSpec.describe ValidSignador::CallbacksController do
 
           expect(response).to redirect_to("/candidacies/#{vote.candidacy.slug}/signatures/finish")
         end
+
+        it "keeps the vote with the signed document" do
+          expect { post :create, params: params }.not_to change(Decidim::SignatureCollection::CandidaciesVote, :count)
+          expect(vote.reload.encrypted_xml_doc_signed).to be_present
+        end
       end
 
       context "with signature error" do
@@ -81,6 +86,33 @@ RSpec.describe ValidSignador::CallbacksController do
 
           expect(response).to redirect_to("/candidacies/#{vote.candidacy.slug}/signatures/fill_personal_data")
           expect(flash[:alert]).to include("User cancelled signature")
+        end
+
+        it "removes the unsigned vote" do
+          expect { post :create, params: params }.to change(Decidim::SignatureCollection::CandidaciesVote, :count).by(-1)
+          expect(Decidim::SignatureCollection::CandidaciesVote.find_by(id: vote.id)).to be_nil
+        end
+
+        context "when the vote was already signed" do
+          let!(:vote) { create(:candidacy_user_vote, signador_token: token, encrypted_xml_doc_signed: "already signed") }
+
+          it "does not remove the vote" do
+            expect { post :create, params: params }.not_to change(Decidim::SignatureCollection::CandidaciesVote, :count)
+          end
+        end
+      end
+
+      context "when Signador request fails" do
+        let(:params) { { token_id: token } }
+
+        before do
+          allow(client).to receive(:get_signature).and_raise(ValidSignador::ApiError, "Server error")
+        end
+
+        it "removes the unsigned vote and redirects with error" do
+          expect { post :create, params: params }.to change(Decidim::SignatureCollection::CandidaciesVote, :count).by(-1)
+          expect(response).to redirect_to("/candidacies/#{vote.candidacy.slug}/signatures/fill_personal_data")
+          expect(flash[:alert]).to include("Server error")
         end
       end
 
@@ -125,6 +157,10 @@ RSpec.describe ValidSignador::CallbacksController do
           post :create, params: params
           expect(response).to redirect_to("/candidacies/#{vote.candidacy.slug}/signatures/fill_personal_data")
           expect(flash[:alert]).to be_present
+        end
+
+        it "removes the unsigned vote" do
+          expect { post :create, params: params }.to change(Decidim::SignatureCollection::CandidaciesVote, :count).by(-1)
         end
       end
     end

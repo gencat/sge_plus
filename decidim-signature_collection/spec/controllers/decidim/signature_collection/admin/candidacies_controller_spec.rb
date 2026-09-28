@@ -546,6 +546,14 @@ describe Decidim::SignatureCollection::Admin::CandidaciesController, skip: "Awai
         expect(flash[:alert]).to be_nil
         expect(response).to have_http_status(:ok)
       end
+
+      it "only exports signed votes" do
+        signed_vote = create(:candidacy_user_vote, candidacy:, encrypted_xml_doc_signed: "signed")
+
+        get :export_votes, params: { slug: candidacy.to_param, format: :csv }
+
+        expect(response.body.lines.map(&:strip)).to eq([signed_vote.sha1])
+      end
     end
   end
 
@@ -573,6 +581,20 @@ describe Decidim::SignatureCollection::Admin::CandidaciesController, skip: "Awai
         get :export_pdf_signatures, params: { slug: candidacy.to_param, format: :pdf }
         expect(flash[:alert]).to be_nil
         expect(response).to have_http_status(:ok)
+      end
+
+      it "only exports signed votes" do
+        create(:candidacy_user_vote, candidacy:)
+        signed_vote = create(:candidacy_user_vote, candidacy:, encrypted_xml_doc_signed: "signed")
+        exported_votes = nil
+        allow(Decidim::Exporters::CandidacyVotesPDF).to receive(:new).and_wrap_original do |original, votes, *args|
+          exported_votes = votes.to_a
+          original.call(votes, *args)
+        end
+
+        get :export_pdf_signatures, params: { slug: candidacy.to_param, format: :pdf }
+
+        expect(exported_votes).to eq([signed_vote])
       end
     end
   end

@@ -156,6 +156,10 @@ module Decidim
                         # is Resourceable instead of ParticipatorySpaceResourceable so we cannot use `visible?`
                         index_on_update: ->(candidacy) { candidacy.published? })
 
+      def self.module_name
+        "Decidim::SignatureCollection"
+      end
+
       def self.export_serializer
         Decidim::SignatureCollection::DownloadYourDataCandidacySerializer
       end

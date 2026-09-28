@@ -1536,7 +1536,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_08_094510) do
   end
 
   create_table "decidim_signature_collection_candidacies_types", force: :cascade do |t|
-    t.jsonb "title", null: false
     t.jsonb "description", null: false
     t.integer "decidim_organization_id"
     t.datetime "created_at", precision: nil, null: false
@@ -1560,6 +1559,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_08_094510) do
     t.datetime "signature_period_end"
     t.boolean "published", default: true
     t.integer "minimum_signing_age"
+    t.jsonb "title", null: false
     t.string "elections", default: "parliament_of_catalonia", null: false
     t.index ["decidim_organization_id"], name: "index_decidim_candidacy_types_on_decidim_organization_id"
   end

@@ -45,7 +45,13 @@ module Decidim
               url_helpers: main_app
             ).call
 
-            redirect_to result[:sign_url], allow_other_host: true
+            if result[:success]
+              redirect_to result[:sign_url], allow_other_host: true
+            else
+              Rails.logger.error "Failed starting signature process: #{result[:error]}"
+              flash[:alert] = I18n.t("create.error", scope: "decidim.signature_collection.candidacy_votes")
+              redirect_to fill_personal_data_path
+            end
           end
           on(:invalid) do |vote|
             Rails.logger.error "Failed creating signature: #{vote.errors.full_messages.join(", ")}" if vote

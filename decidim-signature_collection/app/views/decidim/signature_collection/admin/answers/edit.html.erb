@@ -19,7 +19,9 @@
           <div class="card-section">
             <% if current_candidacy.validating? %>
               <div class="row column">
-                <%= f.check_box :return_to_create_state, id: :candidacy_return_to_create_state %>
+                <%= f.check_box :return_to_create_state,
+                               id: :candidacy_return_to_create_state,
+                               help_text: t(".return_to_create_state_help") %>
               </div>
             <% end %>
 
