@@ -83,22 +83,20 @@ describe "Explore versions", versioning: true do
     end
 
     it "shows the changed attributes" do
-      expect(page).to have_content("Changes at")
+      expect(page).to have_content(I18n.t("decidim.versions.version.show.changes_at_title", title: translated(candidacy.title, locale: :en)))
 
-      within "#diff-for-title-english" do
+      title_diff = find(".version__diff", text: "Title")
+      within(title_diff) do
         expect(page).to have_content("Title")
-
-        within ".diff > ul > .ins" do
-          expect(page).to have_content(translated(candidacy.title, locale: :en))
-        end
+        expect(page).to have_css(".diff > ul > .ins")
+        expect(page).to have_content(translated(candidacy.title, locale: :en))
       end
 
-      within "#diff-for-description-english" do
+      description_diff = find(".version__diff", text: "Description")
+      within(description_diff) do
         expect(page).to have_content("Description")
-
-        within ".diff > ul > .ins" do
-          expect(page).to have_content(ActionView::Base.full_sanitizer.sanitize(translated(candidacy.description, locale: :en), tags: []))
-        end
+        expect(page).to have_css(".diff > ul > .ins")
+        expect(page).to have_content(ActionView::Base.full_sanitizer.sanitize(translated(candidacy.description, locale: :en), tags: []))
       end
     end
   end
