@@ -62,10 +62,10 @@ RUN gem install bundler:2.6.8 \
 ##############################
 # Install NodeJs & Yarn
 ##############################
-ENV NODE_VERSION=18.17.1
+ENV NODE_VERSION=22.14.0
 RUN apt update
 RUN apt -y install curl gnupg
-RUN curl -fsSL https://deb.nodesource.com/node_18.x/pool/main/n/nodejs/nodejs_18.17.1-1nodesource1_amd64.deb -o nodejs_18.17.1.deb \
+RUN curl -fsSL https://deb.nodesource.com/node_22.x/pool/main/n/nodejs/nodejs_${NODE_VERSION}-1nodesource1_amd64.deb -o nodejs_${NODE_VERSION}.deb \
  && dpkg -i nodejs_${NODE_VERSION}.deb \
  && rm nodejs_${NODE_VERSION}.deb
 RUN npm -v
@@ -109,7 +109,7 @@ RUN npm install
 # ADD Gemfile Gemfile
 # ADD Gemfile.lock Gemfile.lock
 
-RUN cp config/application.example.yml config/application.yml
+RUN cp docker/example.env .env
 RUN cp config/puma.example.rb config/puma.rb
 RUN bundle config --without development test \
  && bundle config set deployment 'true' \
@@ -122,7 +122,7 @@ ENV DISABLE_SPRING=1
 RUN RAILS_ENV=production SECRET_KEY_BASE=WHATEVER DATABASE_URL=postgresql://localhost/dummy DOCKER=1 bundle exec rake shakapacker:clobber shakapacker:compile
 
 # make sure nothing gets leacked
-RUN rm config/application.yml && touch config/application.yml
+RUN rm .env && touch .env
 
 # Add a tmp folder for pids
 RUN mkdir -p tmp/pids

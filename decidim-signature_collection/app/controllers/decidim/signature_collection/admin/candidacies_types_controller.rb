@@ -7,6 +7,7 @@ module Decidim
       # organization.
       class CandidaciesTypesController < Decidim::SignatureCollection::Admin::ApplicationController
         include Decidim::TranslatableAttributes
+
         before_action :set_controller_breadcrumb, except: [:index, :new, :create]
 
         add_breadcrumb_item_from_menu :admin_candidacies_menu

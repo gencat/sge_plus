@@ -7,6 +7,7 @@ module Decidim
     class UpdateCandidacy < Decidim::Command
       include ::Decidim::MultipleAttachmentsMethods
       include CurrentLocale
+
       delegate :current_user, to: :form
 
       # Public: Initializes the command.
@@ -40,7 +41,7 @@ module Decidim
             attributes
           )
 
-          document_cleanup!
+          attachment_cleanup!
           create_attachments if process_attachments?
         end
 

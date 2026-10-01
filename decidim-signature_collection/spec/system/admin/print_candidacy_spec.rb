@@ -137,7 +137,10 @@ describe "User prints the candidacy" do
         let(:print_enabled) { true }
 
         it "shows a printable form with all available data about the candidacy", :download do
-          page.find(".action-icon--print").click
+          within("tr", text: translated(candidacy.title)) do
+            find("button[data-controller='dropdown']").click
+            click_on "Print"
+          end
           expect(File.basename(download_path)).to include("candidacy_submit_#{candidacy.id}.pdf")
         end
       end
