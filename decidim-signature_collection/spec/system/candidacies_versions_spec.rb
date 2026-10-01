@@ -37,7 +37,7 @@ describe "Explore versions", versioning: true do
     it "shows the versions index" do
       visit candidacy_path
 
-      expect(page).to have_link I18n.t("decidim.versions.resource_version.see_other_versions")
+      expect(page).to have_link "see other versions"
     end
 
     context "when updating an candidacy" do
@@ -57,12 +57,12 @@ describe "Explore versions", versioning: true do
     before do
       command.call
       visit candidacy_path
-      click_on I18n.t("decidim.versions.resource_version.see_other_versions")
+      click_on "see other versions"
     end
 
     it "lists all versions" do
-      expect(page).to have_link(I18n.t("decidim.versions_list_item.show.version_index", index: 2, total: 2))
-      expect(page).to have_link(I18n.t("decidim.versions_list_item.show.version_index", index: 1, total: 2))
+      expect(page).to have_link("Version 2 of 2")
+      expect(page).to have_link("Version 1 of 2")
     end
   end
 
@@ -70,8 +70,8 @@ describe "Explore versions", versioning: true do
     before do
       command.call
       visit candidacy_path
-      click_on I18n.t("decidim.versions.resource_version.see_other_versions")
-      click_on(I18n.t("decidim.versions_list_item.show.version_index", index: 2, total: 2))
+      click_on "see other versions"
+      click_on("Version 2 of 2")
     end
 
     it_behaves_like "accessible page"
@@ -83,20 +83,22 @@ describe "Explore versions", versioning: true do
     end
 
     it "shows the changed attributes" do
-      expect(page).to have_content(I18n.t("decidim.versions.version.show.changes_at_title", title: translated(candidacy.title, locale: :en)))
+      expect(page).to have_content("Changes at")
 
-      title_diff = find(".version__diff", text: "Title")
-      within(title_diff) do
+      within "#diff-for-title-english" do
         expect(page).to have_content("Title")
-        expect(page).to have_css(".diff > ul > .ins")
-        expect(page).to have_content(translated(candidacy.title, locale: :en))
+
+        within ".diff > ul > .ins" do
+          expect(page).to have_content(translated(candidacy.title, locale: :en))
+        end
       end
 
-      description_diff = find(".version__diff", text: "Description")
-      within(description_diff) do
+      within "#diff-for-description-english" do
         expect(page).to have_content("Description")
-        expect(page).to have_css(".diff > ul > .ins")
-        expect(page).to have_content(ActionView::Base.full_sanitizer.sanitize(translated(candidacy.description, locale: :en), tags: []))
+
+        within ".diff > ul > .ins" do
+          expect(page).to have_content(ActionView::Base.full_sanitizer.sanitize(translated(candidacy.description, locale: :en), tags: []))
+        end
       end
     end
   end
