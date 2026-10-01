@@ -37,7 +37,7 @@ describe "Explore versions", versioning: true do
     it "shows the versions index" do
       visit candidacy_path
 
-      expect(page).to have_link "see other versions"
+      expect(page).to have_link I18n.t("decidim.versions.resource_version.see_other_versions")
     end
 
     context "when updating an candidacy" do
@@ -57,12 +57,12 @@ describe "Explore versions", versioning: true do
     before do
       command.call
       visit candidacy_path
-      click_on "see other versions"
+      click_on I18n.t("decidim.versions.resource_version.see_other_versions")
     end
 
     it "lists all versions" do
-      expect(page).to have_link("Version 2 of 2")
-      expect(page).to have_link("Version 1 of 2")
+      expect(page).to have_link(I18n.t("decidim.versions_list_item.show.version_index", index: 2, total: 2))
+      expect(page).to have_link(I18n.t("decidim.versions_list_item.show.version_index", index: 1, total: 2))
     end
   end
 
@@ -70,8 +70,8 @@ describe "Explore versions", versioning: true do
     before do
       command.call
       visit candidacy_path
-      click_on "see other versions"
-      click_on("Version 2 of 2")
+      click_on I18n.t("decidim.versions.resource_version.see_other_versions")
+      click_on(I18n.t("decidim.versions_list_item.show.version_index", index: 2, total: 2))
     end
 
     it_behaves_like "accessible page"
