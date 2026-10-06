@@ -85,16 +85,20 @@ describe "Explore versions", versioning: true do
     it "shows the changed attributes" do
       expect(page).to have_content("Changes at")
 
-      within "#diff-for-title-english" do
-        expect(page).to have_content("Title")
+      locale_name = I18n.t("locale.name", locale: :en)
+      title_label = "#{I18n.t("activemodel.attributes.candidacy.title")} (#{locale_name})"
+      description_label = "#{I18n.t("activemodel.attributes.candidacy.description")} (#{locale_name})"
+
+      within "#diff-for-#{title_label.parameterize}" do
+        expect(page).to have_content(title_label)
 
         within ".diff > ul > .ins" do
           expect(page).to have_content(translated(candidacy.title, locale: :en))
         end
       end
 
-      within "#diff-for-description-english" do
-        expect(page).to have_content("Description")
+      within "#diff-for-#{description_label.parameterize}" do
+        expect(page).to have_content(description_label)
 
         within ".diff > ul > .ins" do
           expect(page).to have_content(ActionView::Base.full_sanitizer.sanitize(translated(candidacy.description, locale: :en), tags: []))

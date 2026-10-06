@@ -962,6 +962,7 @@ DEPENDENCIES
   net-pop (~> 0.1.1)
   prometheus_exporter (~> 2.3.1)
   puma (>= 6.3.1)
+  selenium-webdriver (~> 4.35.0)
   solid_queue (>= 1.2.0)
   web-console (~> 4.2)
 
