@@ -9,7 +9,37 @@
 #     priority: 2
 #     schedule: at 5am every day
 
-production:
+production: &production
   clear_solid_queue_finished_jobs:
     command: "SolidQueue::Job.clear_finished_in_batches(sleep_between_batches: 0.3)"
     schedule: every hour at minute 12
+
+  # Decidim maintenance tasks (they used to run with Ofelia on the Docker host).
+  # Same schedules, in Madrid time (summer/winter time handled automatically).
+  decidim_meetings_clean_registration_forms:
+    class: RakeTaskJob
+    args: [ "decidim_meetings:clean_registration_forms" ]
+    schedule: "0 3 * * * Europe/Madrid"
+  decidim_reminders:
+    class: RakeTaskJob
+    args: [ "decidim:reminders:all" ]
+    schedule: "0 4 * * * Europe/Madrid"
+  decidim_delete_download_your_data_files:
+    class: RakeTaskJob
+    args: [ "decidim:delete_download_your_data_files" ]
+    schedule: "30 4 * * 0 Europe/Madrid"
+  decidim_open_data_export:
+    class: RakeTaskJob
+    args: [ "decidim:open_data:export" ]
+    schedule: "0 6 * * * Europe/Madrid"
+  decidim_notifications_digest_daily:
+    class: RakeTaskJob
+    args: [ "decidim:mailers:notifications_digest_daily" ]
+    schedule: "30 6 * * * Europe/Madrid"
+  decidim_notifications_digest_weekly:
+    class: RakeTaskJob
+    args: [ "decidim:mailers:notifications_digest_weekly" ]
+    schedule: "0 7 * * 0 Europe/Madrid"
+
+# Pre (RAILS_ENV=preprod) runs the same scheduled tasks as production.
+preprod: *production

@@ -76,7 +76,7 @@ test:
   compile: true
   public_output_path: packs-test
 
-production:
+production: &production
   <<: *default
 
   # Production depends on precompilation of packs prior to booting for performance.
@@ -87,3 +87,7 @@ production:
 
   # Cache manifest.json for performance
   cache_manifest: true
+
+# Pre (RAILS_ENV=preprod) uses the same precompiled packs as production.
+preprod:
+  <<: *production

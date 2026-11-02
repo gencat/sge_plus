@@ -16,7 +16,6 @@ APP_DIR="/var/www/sge_plus"
 ENV_FILE="/var/www/sge_plus/prod.env"
 STORAGE_DIR="/var/www/sge_plus/storage"
 LOG_DIR="/var/www/sge_plus/log"
-OFELIA_INI="/var/www/sge_plus/ofelia.ini"
 
 echo "=== Building image (compiling assets) ==="
 docker build -t "$IMAGE" "$APP_DIR"
@@ -64,17 +63,11 @@ docker run -d \
   "$IMAGE" \
   /bin/sh docker/run-exporter.sh
 
-echo "=== Restarting Ofelia ==="
+# Scheduled tasks now run in the worker (Solid Queue, config/recurring.yml).
+# Remove the old Ofelia cron container so they do not run twice.
+echo "=== Removing old Ofelia container (if exists) ==="
 docker stop ofelia 2>/dev/null || true
 docker rm   ofelia 2>/dev/null || true
-
-docker run -d \
-  --name ofelia \
-  --restart unless-stopped \
-  -v /var/run/docker.sock:/var/run/docker.sock:ro \
-  -v "$OFELIA_INI:/etc/ofelia/config.ini:ro" \
-  mcuadros/ofelia:latest \
-  daemon --config=/etc/ofelia/config.ini
 
 echo ""
 echo "=== Ready ==="
@@ -82,4 +75,3 @@ echo "Web logs:      docker logs -f $WEB_CONTAINER"
 echo "Worker logs:   docker logs -f $WORKER_CONTAINER"
 echo "Exporter logs: docker logs -f $EXPORTER_CONTAINER"
 echo "Metrics:       http://localhost:9394/metrics"
-echo "Crons logs:    docker logs -f ofelia"

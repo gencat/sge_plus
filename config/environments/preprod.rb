@@ -38,7 +38,7 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = "X-Accel-Redirect" # for NGINX
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = Decidim::Env.new("STORAGE_PROVIDER", "local").to_s
+  config.active_storage.service = Decidim::Env.new("STORAGE_PROVIDER", "s3").to_s
 
   # Serve files through the app (rails_storage_proxy) instead of redirecting to
   # the storage service, because the S3 bucket is private.

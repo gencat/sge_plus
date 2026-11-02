@@ -21,7 +21,8 @@ x-app: &app
   image: ${SGE_PLUS_IMAGE:-sge_plus:latest}
   env_file: ../prod.env
   environment:
-    RAILS_ENV: production
+    # "preprod" for pre, "production" for prod.
+    RAILS_ENV: ${RAILS_ENV:-production}
     RAILS_LOG_TO_STDOUT: "true"
     STORAGE_PROVIDER: s3
     # Where web and worker send metrics. On ECS use the exporter's
