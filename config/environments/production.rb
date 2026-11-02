@@ -38,7 +38,11 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = "X-Accel-Redirect" # for NGINX
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = Decidim::Env.new("STORAGE_PROVIDER", "local").to_s
+  config.active_storage.service = Decidim::Env.new("STORAGE_PROVIDER", "s3").to_s
+
+  # Serve files through the app (rails_storage_proxy) instead of redirecting to
+  # the storage service, because the S3 bucket is private.
+  config.active_storage.resolve_model_to_route = :rails_storage_proxy
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
@@ -52,8 +56,9 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
 
-  # Skip http-to-https redirect for the default health check endpoint.
-  # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
+  # Skip http-to-https redirect for the health check: the load balancer checks
+  # it over plain HTTP. force_ssl itself is set by Decidim from DECIDIM_FORCE_SSL.
+  config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
 
   if ENV["RAILS_LOG_TO_STDOUT"].present?
     config.logger = ActiveSupport::Logger.new($stdout)
@@ -79,8 +84,8 @@ Rails.application.configure do
   # want to log everything, set the level to "debug".
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
-  # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
+  # Memcached (ElastiCache on AWS). Dalli 5 needs memcached 1.6+.
+  config.cache_store = :mem_cache_store, ENV.fetch("MEMCACHE_URL")
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   config.active_job.queue_adapter = :solid_queue

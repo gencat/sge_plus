@@ -1,0 +1,59 @@
+# Production services for AWS Fargate (ECS). Each service here is one ECS
+# service/task definition, all using the image built from the repo Dockerfile.
+#
+# Not included on purpose, they are managed AWS services:
+#   - Database: RDS PostgreSQL           -> DATABASE_URL
+#   - Cache:    ElastiCache Memcached 1.6+ -> MEMCACHE_URL ("host:port")
+#   - Files:    private S3 bucket          -> AWS_BUCKET, AWS_REGION
+#
+# Environment: every variable in docker/example.env (secrets in Secrets
+# Manager). Web, worker and exporter need the same variables.
+# AWS credentials come from the ECS task role (taskRoleArn): do not set
+# AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY.
+#
+# Build and run (from the repo root), e.g. to try it on a host:
+#   docker compose -f docker/production/docker-compose.yml up --build
+name: sge_plus
+
+x-app: &app
+  build:
+    context: ../..
+  image: ${SGE_PLUS_IMAGE:-sge_plus:latest}
+  env_file: ../prod.env
+  environment:
+    # "preprod" for pre, "production" for prod.
+    RAILS_ENV: ${RAILS_ENV:-production}
+    RAILS_LOG_TO_STDOUT: "true"
+    STORAGE_PROVIDER: s3
+  restart: unless-stopped
+
+services:
+  # Puma. Put it behind the load balancer (container port 3000).
+  web:
+    <<: *app
+    command: ["sh", "docker/run-web_service.sh"]
+    ports:
+      - "3000:3000"
+      # Exporter metrics (the exporter shares this container's network).
+      - "9394:9394"
+
+  # Runs the migrations and then Solid Queue (background jobs and the
+  # recurring tasks in config/recurring.yml). Keep a single replica so the
+  # migrations do not run twice at the same time.
+  worker:
+    <<: *app
+    command: ["sh", "docker/run-worker.sh"]
+    deploy:
+      replicas: 1
+
+  # Prometheus exporter (metrics on port 9394), as a sidecar of the web: it
+  # shares the web container's network, so Puma sends its metrics to
+  # localhost:9394 (the default), like a sidecar in the same ECS task.
+  # It reads the Solid Queue metrics from the database, so it needs the same
+  # environment as the web. The worker sends no metrics.
+  exporter:
+    <<: *app
+    command: ["sh", "docker/run-exporter.sh"]
+    network_mode: "service:web"
+    depends_on:
+      - web

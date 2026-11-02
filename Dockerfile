@@ -49,7 +49,6 @@ RUN curl -L -o wkhtmltox.deb https://github.com/wkhtmltopdf/packaging/releases/d
     && rm wkhtmltox.deb
 
 # Define volumes
-VOLUME $APP_HOME/storage
 VOLUME $APP_HOME/log
 
 ##############################

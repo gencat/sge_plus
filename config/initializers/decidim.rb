@@ -45,14 +45,6 @@ Decidim.configure do |config|
   #  api_key: ENV["HERE_API_KEY"],
   #  static: { url: 'https://image.maps.hereapi.com/mia/v3/base/mc/overlay' }
   # }
-  config.maps = {
-    provider: :here,
-    api_key: ENV.fetch("HERE_API_KEY", nil),
-    static: false,
-    dynamic: false,
-    autocomplete: false,
-    geocoding: false
-  }
 
   # Workaround to enable SVG assets cors
   # config.cors_enabled = ENV["CORS_ENABLED"].present?
@@ -62,6 +54,21 @@ Decidim.configure do |config|
 
   # Time window in which the throttling is applied.
   config.throttling_period = ENV.fetch("DECIDIM_THROTTLING_PERIOD", "1").to_i.minutes
+
+  # Direct uploads go from the browser straight to the S3 bucket, so the CSP
+  # must allow connecting to it (AWS_ENDPOINT is only set for S3-compatible
+  # services such as LocalStack).
+  if ENV["STORAGE_PROVIDER"] == "s3" && ENV["AWS_BUCKET"].present? && ENV["AWS_REGION"].present?
+    storage_origin =
+      if ENV["AWS_ENDPOINT"].present?
+        URI(ENV["AWS_ENDPOINT"]).origin
+      else
+        "https://#{ENV.fetch("AWS_BUCKET")}.s3.#{ENV.fetch("AWS_REGION")}.amazonaws.com"
+      end
+    # Appended, not assigned: other engines (e.g. meetings) add their own policies.
+    extra_policies = config.content_security_policies_extra
+    extra_policies["connect-src"] = Array(extra_policies["connect-src"]) + [storage_origin]
+  end
 end
 
 if Decidim.module_installed? :signature_collection
@@ -74,19 +81,6 @@ if Decidim.module_installed? :signature_collection
     config.max_time_in_validating_state = ENV["DECIDIM_SIGNATURE_COLLECTION_MAX_TIME_IN_VALIDATING_STATE"].to_i.days
     config.print_enabled = ENV["DECIDIM_SIGNATURE_COLLECTION_PRINT_ENABLED"].present? unless ENV["DECIDIM_SIGNATURE_COLLECTION_PRINT_ENABLED"] == "auto"
     config.do_not_require_authorization = ENV["DECIDIM_SIGNATURE_COLLECTION_DO_NOT_REQUIRE_AUTHORIZATION"].present?
-  end
-end
-
-if Decidim.module_installed? :signature_collection
-  Decidim::SignatureCollection.configure do |config|
-    config.minimum_committee_members = ENV["DECIDIM_CANDIDACIES_MINIMUM_COMMITTEE_MEMBERS"].presence || 0
-    config.default_components = ENV["DECIDIM_CANDIDACIES_DEFAULT_COMPONENTS"] if ENV["DECIDIM_CANDIDACIES_DEFAULT_COMPONENTS"].present?
-    config.first_notification_percentage = ENV["DECIDIM_CANDIDACIES_FIRST_NOTIFICATION_PERCENTAGE"].presence || 33
-    config.second_notification_percentage = ENV["DECIDIM_CANDIDACIES_SECOND_NOTIFICATION_PERCENTAGE"].presence || 66
-    config.stats_cache_expiration_time = ENV["DECIDIM_CANDIDACIES_STATS_CACHE_EXPIRATION_TIME"].to_i.minutes
-    config.max_time_in_validating_state = ENV["DECIDIM_CANDIDACIES_MAX_TIME_IN_VALIDATING_STATE"].to_i.days
-    config.print_enabled = ENV["DECIDIM_CANDIDACIES_PRINT_ENABLED"].present? unless ENV["DECIDIM_CANDIDACIES_PRINT_ENABLED"] == "auto"
-    config.do_not_require_authorization = ENV["DECIDIM_CANDIDACIES_DO_NOT_REQUIRE_AUTHORIZATION"].present?
   end
 end
 

@@ -41,6 +41,8 @@
 .envrc
 .rbenv-vars
 docker/*.env
+# Template with placeholder values, copied by the Dockerfile during the build
+!docker/example.env
 
 # Ignore the files and folders generated through Webpack
 /public/decidim-packs
