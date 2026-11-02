@@ -1,12 +1,16 @@
 # Runs the production image locally (same image and commands as on Fargate),
-# with Postgres and Memcached as containers. Use it to test the build before
-# deploying.
+# with Postgres, Memcached and S3 (LocalStack) as containers. Use it to test
+# the build before deploying.
 #
-# Setup:  cp docker/example.env docker/local.env   (and fill it in)
+# Setup:
+#   cp docker/example.env docker/local.env   (and fill it in)
+#   export LOCALSTACK_AUTH_TOKEN=...         (from your LocalStack account)
 # Run (from the repo root):
 #   docker compose -f docker/development/docker-compose.yml up --build
 #
-# App: http://localhost:3000    Metrics: http://localhost:9394/metrics
+# App: https://localhost (Caddy, like the AWS load balancer)
+# Metrics: http://localhost:9394/metrics
+# S3:  https://localhost.localstack.cloud:4566 (bucket sge-plus-local)
 name: sge_plus_development
 
 x-app: &app
@@ -16,19 +20,26 @@ x-app: &app
   env_file: ../local.env
   # These override docker/local.env so the app uses the containers below.
   environment:
-    RAILS_ENV: production
+    RAILS_ENV: preprod   # same as pre
     RAILS_LOG_TO_STDOUT: "true"
     DATABASE_URL: postgresql://sge_plus:sge_plus@db:5432/sge_plus
     MEMCACHE_URL: memcached:11211
-    STORAGE_PROVIDER: local
-    PROMETHEUS_EXPORTER_HOST: exporter
-  volumes:
-    - storage:/var/www/sge_plus/storage
+    # Same S3 setup as on AWS, but against LocalStack. On AWS there is no
+    # endpoint and no access keys (the ECS task role is used instead).
+    STORAGE_PROVIDER: s3
+    AWS_BUCKET: sge-plus-local
+    AWS_REGION: eu-west-1
+    # HTTPS so the browser does not block uploads from the https app page.
+    AWS_ENDPOINT: https://localhost.localstack.cloud:4566
+    AWS_ACCESS_KEY_ID: test
+    AWS_SECRET_ACCESS_KEY: test
   depends_on:
     db:
       condition: service_healthy
     memcached:
       condition: service_started
+    localstack:
+      condition: service_healthy
 
 services:
   db:
@@ -48,6 +59,34 @@ services:
   memcached:
     image: memcached:1.6
 
+  # S3 emulator. The alias makes localhost.localstack.cloud point to this
+  # container inside Docker; from the browser that name resolves to 127.0.0.1,
+  # so presigned upload URLs work in both places.
+  localstack:
+    image: localstack/localstack:${LOCALSTACK_VERSION:-latest}
+    environment:
+      LOCALSTACK_AUTH_TOKEN: ${LOCALSTACK_AUTH_TOKEN:?Set LOCALSTACK_AUTH_TOKEN}
+      SERVICES: s3
+      # Keeps the files between restarts (the database keeps pointing to them).
+      PERSISTENCE: "1"
+      AWS_BUCKET: sge-plus-local
+      AWS_DEFAULT_REGION: eu-west-1
+    ports:
+      - "4566:4566"
+    volumes:
+      - ./localstack/init-s3.sh:/etc/localstack/init/ready.d/init-s3.sh:ro
+      - localstack-data:/var/lib/localstack
+    networks:
+      default:
+        aliases:
+          - localhost.localstack.cloud
+    healthcheck:
+      # The image has no curl; python3 checks that init-s3.sh has finished.
+      test: ["CMD", "python3", "-c", "import json, urllib.request, sys; sys.exit(0 if json.load(urllib.request.urlopen('http://localhost:4566/_localstack/init/ready'))['completed'] else 1)"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
   # Runs the migrations and then Solid Queue (background jobs).
   worker:
     <<: *app
@@ -58,14 +97,30 @@ services:
     command: ["sh", "docker/run-web_service.sh"]
     ports:
       - "3000:3000"
+      # Exporter metrics (the exporter shares this container's network).
+      - "9394:9394"
 
+  # HTTPS in front of Puma, like the load balancer on AWS.
+  caddy:
+    image: caddy:2
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+    depends_on:
+      - web
+
+  # Sidecar of the web, like in the ECS task: Puma sends to localhost:9394.
   exporter:
     <<: *app
     command: ["sh", "docker/run-exporter.sh"]
-    volumes: []
-    ports:
-      - "9394:9394"
+    network_mode: "service:web"
+    depends_on:
+      - web
 
 volumes:
   pg-data: {}
-  storage: {}
+  localstack-data: {}
+  caddy-data: {}

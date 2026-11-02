@@ -1,0 +1,7 @@
+# Plays the role of the AWS load balancer: terminates HTTPS and forwards to
+# Puma over HTTP with X-Forwarded-Proto: https, so config.force_ssl works.
+# "tls internal" uses a local certificate authority created by Caddy.
+localhost {
+	tls internal
+	reverse_proxy web:3000
+}
