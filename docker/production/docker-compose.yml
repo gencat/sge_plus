@@ -1,0 +1,54 @@
+# Production services for AWS Fargate (ECS). Each service here is one ECS
+# service/task definition, all using the image built from the repo Dockerfile.
+#
+# Not included on purpose, they are managed AWS services:
+#   - Database: RDS PostgreSQL           -> DATABASE_URL
+#   - Cache:    ElastiCache Memcached 1.6+ -> MEMCACHE_URL ("host:port")
+#   - Files:    private S3 bucket          -> AWS_BUCKET, AWS_REGION
+#
+# Environment: every variable in docker/example.env (secrets in Secrets
+# Manager). Web, worker and exporter need the same variables.
+# AWS credentials come from the ECS task role (taskRoleArn): do not set
+# AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY.
+#
+# Build and run (from the repo root), e.g. to try it on a host:
+#   docker compose -f docker/production/docker-compose.yml up --build
+name: sge_plus
+
+x-app: &app
+  build:
+    context: ../..
+  image: ${SGE_PLUS_IMAGE:-sge_plus:latest}
+  env_file: ../prod.env
+  environment:
+    RAILS_ENV: production
+    RAILS_LOG_TO_STDOUT: "true"
+    STORAGE_PROVIDER: s3
+    # Where web and worker send metrics. On ECS use the exporter's
+    # Service Connect / Cloud Map name.
+    PROMETHEUS_EXPORTER_HOST: exporter
+  restart: unless-stopped
+
+services:
+  # Puma. Put it behind the load balancer (container port 3000).
+  web:
+    <<: *app
+    command: ["sh", "docker/run-web_service.sh"]
+    ports:
+      - "3000:3000"
+
+  # Runs the migrations and then Solid Queue (background jobs and the
+  # recurring tasks in config/recurring.yml). Keep a single replica so the
+  # migrations do not run twice at the same time.
+  worker:
+    <<: *app
+    command: ["sh", "docker/run-worker.sh"]
+    deploy:
+      replicas: 1
+
+  # Prometheus exporter (metrics on port 9394). Optional.
+  exporter:
+    <<: *app
+    command: ["sh", "docker/run-exporter.sh"]
+    ports:
+      - "9394:9394"

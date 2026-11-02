@@ -1,27 +1,21 @@
 #!/bin/sh
-# PRODUCTION deployment script (Linux server).
-# Usage: sh docker/start_sge_plus.sh
-#
-# Prerequisites on the server:
-#   - Code cloned in APP_DIR (git clone / git pull)
-#   - ENV_FILE filled with real credentials
-#   - STORAGE_DIR and LOG_DIR directories created
+# Script de despliegue LOCAL (Docker Desktop).
+# Uso: sh docker/development/start_local.sh
 set -e
 
 IMAGE="sge_plus:latest"
 WEB_CONTAINER="sge_plus"
 WORKER_CONTAINER="sge_plus_worker"
 EXPORTER_CONTAINER="sge_plus_exporter"
-APP_DIR="/var/www/sge_plus"
-ENV_FILE="/var/www/sge_plus/prod.env"
-STORAGE_DIR="/var/www/sge_plus/storage"
-LOG_DIR="/var/www/sge_plus/log"
-OFELIA_INI="/var/www/sge_plus/ofelia.ini"
+APP_DIR="$(pwd)"
+ENV_FILE="$(pwd)/docker/local.env"
+STORAGE_DIR="$(pwd)/storage"
+LOG_DIR="$(pwd)/log"
 
-echo "=== Building image (compiling assets) ==="
+echo "=== Construyendo imagen (compilando assets) ==="
 docker build -t "$IMAGE" "$APP_DIR"
 
-echo "=== Stopping old containers (if exist) ==="
+echo "=== Parando contenedores antiguos (si existen) ==="
 docker stop "$WEB_CONTAINER"      2>/dev/null || true
 docker rm   "$WEB_CONTAINER"      2>/dev/null || true
 docker stop "$WORKER_CONTAINER"   2>/dev/null || true
@@ -29,7 +23,7 @@ docker rm   "$WORKER_CONTAINER"   2>/dev/null || true
 docker stop "$EXPORTER_CONTAINER" 2>/dev/null || true
 docker rm   "$EXPORTER_CONTAINER" 2>/dev/null || true
 
-echo "=== Starting worker container (migrations + Solid Queue) ==="
+echo "=== Arrancando contenedor worker (migraciones + Solid Queue) ==="
 docker run -d \
   --name "$WORKER_CONTAINER" \
   --restart unless-stopped \
@@ -41,7 +35,7 @@ docker run -d \
   "$IMAGE" \
   /bin/sh docker/run-worker.sh
 
-echo "=== Starting web container (puma) ==="
+echo "=== Arrancando contenedor web (puma) ==="
 docker run -d \
   --name "$WEB_CONTAINER" \
   --restart unless-stopped \
@@ -49,12 +43,13 @@ docker run -d \
   --env-file "$ENV_FILE" \
   -e RAILS_ENV=production \
   -e PORT=3000 \
+  -e RAILS_SERVE_STATIC_FILES=true \
   -v "$STORAGE_DIR:/var/www/sge_plus/storage" \
   -v "$LOG_DIR:/var/www/sge_plus/log" \
   "$IMAGE" \
   /bin/sh docker/run-web_service.sh
 
-echo "=== Starting Prometheus Exporter container ==="
+echo "=== Arrancando contenedor Prometheus Exporter ==="
 docker run -d \
   --name "$EXPORTER_CONTAINER" \
   --restart unless-stopped \
@@ -64,22 +59,10 @@ docker run -d \
   "$IMAGE" \
   /bin/sh docker/run-exporter.sh
 
-echo "=== Restarting Ofelia ==="
-docker stop ofelia 2>/dev/null || true
-docker rm   ofelia 2>/dev/null || true
-
-docker run -d \
-  --name ofelia \
-  --restart unless-stopped \
-  -v /var/run/docker.sock:/var/run/docker.sock:ro \
-  -v "$OFELIA_INI:/etc/ofelia/config.ini:ro" \
-  mcuadros/ofelia:latest \
-  daemon --config=/etc/ofelia/config.ini
-
 echo ""
-echo "=== Ready ==="
+echo "=== Listo ==="
 echo "Web logs:      docker logs -f $WEB_CONTAINER"
 echo "Worker logs:   docker logs -f $WORKER_CONTAINER"
 echo "Exporter logs: docker logs -f $EXPORTER_CONTAINER"
-echo "Metrics:       http://localhost:9394/metrics"
-echo "Crons logs:    docker logs -f ofelia"
+echo "Web:           http://localhost:3000"
+echo "Metricas:      http://localhost:9394/metrics"

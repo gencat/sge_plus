@@ -1,0 +1,71 @@
+# Runs the production image locally (same image and commands as on Fargate),
+# with Postgres and Memcached as containers. Use it to test the build before
+# deploying.
+#
+# Setup:  cp docker/example.env docker/local.env   (and fill it in)
+# Run (from the repo root):
+#   docker compose -f docker/development/docker-compose.yml up --build
+#
+# App: http://localhost:3000    Metrics: http://localhost:9394/metrics
+name: sge_plus_development
+
+x-app: &app
+  build:
+    context: ../..
+  image: sge_plus:development
+  env_file: ../local.env
+  # These override docker/local.env so the app uses the containers below.
+  environment:
+    RAILS_ENV: production
+    RAILS_LOG_TO_STDOUT: "true"
+    DATABASE_URL: postgresql://sge_plus:sge_plus@db:5432/sge_plus
+    MEMCACHE_URL: memcached:11211
+    STORAGE_PROVIDER: local
+    PROMETHEUS_EXPORTER_HOST: exporter
+  volumes:
+    - storage:/var/www/sge_plus/storage
+  depends_on:
+    db:
+      condition: service_healthy
+    memcached:
+      condition: service_started
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: sge_plus
+      POSTGRES_PASSWORD: sge_plus
+      POSTGRES_DB: sge_plus
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sge_plus"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  memcached:
+    image: memcached:1.6
+
+  # Runs the migrations and then Solid Queue (background jobs).
+  worker:
+    <<: *app
+    command: ["sh", "docker/run-worker.sh"]
+
+  web:
+    <<: *app
+    command: ["sh", "docker/run-web_service.sh"]
+    ports:
+      - "3000:3000"
+
+  exporter:
+    <<: *app
+    command: ["sh", "docker/run-exporter.sh"]
+    volumes: []
+    ports:
+      - "9394:9394"
+
+volumes:
+  pg-data: {}
+  storage: {}
