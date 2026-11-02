@@ -25,9 +25,6 @@ x-app: &app
     RAILS_ENV: ${RAILS_ENV:-production}
     RAILS_LOG_TO_STDOUT: "true"
     STORAGE_PROVIDER: s3
-    # Where web and worker send metrics. On ECS use the exporter's
-    # Service Connect / Cloud Map name.
-    PROMETHEUS_EXPORTER_HOST: exporter
   restart: unless-stopped
 
 services:
@@ -37,6 +34,8 @@ services:
     command: ["sh", "docker/run-web_service.sh"]
     ports:
       - "3000:3000"
+      # Exporter metrics (the exporter shares this container's network).
+      - "9394:9394"
 
   # Runs the migrations and then Solid Queue (background jobs and the
   # recurring tasks in config/recurring.yml). Keep a single replica so the
@@ -47,9 +46,14 @@ services:
     deploy:
       replicas: 1
 
-  # Prometheus exporter (metrics on port 9394). Optional.
+  # Prometheus exporter (metrics on port 9394), as a sidecar of the web: it
+  # shares the web container's network, so Puma sends its metrics to
+  # localhost:9394 (the default), like a sidecar in the same ECS task.
+  # It reads the Solid Queue metrics from the database, so it needs the same
+  # environment as the web. The worker sends no metrics.
   exporter:
     <<: *app
     command: ["sh", "docker/run-exporter.sh"]
-    ports:
-      - "9394:9394"
+    network_mode: "service:web"
+    depends_on:
+      - web
