@@ -41,5 +41,19 @@ production: &production
     args: [ "decidim:mailers:notifications_digest_weekly" ]
     schedule: "0 7 * * 0 Europe/Madrid"
 
+  # Daily candidacy tasks (see decidim-signature_collection/README.md).
+  decidim_candidacies_check_validating:
+    class: RakeTaskJob
+    args: [ "decidim_candidacies:check_validating" ]
+    schedule: "0 2 * * * Europe/Madrid"
+  decidim_candidacies_check_published:
+    class: RakeTaskJob
+    args: [ "decidim_candidacies:check_published" ]
+    schedule: "15 2 * * * Europe/Madrid"
+  decidim_candidacies_notify_progress:
+    class: RakeTaskJob
+    args: [ "decidim_candidacies:notify_progress" ]
+    schedule: "30 2 * * * Europe/Madrid"
+
 # Pre (RAILS_ENV=preprod) runs the same scheduled tasks as production.
 preprod: *production
