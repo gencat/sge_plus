@@ -2,7 +2,7 @@
 <% announcement_body = capture do %>
   <div class="max-w-full prose">
     <%= t("fill_data_help", scope: "decidim.signature_collection.create_candidacy.fill_data").html_safe %>
-    <%= link_to t(".more_information"), decidim.page_path("candidacies"), target: "_blank", class: "button button__sm button__text-secondary block text-left" %>
+    <%= link_to t(".more_information"), decidim.pages_path, target: "_blank", class: "button button__sm button__text-secondary block text-left" %>
   </div>
 <% end %>
 
