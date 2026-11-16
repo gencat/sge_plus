@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe "Candidacy search", skip: "Awaiting review" do
+RSpec.describe "Candidacy search" do
   subject { response.body }
 
   let(:organization) { create(:organization) }
@@ -12,8 +12,6 @@ RSpec.describe "Candidacy search", skip: "Awaiting review" do
   let(:scoped_type2) { create(:candidacies_type_scope, type: type2) }
   let(:user1) { create(:user, :confirmed, organization:, name: "John McDoggo", nickname: "john_mcdoggo") }
   let(:user2) { create(:user, :confirmed, organization:, nickname: "doggotrainer") }
-  let(:group1) { create(:user_group, :confirmed, organization:, name: "The Doggo House", nickname: "the_doggo_house") }
-  let(:group2) { create(:user_group, :confirmed, organization:, nickname: "thedoggokeeper") }
   let(:area1) { create(:area, organization:) }
   let(:area2) { create(:area, organization:) }
 
@@ -24,8 +22,6 @@ RSpec.describe "Candidacy search", skip: "Awaiting review" do
   let!(:area2_candidacy) { create(:candidacy, organization:, area: area2) }
   let!(:user1_candidacy) { create(:candidacy, organization:, author: user1) }
   let!(:user2_candidacy) { create(:candidacy, organization:, author: user2) }
-  let!(:group1_candidacy) { create(:candidacy, organization:, author: group1) }
-  let!(:group2_candidacy) { create(:candidacy, organization:, author: group2) }
   let!(:closed_candidacy) { create(:candidacy, :acceptable, organization:) }
   let!(:accepted_candidacy) { create(:candidacy, :accepted, organization:) }
   let!(:rejected_candidacy) { create(:candidacy, :rejected, organization:) }
@@ -53,8 +49,6 @@ RSpec.describe "Candidacy search", skip: "Awaiting review" do
     expect(subject).to include(decidim_escape_translated(area2_candidacy.title))
     expect(subject).to include(decidim_escape_translated(user1_candidacy.title))
     expect(subject).to include(decidim_escape_translated(user2_candidacy.title))
-    expect(subject).to include(decidim_escape_translated(group1_candidacy.title))
-    expect(subject).to include(decidim_escape_translated(group2_candidacy.title))
     expect(subject).not_to include(decidim_escape_translated(closed_candidacy.title))
     expect(subject).not_to include(decidim_escape_translated(accepted_candidacy.title))
     expect(subject).not_to include(decidim_escape_translated(rejected_candidacy.title))
@@ -75,8 +69,6 @@ RSpec.describe "Candidacy search", skip: "Awaiting review" do
       expect(subject).not_to include(decidim_escape_translated(area2_candidacy.title))
       expect(subject).to include(decidim_escape_translated(user1_candidacy.title))
       expect(subject).to include(decidim_escape_translated(user2_candidacy.title))
-      expect(subject).to include(decidim_escape_translated(group1_candidacy.title))
-      expect(subject).to include(decidim_escape_translated(group2_candidacy.title))
       expect(subject).not_to include(decidim_escape_translated(closed_candidacy.title))
       expect(subject).not_to include(decidim_escape_translated(accepted_candidacy.title))
       expect(subject).not_to include(decidim_escape_translated(rejected_candidacy.title))
@@ -96,8 +88,6 @@ RSpec.describe "Candidacy search", skip: "Awaiting review" do
         expect(subject).not_to include(decidim_escape_translated(area2_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(user1_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(user2_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group1_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group2_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(closed_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(accepted_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(rejected_candidacy.title))
@@ -122,8 +112,6 @@ RSpec.describe "Candidacy search", skip: "Awaiting review" do
         expect(subject).to include(decidim_escape_translated(area2_candidacy.title))
         expect(subject).to include(decidim_escape_translated(user1_candidacy.title))
         expect(subject).to include(decidim_escape_translated(user2_candidacy.title))
-        expect(subject).to include(decidim_escape_translated(group1_candidacy.title))
-        expect(subject).to include(decidim_escape_translated(group2_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(closed_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(accepted_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(rejected_candidacy.title))
@@ -144,8 +132,6 @@ RSpec.describe "Candidacy search", skip: "Awaiting review" do
         expect(subject).not_to include(decidim_escape_translated(area2_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(user1_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(user2_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group1_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group2_candidacy.title))
         expect(subject).to include(decidim_escape_translated(closed_candidacy.title))
         expect(subject).to include(decidim_escape_translated(accepted_candidacy.title))
         expect(subject).to include(decidim_escape_translated(rejected_candidacy.title))
@@ -166,8 +152,6 @@ RSpec.describe "Candidacy search", skip: "Awaiting review" do
         expect(subject).not_to include(decidim_escape_translated(area2_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(user1_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(user2_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group1_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group2_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(closed_candidacy.title))
         expect(subject).to include(decidim_escape_translated(accepted_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(rejected_candidacy.title))
@@ -188,8 +172,6 @@ RSpec.describe "Candidacy search", skip: "Awaiting review" do
         expect(subject).not_to include(decidim_escape_translated(area2_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(user1_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(user2_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group1_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group2_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(closed_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(accepted_candidacy.title))
         expect(subject).to include(decidim_escape_translated(rejected_candidacy.title))
@@ -210,8 +192,6 @@ RSpec.describe "Candidacy search", skip: "Awaiting review" do
         expect(subject).not_to include(decidim_escape_translated(area2_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(user1_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(user2_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group1_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group2_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(closed_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(accepted_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(rejected_candidacy.title))
@@ -232,8 +212,6 @@ RSpec.describe "Candidacy search", skip: "Awaiting review" do
         expect(subject).to include(decidim_escape_translated(area2_candidacy.title))
         expect(subject).to include(decidim_escape_translated(user1_candidacy.title))
         expect(subject).to include(decidim_escape_translated(user2_candidacy.title))
-        expect(subject).to include(decidim_escape_translated(group1_candidacy.title))
-        expect(subject).to include(decidim_escape_translated(group2_candidacy.title))
         expect(subject).to include(decidim_escape_translated(closed_candidacy.title))
         expect(subject).to include(decidim_escape_translated(accepted_candidacy.title))
         expect(subject).to include(decidim_escape_translated(rejected_candidacy.title))
@@ -258,8 +236,6 @@ RSpec.describe "Candidacy search", skip: "Awaiting review" do
         expect(subject).not_to include(decidim_escape_translated(area2_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(user1_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(user2_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group1_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group2_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(closed_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(accepted_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(rejected_candidacy.title))
@@ -280,8 +256,6 @@ RSpec.describe "Candidacy search", skip: "Awaiting review" do
         expect(subject).not_to include(decidim_escape_translated(area2_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(user1_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(user2_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group1_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group2_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(closed_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(accepted_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(rejected_candidacy.title))
@@ -316,8 +290,6 @@ RSpec.describe "Candidacy search", skip: "Awaiting review" do
         expect(subject).to include(decidim_escape_translated(area2_candidacy.title))
         expect(subject).to include(decidim_escape_translated(user1_candidacy.title))
         expect(subject).to include(decidim_escape_translated(user2_candidacy.title))
-        expect(subject).to include(decidim_escape_translated(group1_candidacy.title))
-        expect(subject).to include(decidim_escape_translated(group2_candidacy.title))
         expect(subject).to include(decidim_escape_translated(closed_candidacy.title))
         expect(subject).to include(decidim_escape_translated(accepted_candidacy.title))
         expect(subject).to include(decidim_escape_translated(rejected_candidacy.title))
@@ -330,7 +302,7 @@ RSpec.describe "Candidacy search", skip: "Awaiting review" do
     context "and author is myself" do
       let(:author) { "myself" }
 
-      it "contains only candidacies of the author, including their created upcoming candidacy" do
+      it "contains only published candidacies of the author" do
         expect(subject).not_to include(decidim_escape_translated(candidacy1.title))
         expect(subject).not_to include(decidim_escape_translated(candidacy2.title))
         expect(subject).not_to include(decidim_escape_translated(candidacy3.title))
@@ -338,14 +310,12 @@ RSpec.describe "Candidacy search", skip: "Awaiting review" do
         expect(subject).not_to include(decidim_escape_translated(area2_candidacy.title))
         expect(subject).to include(decidim_escape_translated(user1_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(user2_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group1_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group2_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(closed_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(accepted_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(rejected_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(answered_rejected_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(created_candidacy.title))
-        expect(subject).to include(decidim_escape_translated(user1_created_candidacy.title))
+        expect(subject).not_to include(decidim_escape_translated(user1_created_candidacy.title))
       end
     end
   end
@@ -362,8 +332,6 @@ RSpec.describe "Candidacy search", skip: "Awaiting review" do
       expect(subject).not_to include(decidim_escape_translated(area2_candidacy.title))
       expect(subject).not_to include(decidim_escape_translated(user1_candidacy.title))
       expect(subject).not_to include(decidim_escape_translated(user2_candidacy.title))
-      expect(subject).not_to include(decidim_escape_translated(group1_candidacy.title))
-      expect(subject).not_to include(decidim_escape_translated(group2_candidacy.title))
       expect(subject).not_to include(decidim_escape_translated(closed_candidacy.title))
       expect(subject).not_to include(decidim_escape_translated(accepted_candidacy.title))
       expect(subject).not_to include(decidim_escape_translated(rejected_candidacy.title))
@@ -383,8 +351,6 @@ RSpec.describe "Candidacy search", skip: "Awaiting review" do
         expect(subject).not_to include(decidim_escape_translated(area2_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(user1_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(user2_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group1_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group2_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(closed_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(accepted_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(rejected_candidacy.title))
@@ -409,8 +375,6 @@ RSpec.describe "Candidacy search", skip: "Awaiting review" do
         expect(subject).not_to include(decidim_escape_translated(area2_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(user1_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(user2_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group1_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group2_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(closed_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(accepted_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(rejected_candidacy.title))
@@ -431,8 +395,6 @@ RSpec.describe "Candidacy search", skip: "Awaiting review" do
         expect(subject).to include(decidim_escape_translated(area2_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(user1_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(user2_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group1_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(group2_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(closed_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(accepted_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(rejected_candidacy.title))

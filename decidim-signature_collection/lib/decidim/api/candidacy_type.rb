@@ -33,10 +33,6 @@ module Decidim
       field :signature_type, GraphQL::Types::String, "Signature type of the candidacy", null: true
       field :slug, GraphQL::Types::String, "The slug of the candidacy", null: false
       field :state, GraphQL::Types::String, "Current status of the candidacy", null: true
-
-      def author
-        object.user_group || object.author
-      end
     end
   end
 end

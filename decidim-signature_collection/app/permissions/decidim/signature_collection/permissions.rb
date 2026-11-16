@@ -157,7 +157,7 @@ module Decidim
         return false unless permission_action.action == :sign_candidacy &&
                             permission_action.subject == :candidacy
 
-        toggle_allow(candidacy.votes_enabled?)
+        toggle_allow(can_vote?)
       end
 
       def decidim_user_group_id

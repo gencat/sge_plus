@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe Decidim::SignatureCollection::Admin::Permissions, skip: "Awaiting review" do
+describe Decidim::SignatureCollection::Admin::Permissions do
   subject { described_class.new(user, permission_action, context).permissions.allowed? }
 
   let(:user) { create(:user, organization:) }
@@ -182,16 +182,6 @@ describe Decidim::SignatureCollection::Admin::Permissions, skip: "Awaiting revie
 
         context "when candidacy is created" do
           let(:candidacy) { create(:candidacy, :created, organization:) }
-
-          context "when candidacy is authored by a user group" do
-            let(:user_group) { create(:user_group, organization: user.organization, users: [user]) }
-
-            before do
-              candidacy.update(decidim_user_group_id: user_group.id)
-            end
-
-            it { is_expected.to be true }
-          end
 
           context "when candidacy has enough approved members" do
             before do
@@ -422,7 +412,9 @@ describe Decidim::SignatureCollection::Admin::Permissions, skip: "Awaiting revie
 
       context "when accepting the candidacy" do
         let(:action_name) { :accept }
-        let(:candidacy) { create(:candidacy, organization:, signature_end_date: 2.days.ago) }
+        let(:candidacy_type) { create(:candidacies_type, :with_signature_period_passed, organization:) }
+        let(:scoped_type) { create(:candidacies_type_scope, type: candidacy_type) }
+        let(:candidacy) { create(:candidacy, organization:, scoped_type:) }
         let(:goal_reached) { true }
 
         before do
@@ -432,13 +424,13 @@ describe Decidim::SignatureCollection::Admin::Permissions, skip: "Awaiting revie
         it { is_expected.to be true }
 
         context "when the candidacy is not published" do
-          let(:candidacy) { create(:candidacy, :validating, organization:) }
+          let(:candidacy) { create(:candidacy, :validating, organization:, scoped_type:) }
 
           it { is_expected.to be false }
         end
 
         context "when the candidacy signature time is not finished" do
-          let(:candidacy) { create(:candidacy, signature_end_date: 2.days.from_now, organization:) }
+          let(:candidacy_type) { create(:candidacies_type, organization:) }
 
           it { is_expected.to be false }
         end
@@ -452,7 +444,9 @@ describe Decidim::SignatureCollection::Admin::Permissions, skip: "Awaiting revie
 
       context "when rejecting the candidacy" do
         let(:action_name) { :reject }
-        let(:candidacy) { create(:candidacy, organization:, signature_end_date: 2.days.ago) }
+        let(:candidacy_type) { create(:candidacies_type, :with_signature_period_passed, organization:) }
+        let(:scoped_type) { create(:candidacies_type_scope, type: candidacy_type) }
+        let(:candidacy) { create(:candidacy, organization:, scoped_type:) }
         let(:goal_reached) { false }
 
         before do
@@ -462,13 +456,13 @@ describe Decidim::SignatureCollection::Admin::Permissions, skip: "Awaiting revie
         it { is_expected.to be true }
 
         context "when the candidacy is not published" do
-          let(:candidacy) { create(:candidacy, :validating, organization:) }
+          let(:candidacy) { create(:candidacy, :validating, organization:, scoped_type:) }
 
           it { is_expected.to be false }
         end
 
         context "when the candidacy signature time is not finished" do
-          let(:candidacy) { create(:candidacy, signature_end_date: 2.days.from_now, organization:) }
+          let(:candidacy_type) { create(:candidacies_type, organization:) }
 
           it { is_expected.to be false }
         end

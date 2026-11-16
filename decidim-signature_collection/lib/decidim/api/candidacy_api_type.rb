@@ -23,6 +23,11 @@ module Decidim
       def banner_image
         object.attached_uploader(:banner_image).url
       end
+
+      # Personal data is always collected when signing a candidacy.
+      def collect_user_extra_fields
+        true
+      end
     end
   end
 end

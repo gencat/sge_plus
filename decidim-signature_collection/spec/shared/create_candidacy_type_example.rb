@@ -20,6 +20,7 @@ shared_examples "create an candidacy type" do
         title: Decidim::Faker::Localized.sentence(word_count: 5),
         description: Decidim::Faker::Localized.sentence(word_count: 25),
         signature_type: "online",
+        elections: "congress",
         attachments_enabled: true,
         undo_online_signatures_enabled: true,
         custom_signature_end_date_enabled: true,

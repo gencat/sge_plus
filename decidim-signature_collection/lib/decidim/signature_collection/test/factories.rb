@@ -236,6 +236,10 @@ FactoryBot.define do
     after(:create) do |vote|
       vote.candidacy.update_online_votes_counters
     end
+
+    trait :signed do
+      encrypted_xml_doc_signed { "signed" }
+    end
   end
 
   factory :organization_user_vote, class: "Decidim::SignatureCollection::CandidaciesVote" do

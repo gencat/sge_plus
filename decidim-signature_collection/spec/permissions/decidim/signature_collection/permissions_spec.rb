@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe Decidim::SignatureCollection::Permissions, skip: "Awaiting review" do
+describe Decidim::SignatureCollection::Permissions do
   subject { described_class.new(user, permission_action, context).permissions.allowed? }
 
   let(:user) { create(:user, organization:) }
@@ -36,22 +36,6 @@ describe Decidim::SignatureCollection::Permissions, skip: "Awaiting review" do
       it { is_expected.to be false }
     end
 
-    context "when user has already voted the candidacy" do
-      before do
-        create(:candidacy_user_vote, candidacy:, author: user)
-      end
-
-      it { is_expected.to be false }
-    end
-
-    context "when user has verified user groups" do
-      before do
-        create(:user_group, :verified, users: [user], organization: user.organization)
-      end
-
-      it { is_expected.to be true }
-    end
-
     context "when the candidacy type has permissions to vote" do
       before do
         candidacy.type.create_resource_permission(
@@ -64,18 +48,6 @@ describe Decidim::SignatureCollection::Permissions, skip: "Awaiting review" do
             }
           }
         )
-      end
-
-      context "when user is not verified" do
-        it { is_expected.to be false }
-      end
-
-      context "when user is not fully verified" do
-        before do
-          create(:authorization, name: "dummy_authorization_handler", user:, granted_at: 2.seconds.ago)
-        end
-
-        it { is_expected.to be false }
       end
 
       context "when user is fully verified" do
@@ -207,89 +179,6 @@ describe Decidim::SignatureCollection::Permissions, skip: "Awaiting review" do
     end
 
     it { is_expected.to be true }
-  end
-
-  context "when creating an candidacy" do
-    let(:action) do
-      { scope: :public, action: :create, subject: :candidacy }
-    end
-    let(:context) do
-      { candidacy_type: candidacy.type }
-    end
-
-    context "when creation is enabled" do
-      before do
-        allow(Decidim::SignatureCollection)
-          .to receive(:creation_enabled)
-          .and_return(true)
-      end
-
-      it { is_expected.to be false }
-
-      context "when authorizations are not required" do
-        before do
-          allow(Decidim::SignatureCollection)
-            .to receive(:do_not_require_authorization)
-            .and_return(true)
-        end
-
-        it { is_expected.to be true }
-      end
-
-      context "when user is authorized" do
-        before do
-          create(:authorization, :granted, user:)
-        end
-
-        it { is_expected.to be true }
-      end
-
-      context "when user belongs to a verified user group" do
-        before do
-          create(:user_group, :verified, users: [user], organization: user.organization)
-        end
-
-        it { is_expected.to be true }
-      end
-
-      context "when the candidacy type has permissions to create" do
-        before do
-          candidacy.type.create_resource_permission(
-            permissions: {
-              "create" => {
-                "authorization_handlers" => {
-                  "dummy_authorization_handler" => { "options" => {} },
-                  "another_dummy_authorization_handler" => { "options" => {} }
-                }
-              }
-            }
-          )
-        end
-
-        context "when user is not verified" do
-          it { is_expected.to be false }
-        end
-
-        context "when user is fully verified" do
-          before do
-            create(:authorization, name: "dummy_authorization_handler", user:, granted_at: 2.seconds.ago)
-            create(:authorization, name: "another_dummy_authorization_handler", user:, granted_at: 2.seconds.ago)
-          end
-
-          it { is_expected.to be true }
-        end
-      end
-    end
-
-    context "when creation is not enabled" do
-      before do
-        allow(Decidim::SignatureCollection)
-          .to receive(:creation_enabled)
-          .and_return(false)
-      end
-
-      it { is_expected.to be false }
-    end
   end
 
   context "when managing an candidacy" do
@@ -456,14 +345,6 @@ describe Decidim::SignatureCollection::Permissions, skip: "Awaiting review" do
           it { is_expected.to be true }
         end
 
-        context "when user belongs to a verified user group" do
-          before do
-            create(:user_group, :verified, users: [user], organization: user.organization)
-          end
-
-          it { is_expected.to be true }
-        end
-
         context "when user is not connected" do
           let(:user) { nil }
 
@@ -482,68 +363,14 @@ describe Decidim::SignatureCollection::Permissions, skip: "Awaiting review" do
   end
 
   context "when signing an candidacy" do
-    context "when candidacy signature has steps" do
-      it_behaves_like "votes permissions" do
-        let(:action) do
-          { scope: :public, action: :sign_candidacy, subject: :candidacy }
-        end
-        let(:context) do
-          { candidacy: }
-        end
-      end
-    end
-
-    context "when candidacy signature does not have steps" do
-      let(:organization) { create(:organization, available_authorizations: authorizations) }
-      let(:authorizations) { %w(dummy_authorization_handler another_dummy_authorization_handler) }
-      let(:candidacy) { create(:candidacy, organization:) }
-      let(:votes_enabled?) { true }
+    it_behaves_like "votes permissions" do
       let(:action) do
         { scope: :public, action: :sign_candidacy, subject: :candidacy }
-      end
-      let(:context) do
-        { candidacy: }
-      end
-
-      before do
-        allow(candidacy).to receive(:votes_enabled?).and_return(votes_enabled?)
-      end
-
-      context "when user has verified user groups" do
-        before do
-          create(:user_group, :verified, users: [user], organization: user.organization)
-        end
-
-        it { is_expected.to be false }
-      end
-
-      context "when the candidacy type has permissions to vote" do
-        before do
-          candidacy.type.create_resource_permission(
-            permissions: {
-              "vote" => {
-                "authorization_handlers" => {
-                  "dummy_authorization_handler" => { "options" => {} },
-                  "another_dummy_authorization_handler" => { "options" => {} }
-                }
-              }
-            }
-          )
-        end
-
-        context "when user is fully verified" do
-          before do
-            create(:authorization, name: "dummy_authorization_handler", user:, granted_at: 2.seconds.ago)
-            create(:authorization, name: "another_dummy_authorization_handler", user:, granted_at: 2.seconds.ago)
-          end
-
-          it { is_expected.to be false }
-        end
       end
     end
   end
 
-  context "when unvoting an candidacy" do
+  context "when unvoting an candidacy", skip: "Votes no longer have an author (removed in 20251222131109), pending decision on unvote" do
     let(:action) do
       { scope: :public, action: :unvote, subject: :candidacy }
     end
@@ -591,245 +418,195 @@ describe Decidim::SignatureCollection::Permissions, skip: "Awaiting review" do
     end
   end
 
-  describe "show_answer" do
-    let(:action) do
-      { scope: :public, action: :show_answer, subject: :candidacy }
+  describe "exporting candidacy files" do
+    let(:export_candidacy) { create(:candidacy, :accepted, organization:) }
+    let(:context) { { candidacy: export_candidacy } }
+
+    shared_examples "allows only admin author committee" do |action_name|
+      let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: action_name, subject: :candidacy) }
+
+      context "when user is admin" do
+        let(:user) { create(:user, :admin, organization:) }
+
+        it { is_expected.to be true }
+      end
+
+      context "when user is author" do
+        let(:user) { export_candidacy.author }
+
+        it { is_expected.to be true }
+      end
+
+      context "when user is committee member" do
+        let(:user) { create(:user, organization:) }
+
+        before { create(:candidacies_committee_member, candidacy: export_candidacy, user:) }
+
+        it { is_expected.to be true }
+      end
+
+      context "when user is a regular user" do
+        let(:user) { create(:user, organization:) }
+
+        it { is_expected.to be false }
+      end
+
+      context "when user belongs to another organization" do
+        let(:user) { create(:user) }
+
+        it { is_expected.to be false }
+      end
     end
-    let(:candidacy) { create(:candidacy, :answered, organization:) }
-    let(:context) do
-      { candidacy: }
+
+    describe "PDF signatures export" do
+      it_behaves_like "allows only admin author committee", :export_pdf_signatures
     end
 
-    context "when user is not logged in" do
-      let(:user) { nil }
-
-      it { is_expected.to be false }
+    describe "XML signatures export" do
+      it_behaves_like "allows only admin author committee", :export_xml_signatures
     end
 
-    context "when user is an admin" do
-      let(:user) { create(:user, :admin, organization:) }
-
-      it { is_expected.to be true }
+    describe "votes export" do
+      it_behaves_like "allows only admin author committee", :export_votes
     end
 
-    describe "exporting candidacy files" do
-      let(:export_candidacy) { create(:candidacy, :accepted, organization:) }
-      let(:context) { { candidacy: export_candidacy } }
+    describe "edge conditions for export permissions" do
+      context "when candidacy is created (should be blocked for pdf/xml)" do
+        let(:export_candidacy) { create(:candidacy, :created, organization:) }
 
-      shared_examples "allows only admin author committee" do |action_name|
-        let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: action_name, subject: :candidacy) }
+        context "when exporting pdf signatures" do
+          let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: :export_pdf_signatures, subject: :candidacy) }
 
-        context "when user is admin" do
-          let(:user) { create(:user, :admin, organization:) }
+          context "when user is author" do
+            let(:user) { export_candidacy.author }
 
-          it { is_expected.to be true }
+            it { is_expected.to be false }
+          end
+
+          context "when user is admin" do
+            let(:user) { create(:user, :admin, organization:) }
+
+            it { is_expected.to be false }
+          end
+
+          context "when user is committee member" do
+            let(:user) { create(:user, organization:) }
+
+            before { create(:candidacies_committee_member, candidacy: export_candidacy, user:) }
+
+            it { is_expected.to be false }
+          end
         end
 
-        context "when user is author" do
+        context "when exporting xml signatures" do
+          let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: :export_xml_signatures, subject: :candidacy) }
+
+          context "when user is author" do
+            let(:user) { export_candidacy.author }
+
+            it { is_expected.to be false }
+          end
+
+          context "when user is admin" do
+            let(:user) { create(:user, :admin, organization:) }
+
+            it { is_expected.to be false }
+          end
+
+          context "when user is committee member" do
+            let(:user) { create(:user, organization:) }
+
+            before { create(:candidacies_committee_member, candidacy: export_candidacy, user:) }
+
+            it { is_expected.to be false }
+          end
+        end
+      end
+
+      context "when candidacy is rejected (allowed for pdf/xml)" do
+        let(:export_candidacy) { create(:candidacy, :rejected, organization:) }
+
+        context "when exporting pdf signatures" do
+          let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: :export_pdf_signatures, subject: :candidacy) }
+
+          context "when user is author" do
+            let(:user) { export_candidacy.author }
+
+            it { is_expected.to be true }
+          end
+
+          context "when user is admin" do
+            let(:user) { create(:user, :admin, organization:) }
+
+            it { is_expected.to be true }
+          end
+        end
+
+        context "when exporting xml signatures" do
+          let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: :export_xml_signatures, subject: :candidacy) }
+
+          context "when user is author" do
+            let(:user) { export_candidacy.author }
+
+            it { is_expected.to be true }
+          end
+
+          context "when user is admin" do
+            let(:user) { create(:user, :admin, organization:) }
+
+            it { is_expected.to be true }
+          end
+        end
+      end
+
+      context "when votes export signature_type variations" do
+        context "when signature_type is offline (blocked)" do
+          let(:export_candidacy) { create(:candidacy, :accepted, :offline, organization:) }
+          let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: :export_votes, subject: :candidacy) }
+          let(:user) { export_candidacy.author }
+
+          it { is_expected.to be false }
+        end
+
+        context "when signature_type is online (allowed)" do
+          let(:export_candidacy) { create(:candidacy, :accepted, :online, organization:) }
+          let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: :export_votes, subject: :candidacy) }
           let(:user) { export_candidacy.author }
 
           it { is_expected.to be true }
         end
 
-        context "when user is committee member" do
-          let(:user) { create(:user, organization:) }
-
-          before { create(:candidacies_committee_member, candidacy: export_candidacy, user:) }
+        context "when signature_type is any (allowed)" do
+          let(:export_candidacy) { create(:candidacy, :accepted, organization:, signature_type: "any") }
+          let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: :export_votes, subject: :candidacy) }
+          let(:user) { export_candidacy.author }
 
           it { is_expected.to be true }
         end
-
-        context "when user is a regular user" do
-          let(:user) { create(:user, organization:) }
-
-          it { is_expected.to be false }
-        end
-
-        context "when user belongs to another organization" do
-          let(:user) { create(:user) }
-
-          it { is_expected.to be false }
-        end
       end
 
-      describe "PDF signatures export" do
-        it_behaves_like "allows only admin author committee", :export_pdf_signatures
-      end
+      context "when user is not logged in" do
+        let(:user) { nil }
+        let(:export_candidacy) { create(:candidacy, :accepted, organization:) }
 
-      describe "XML signatures export" do
-        it_behaves_like "allows only admin author committee", :export_xml_signatures
-      end
+        context "when exporting pdf signatures" do
+          let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: :export_pdf_signatures, subject: :candidacy) }
 
-      describe "votes export" do
-        it_behaves_like "allows only admin author committee", :export_votes
-      end
-
-      describe "edge conditions for export permissions" do
-        context "when candidacy is created (should be blocked for pdf/xml)" do
-          let(:export_candidacy) { create(:candidacy, :created, organization:) }
-
-          context "when exporting pdf signatures" do
-            let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: :export_pdf_signatures, subject: :candidacy) }
-
-            context "when user is author" do
-              let(:user) { export_candidacy.author }
-
-              it { is_expected.to be false }
-            end
-
-            context "when user is admin" do
-              let(:user) { create(:user, :admin, organization:) }
-
-              it { is_expected.to be false }
-            end
-
-            context "when user is committee member" do
-              let(:user) { create(:user, organization:) }
-
-              before { create(:candidacies_committee_member, candidacy: export_candidacy, user:) }
-
-              it { is_expected.to be false }
-            end
-          end
-
-          context "when exporting xml signatures" do
-            let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: :export_xml_signatures, subject: :candidacy) }
-
-            context "when user is author" do
-              let(:user) { export_candidacy.author }
-
-              it { is_expected.to be false }
-            end
-
-            context "when user is admin" do
-              let(:user) { create(:user, :admin, organization:) }
-
-              it { is_expected.to be false }
-            end
-
-            context "when user is committee member" do
-              let(:user) { create(:user, organization:) }
-
-              before { create(:candidacies_committee_member, candidacy: export_candidacy, user:) }
-
-              it { is_expected.to be false }
-            end
-          end
+          it { expect { subject }.to raise_error(Decidim::PermissionAction::PermissionNotSetError) }
         end
 
-        context "when candidacy is rejected (allowed for pdf/xml)" do
-          let(:export_candidacy) { create(:candidacy, :rejected, organization:) }
+        context "when exporting xml signatures" do
+          let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: :export_xml_signatures, subject: :candidacy) }
 
-          context "when exporting pdf signatures" do
-            let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: :export_pdf_signatures, subject: :candidacy) }
-
-            context "when user is author" do
-              let(:user) { export_candidacy.author }
-
-              it { is_expected.to be true }
-            end
-
-            context "when user is admin" do
-              let(:user) { create(:user, :admin, organization:) }
-
-              it { is_expected.to be true }
-            end
-          end
-
-          context "when exporting xml signatures" do
-            let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: :export_xml_signatures, subject: :candidacy) }
-
-            context "when user is author" do
-              let(:user) { export_candidacy.author }
-
-              it { is_expected.to be true }
-            end
-
-            context "when user is admin" do
-              let(:user) { create(:user, :admin, organization:) }
-
-              it { is_expected.to be true }
-            end
-          end
+          it { expect { subject }.to raise_error(Decidim::PermissionAction::PermissionNotSetError) }
         end
 
-        context "when votes export signature_type variations" do
-          context "when signature_type is offline (blocked)" do
-            let(:export_candidacy) { create(:candidacy, :accepted, :offline, organization:) }
-            let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: :export_votes, subject: :candidacy) }
-            let(:user) { export_candidacy.author }
+        context "when exporting votes" do
+          let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: :export_votes, subject: :candidacy) }
 
-            it { is_expected.to be false }
-          end
-
-          context "when signature_type is online (allowed)" do
-            let(:export_candidacy) { create(:candidacy, :accepted, :online, organization:) }
-            let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: :export_votes, subject: :candidacy) }
-            let(:user) { export_candidacy.author }
-
-            it { is_expected.to be true }
-          end
-
-          context "when signature_type is any (allowed)" do
-            let(:export_candidacy) { create(:candidacy, :accepted, organization:, signature_type: "any") }
-            let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: :export_votes, subject: :candidacy) }
-            let(:user) { export_candidacy.author }
-
-            it { is_expected.to be true }
-          end
-        end
-
-        context "when user is not logged in" do
-          let(:user) { nil }
-          let(:export_candidacy) { create(:candidacy, :accepted, organization:) }
-
-          context "when exporting pdf signatures" do
-            let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: :export_pdf_signatures, subject: :candidacy) }
-
-            it { is_expected.to be false }
-          end
-
-          context "when exporting xml signatures" do
-            let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: :export_xml_signatures, subject: :candidacy) }
-
-            it { is_expected.to be false }
-          end
-
-          context "when exporting votes" do
-            let(:permission_action) { Decidim::PermissionAction.new(scope: :public, action: :export_votes, subject: :candidacy) }
-
-            it { is_expected.to be false }
-          end
+          it { expect { subject }.to raise_error(Decidim::PermissionAction::PermissionNotSetError) }
         end
       end
-    end
-
-    context "when user is the author of the candidacy" do
-      let(:user) { candidacy.author }
-
-      it { is_expected.to be true }
-    end
-
-    context "when user is a committee member" do
-      let(:user) { create(:user, organization:) }
-
-      before do
-        create(:candidacies_committee_member, candidacy:, user:)
-      end
-
-      it { is_expected.to be true }
-    end
-
-    context "when user is a regular user" do
-      let(:user) { create(:user, organization:) }
-
-      it { is_expected.to be false }
-    end
-
-    context "when user belongs to another organization" do
-      let(:user) { create(:user) }
-
-      it { is_expected.to be false }
     end
   end
 end

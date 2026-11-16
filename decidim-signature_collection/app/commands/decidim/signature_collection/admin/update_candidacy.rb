@@ -56,16 +56,16 @@ module Decidim
         end
 
         def add_admin_accessible_attrs(attrs)
-          attrs[:signature_start_date] = form.signature_start_date
-          attrs[:signature_end_date] = form.signature_end_date
           attrs[:offline_votes] = form.offline_votes if form.offline_votes
           attrs[:state] = form.state if form.state
           attrs[:decidim_area_id] = form.area_id
 
-          if resource.published? && form.signature_end_date != resource.signature_end_date &&
-             form.signature_end_date > resource.signature_end_date
-            @notify_extended = true
-          end
+          attrs[:signature_start_date] = form.signature_start_date if form.signature_start_date.present?
+          return if form.signature_end_date.blank?
+
+          attrs[:signature_end_date] = form.signature_end_date
+          @notify_extended = true if resource.published? && resource.signature_end_date.present? &&
+                                     form.signature_end_date > resource.signature_end_date
         end
 
         def notify_candidacy_is_extended

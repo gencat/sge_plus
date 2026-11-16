@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe "Filter Candidacies", :slow, skip: "Awaiting review" do
+describe "Filter Candidacies", :slow do
   let!(:organization) { create(:organization) }
   let!(:type1) { create(:candidacies_type, organization:) }
   let!(:type2) { create(:candidacies_type, organization:) }
@@ -79,8 +79,8 @@ describe "Filter Candidacies", :slow, skip: "Awaiting review" do
           click_on "Most commented"
         end
 
-        expect(page).to have_css(".card__grid[id^='candidacy']", count: 2)
-        expect(page).to have_css(".card__grid[id^='candidacy']:first-child", text: translated(first_candidacy.title))
+        expect(page).to have_css(".card__grid[id^='signature_collection__candidacy']", count: 2)
+        expect(page).to have_css(".card__grid[id^='signature_collection__candidacy']:first-child", text: translated(first_candidacy.title))
       end
     end
   end

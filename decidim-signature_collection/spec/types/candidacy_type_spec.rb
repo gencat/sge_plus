@@ -98,7 +98,7 @@ module Decidim
         end
       end
 
-      context "without fields from AuthorInterface", skip: "Fields are currently exposed on Candidacy type, pending review" do
+      context "without fields from AuthorInterface" do
         %w(name profilePath organizationName deleted).each do |field|
           describe field do
             let(:query) { "{ #{field} }" }

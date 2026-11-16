@@ -4,7 +4,7 @@ require "spec_helper"
 
 module Decidim
   module SignatureCollection
-    describe CandidacyVotesController, skip: "Awaiting review" do
+    describe CandidacyVotesController do
       routes { Decidim::SignatureCollection::Engine.routes }
 
       let(:organization) { create(:organization) }
@@ -16,11 +16,15 @@ module Decidim
 
       context "when POST create" do
         context "and Authorized users" do
-          it "Authorized users can vote" do
+          # Signatures are collected through CandidacySignaturesController, which
+          # requires personal data. This endpoint does not receive it.
+          it "does not register the vote" do
+            sign_in candidacy.author, scope: :user
+
             expect do
-              sign_in candidacy.author, scope: :user
               post :create, params: { candidacy_slug: candidacy.slug, format: :js }
-            end.to change { CandidaciesVote.where(candidacy:).count }.by(1)
+            end.not_to(change { CandidaciesVote.where(candidacy:).count })
+            expect(response).to have_http_status(:unprocessable_entity)
           end
         end
 
@@ -38,7 +42,7 @@ module Decidim
         end
       end
 
-      context "when destroy" do
+      context "when destroy", skip: "Votes no longer have an author (removed in 20251222131109), pending decision on unvote" do
         let!(:vote) { create(:candidacy_user_vote, candidacy:, author: candidacy.author) }
 
         context "and authorized users" do

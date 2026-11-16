@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe Decidim::SignatureCollection::CandidaciesController, skip: "Awaiting review" do
+describe Decidim::SignatureCollection::CandidaciesController do
   routes { Decidim::SignatureCollection::Engine.routes }
 
   let(:organization) { create(:organization) }
@@ -22,7 +22,7 @@ describe Decidim::SignatureCollection::CandidaciesController, skip: "Awaiting re
 
     context "when no order is given" do
       let(:voted_candidacy) { create(:candidacy, organization:) }
-      let!(:vote) { create(:candidacy_user_vote, candidacy: voted_candidacy) }
+      let!(:vote) { create(:candidacy_user_vote, :signed, candidacy: voted_candidacy) }
       let!(:candidacies_settings) { create(:candidacies_settings, :most_signed) }
 
       it "return in the default order" do
@@ -34,7 +34,7 @@ describe Decidim::SignatureCollection::CandidaciesController, skip: "Awaiting re
 
     context "when order by most_voted" do
       let(:voted_candidacy) { create(:candidacy, organization:) }
-      let!(:vote) { create(:candidacy_user_vote, candidacy: voted_candidacy) }
+      let!(:vote) { create(:candidacy_user_vote, :signed, candidacy: voted_candidacy) }
 
       it "most voted appears first" do
         get :index, params: { order: "most_voted" }

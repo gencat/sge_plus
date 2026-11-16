@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe "Candidacy", skip: "Awaiting review" do
+describe "Candidacy" do
   let(:organization) { create(:organization) }
   let(:state) { :open }
   let(:base_candidacy) do
@@ -94,7 +94,7 @@ describe "Candidacy", skip: "Awaiting review" do
 
         it "displays minimum signing age" do
           within ".candidacy__aside" do
-            expect(page).to have_content("Minimum signing age")
+            expect(page).to have_content("Minimum age for signature")
             expect(page).to have_content("16")
           end
         end
@@ -154,7 +154,37 @@ describe "Candidacy", skip: "Awaiting review" do
         it_behaves_like "candidacy does not show signatures"
       end
 
-      it_behaves_like "has attachments tabs"
+      # Candidacies only show the documents tab (images were removed in #7).
+      context "when it has attachments" do
+        let!(:document) { create(:attachment, :with_pdf, attached_to:) }
+        let!(:link) { create(:attachment, :with_link, attached_to:) }
+        let!(:image) { create(:attachment, attached_to:) }
+
+        before { visit current_path }
+
+        it "shows the documents" do
+          find("li [data-controls='panel-documents']").click
+          within "#panel-documents" do
+            expect(page).to have_content(translated(document.title))
+            expect(page).to have_content(translated(link.title))
+          end
+          expect(page).to have_no_css("li [data-controls='panel-images']")
+        end
+      end
+
+      context "when documents are ordered by weight" do
+        let!(:last_document) { create(:attachment, :with_link, attached_to:, weight: 2) }
+        let!(:first_document) { create(:attachment, :with_pdf, attached_to:, weight: 1) }
+
+        before { visit current_path }
+
+        it "shows them ordered" do
+          find("li [data-controls='panel-documents']").click
+          within "#panel-documents" do
+            expect(decidim_escape_translated(first_document.title).gsub("&quot;", "\"")).to appear_before(decidim_escape_translated(last_document.title).gsub("&quot;", "\""))
+          end
+        end
+      end
 
       context "when the candidacy is not published" do
         let(:state) { :created }
@@ -212,6 +242,7 @@ describe "Candidacy", skip: "Awaiting review" do
         context "when the user cannot send the candidacy to technical validation" do
           before do
             candidacy.update!(published_at: nil)
+            candidacy.type.update!(minimum_committee_members: 2)
             candidacy.committee_members.destroy_all
             visit decidim_candidacies.candidacy_path(candidacy)
           end
@@ -284,44 +315,30 @@ describe "Candidacy", skip: "Awaiting review" do
       allow(Decidim).to receive(:component_manifests).and_return([meetings_component.manifest, proposals_component.manifest, blogs_component.manifest])
     end
 
-    context "when requesting the candidacy path" do
-      before { visit decidim_candidacies.candidacy_path(candidacy) }
-
-      it "shows the components" do
-        within ".participatory-space__nav-container" do
-          expect(page).to have_content(translated(meetings_component.name, locale: :en))
-          expect(page).to have_no_content(translated(proposals_component.name, locale: :en))
-          expect(page).to have_content(translated(blogs_component.name, locale: :en))
-        end
-      end
-
-      it "allows visiting the components" do
-        within ".participatory-space__nav-container" do
-          click_on translated(meetings_component.name, locale: :en)
-        end
+    # The candidacy page does not show the components menu (custom candidacy_head layout since #5),
+    # so the components are visited directly.
+    context "when visiting a published component" do
+      it "shows its content" do
+        visit Decidim::EngineRouter.main_proxy(meetings_component).root_path
 
         expect(page).to have_css('[id^="meetings__meeting"]', count: 3)
       end
     end
 
-    context "when signed in as the author of the candidacy" do
+    context "when signed in as the author of the candidacy",
+            skip: "decidim-blogs and decidim-meetings only grant author permissions for Decidim::Initiative spaces" do
       before do
         sign_in candidacy.author
-        visit decidim_candidacies.candidacy_path(candidacy)
       end
 
       it "has special permissions to create posts" do
-        within ".participatory-space__nav-container" do
-          click_on translated(blogs_component.name, locale: :en)
-        end
+        visit Decidim::EngineRouter.main_proxy(blogs_component).root_path
 
         expect(page).to have_content("New post")
       end
 
       it "has special permissions to create meetings" do
-        within ".participatory-space__nav-container" do
-          click_on translated(meetings_component.name, locale: :en)
-        end
+        visit Decidim::EngineRouter.main_proxy(meetings_component).root_path
 
         expect(page).to have_content("New meeting")
       end

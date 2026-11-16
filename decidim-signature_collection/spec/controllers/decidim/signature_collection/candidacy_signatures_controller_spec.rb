@@ -4,65 +4,106 @@ require "spec_helper"
 
 module Decidim
   module SignatureCollection
-    describe CandidacySignaturesController, skip: "Awaiting review" do
+    describe CandidacySignaturesController do
       routes { Decidim::SignatureCollection::Engine.routes }
 
       let(:organization) { create(:organization) }
       let(:candidacy) { create(:candidacy, organization:) }
+      let(:user) { create(:user, :confirmed, organization:) }
+      let(:document_number) { "12345678Z" }
       let(:params) do
         {
           candidacy_slug: candidacy.slug,
-          document_number: "12345678Z",
-          document_type: 1,
-          name: "John",
-          first_surname: "Doe",
-          date_of_birth: "1990-01-01",
-          postal_code: "08001",
-          format: :js
+          candidacies_vote: {
+            document_number:,
+            document_type: 1,
+            name: "John",
+            first_surname: "Doe",
+            date_of_birth: "1990-01-01",
+            postal_code: "08001"
+          }
         }
       end
+      let(:signature_process) { instance_double("ValidSignador::StartSignatureProcess", call: signature_result) }
+      let(:signature_result) { { success: true, sign_url: "https://signador.example.org/sign" } }
 
       before do
         request.env["decidim.current_organization"] = organization
+        stub_const("ValidSignador::StartSignatureProcess", Class.new)
+        allow(ValidSignador::StartSignatureProcess).to receive(:new).and_return(signature_process)
       end
 
-      context "when POST create" do
+      context "when PUT fill_personal_data" do
         context "with a logged user" do
-          it "can vote" do
-            sign_in candidacy.author, scope: :user
+          before { sign_in user, scope: :user }
 
+          it "creates an unsigned vote and redirects to Signador" do
             expect do
-              sign_in candidacy.author, scope: :user
-              post :create, params: params
-            end.to change { CandidaciesVote.where(candidacy: candidacy).count }.by(1)
+              put :store_personal_data, params:
+            end.to change { CandidaciesVote.where(candidacy:).count }.by(1)
+
+            expect(CandidaciesVote.last.encrypted_xml_doc_signed).to be_nil
+            expect(response).to redirect_to("https://signador.example.org/sign")
+          end
+
+          context "when the signature process cannot be started" do
+            let(:signature_result) { { success: false, error: "Signador unavailable" } }
+
+            it "redirects back to the personal data step" do
+              put(:store_personal_data, params:)
+
+              expect(flash[:alert]).to be_present
+              expect(response).to redirect_to(fill_personal_data_candidacy_signatures_path(candidacy))
+            end
+          end
+
+          context "when the personal data is not valid" do
+            let(:document_number) { "12345678A" }
+
+            it "does not register the vote" do
+              expect do
+                put :store_personal_data, params:
+              end.not_to(change { CandidaciesVote.where(candidacy:).count })
+
+              expect(flash[:alert]).to be_present
+              expect(response).to render_template(:fill_personal_data)
+            end
           end
         end
 
-        context "and Guest users" do
-          it "receives unauthorized response" do
-            post :create, params: { candidacy_slug: candidacy.slug, format: :js }
-            expect(response).to have_http_status(:unauthorized)
-          end
-
-          it "do not register the vote" do
+        context "with a guest user" do
+          # Signer identity is verified by Signador, so no session is required.
+          it "creates an unsigned vote and redirects to Signador" do
             expect do
-              post :create, params: { candidacy_slug: candidacy.slug, format: :js }
+              put :store_personal_data, params:
+            end.to change { CandidaciesVote.where(candidacy:).count }.by(1)
+
+            expect(response).to redirect_to("https://signador.example.org/sign")
+          end
+        end
+
+        context "when signatures are not enabled" do
+          let(:candidacy) { create(:candidacy, :created, organization:) }
+
+          it "does not register the vote" do
+            expect do
+              put :store_personal_data, params:
             end.not_to(change { CandidaciesVote.where(candidacy:).count })
           end
         end
       end
 
-      context "when GET show first step" do
-        let(:candidacy) { candidacy_with_user_extra_fields }
+      context "when GET fill_personal_data" do
+        let(:candidacy) { create(:candidacy, :with_user_extra_fields_collection, organization:) }
 
-        context "and Authorized user" do
-          it "can get first step" do
-            sign_in candidacy.author, scope: :user
+        it "renders the personal data step" do
+          sign_in user, scope: :user
 
-            get :fill_personal_data, params: { candidacy_slug: candidacy.slug }
-            expect(subject.helpers.current_candidacy).to eq(candidacy)
-            expect(subject.helpers.extra_data_legal_information).to eq(candidacy.scoped_type.type.extra_fields_legal_information)
-          end
+          get :fill_personal_data, params: { candidacy_slug: candidacy.slug }
+
+          expect(response).to have_http_status(:ok)
+          expect(subject.helpers.current_candidacy).to eq(candidacy)
+          expect(subject.helpers.extra_data_legal_information).to eq(candidacy.scoped_type.type.extra_fields_legal_information)
         end
       end
     end

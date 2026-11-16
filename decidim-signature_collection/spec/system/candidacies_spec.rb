@@ -3,7 +3,7 @@
 require "spec_helper"
 require "decidim/core/test/shared_examples/has_contextual_help"
 
-describe "Candidacies", skip: "Awaiting review" do
+describe "Candidacies" do
   let(:organization) { create(:organization) }
   let(:base_candidacy) do
     create(:candidacy, organization:)
@@ -152,7 +152,7 @@ describe "Candidacies", skip: "Awaiting review" do
         end
 
         it "shows the card image" do
-          within "#candidacy_#{candidacy.id}" do
+          within "#signature_collection__candidacy_#{candidacy.id}" do
             expect(page).to have_css(".card__grid-img")
           end
         end

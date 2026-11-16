@@ -4,7 +4,7 @@ require "spec_helper"
 
 module Decidim
   module SignatureCollection
-    describe CandidaciesType, skip: "Awaiting review" do
+    describe CandidaciesType do
       let(:candidacies_type) { build(:candidacies_type) }
 
       it "is valid" do

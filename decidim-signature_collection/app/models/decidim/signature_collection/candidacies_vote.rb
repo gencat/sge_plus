@@ -36,7 +36,7 @@ module Decidim
       private
 
       def encryptor
-        @encryptor ||= Decidim::SignatureCollection::DataEncryptor.new(secret: "personal user metadata")
+        @encryptor ||= Decidim::SignatureCollection::DataEncryptor.new(secret: Rails.application.secret_key_base)
       end
 
       def update_counter_cache

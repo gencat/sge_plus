@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe "Candidacy", skip: "Awaiting review" do
+describe "Candidacy" do
   let(:organization) { create(:organization) }
   let!(:user) { create(:user, :confirmed, organization:) }
   let(:login) { true }
@@ -22,7 +22,7 @@ describe "Candidacy", skip: "Awaiting review" do
   shared_examples "candidacies path redirection" do
     it "redirects to candidacies path" do
       accept_confirm do
-        click_on("Send my candidacy to technical validation")
+        click_on("Send candidacy to technical validation")
       end
 
       expect(page).to have_current_path("/candidacies")
@@ -117,7 +117,7 @@ describe "Candidacy", skip: "Awaiting review" do
       context "when the user is logged in" do
         it "they are taken to the candidacy form" do
           click_on "New candidacy"
-          expect(page).to have_content("Create a new candidacy")
+          expect(page).to have_field("candidacy_title")
         end
       end
 
@@ -137,7 +137,7 @@ describe "Candidacy", skip: "Awaiting review" do
             click_on "Log in"
           end
 
-          expect(page).to have_content("Create a new candidacy")
+          expect(page).to have_field("candidacy_title")
         end
       end
     end
@@ -231,7 +231,7 @@ describe "Candidacy", skip: "Awaiting review" do
 
         it "offers contextual help" do
           within ".flash.secondary" do
-            expect(page).to have_content("Review the content of your candidacy.")
+            expect(page).to have_content("Remember that, prior to starting the collection of signatures")
           end
         end
       end
@@ -266,7 +266,7 @@ describe "Candidacy", skip: "Awaiting review" do
 
         it "offers contextual help" do
           within ".flash.secondary" do
-            expect(page).to have_content("Review the content of your candidacy.")
+            expect(page).to have_content("Remember that, prior to starting the collection of signatures")
           end
         end
       end
@@ -294,7 +294,7 @@ describe "Candidacy", skip: "Awaiting review" do
           let!(:other_candidacy_type_scope) { nil }
 
           before do
-            fill_in "Title", with: translated(candidacy.title, locale: :en)
+            fill_in "candidacy_title", with: translated(candidacy.title, locale: :en)
             fill_in "candidacy_description", with: translated(candidacy.description, locale: :en)
             find_button("Continue").click
           end
@@ -321,9 +321,7 @@ describe "Candidacy", skip: "Awaiting review" do
 
           it "offers contextual help" do
             within ".flash.secondary" do
-              expect(page).to have_content("Review the content of your candidacy. Is your title easy to understand? Is the objective of your candidacy clear?")
-              expect(page).to have_content("You have to choose the type of signature. In-person, online or a combination of both")
-              expect(page).to have_content("Which is the geographic scope of the candidacy?")
+              expect(page).to have_content("Remember that, prior to starting the collection of signatures")
             end
           end
 
@@ -332,9 +330,9 @@ describe "Candidacy", skip: "Awaiting review" do
             expect(find(:xpath, "//input[@id='candidacy_type_id']", visible: :all).value).to eq(candidacy_type.id.to_s)
           end
 
-          it "shows input for signature collection type" do
-            expect(page).to have_content("Signature collection type")
-            expect(find(:xpath, "//select[@id='candidacy_signature_type']", visible: :all).value).to eq(candidacy_type.signature_type)
+          it "does not let the user choose the signature collection type" do
+            expect(page).to have_no_select("candidacy_signature_type")
+            expect(page).to have_xpath("//input[@id='candidacy_signature_type']", visible: :all)
           end
 
           context "when only one signature collection and scope are available" do
@@ -351,7 +349,6 @@ describe "Candidacy", skip: "Awaiting review" do
 
           context "when the scope is not selected" do
             it "shows an error" do
-              select("Online", from: "Signature collection type")
               find_button("Continue").click
 
               expect_blank_field_validation_message("#candidacy_scope_id", type: :select)
@@ -396,9 +393,8 @@ describe "Candidacy", skip: "Awaiting review" do
         before do
           first(".card__highlight .button__secondary").click
 
-          fill_in "Title", with: translated(candidacy.title, locale: :en)
+          fill_in "candidacy_title", with: translated(candidacy.title, locale: :en)
           fill_in "candidacy_description", with: translated(candidacy.description, locale: :en)
-          select("Online", from: "Signature collection type")
           select(translated(candidacy_type_scope&.scope&.name, locale: :en), from: "Scope")
           find_button("Continue").click
         end
@@ -420,57 +416,22 @@ describe "Candidacy", skip: "Awaiting review" do
         end
       end
 
-      context "when the candidacy is created by an user group" do
-        let(:organization) { create(:organization, user_groups_enabled: true) }
-        let(:candidacy) { build(:candidacy) }
-        let!(:user_group) { create(:user_group, :verified, organization:, users: [user]) }
-
-        before do
-          user.reload
-          first(".card__highlight .button__secondary").click
-
-          fill_in "Title", with: translated(candidacy.title, locale: :en)
-          fill_in "candidacy_description", with: translated(candidacy.description, locale: :en)
-          select("Online", from: "Signature collection type")
-          select(translated(candidacy_type_scope&.scope&.name, locale: :en), from: "Scope")
-        end
-
-        it "shows the user group as author" do
-          expect(Decidim::SignatureCollection::Candidacy.where(decidim_user_group_id: user_group.id).count).to eq(0)
-          select(user_group.name, from: "Author")
-          find_button("Continue").click
-          expect(Decidim::SignatureCollection::Candidacy.where(decidim_user_group_id: user_group.id).count).to eq(1)
-        end
-      end
-
       context "when finish" do
         let(:candidacy) { build(:candidacy) }
 
         before do
           first(".card__highlight .button__secondary").click
 
-          fill_in "Title", with: translated(candidacy.title, locale: :en)
+          fill_in "candidacy_title", with: translated(candidacy.title, locale: :en)
           fill_in "candidacy_description", with: translated(candidacy.description, locale: :en)
-          select("Online", from: "Signature collection type")
           select(translated(candidacy_type_scope&.scope&.name, locale: :en), from: "Scope")
           dynamically_attach_file(:candidacy_documents, Decidim::Dev.asset("Exampledocument.pdf"))
           find_button("Continue").click
-          expect(page).to have_content("Your candidacy has been successfully created.")
+          expect(page).to have_content("Congratulations! The process has been successfully initiated.")
         end
 
         it "saves the attachments" do
           expect(Decidim::SignatureCollection::Candidacy.last.documents.count).to eq(1)
-        end
-
-        it "shows the page component" do
-          find_link("Go to my candidacies").click
-          find_link(translated(candidacy.title, locale: :en)).click
-
-          within ".participatory-space__nav-container" do
-            find_link("Page").click
-          end
-
-          expect(page).to have_content("Page")
         end
 
         context "when minimum committee size is above zero" do
@@ -480,17 +441,17 @@ describe "Candidacy", skip: "Awaiting review" do
 
           it "Offers contextual help" do
             within ".flash.secondary" do
-              expect(page).to have_content("Congratulations! Your candidacy has been successfully created.")
+              expect(page).to have_content("Congratulations! The process has been successfully initiated.")
             end
           end
 
           it "displays an edit link" do
-            expect(page).to have_link("Edit my candidacy")
+            expect(page).to have_link("Edit candidacy")
           end
         end
 
-        it "displays a link to take the user to their candidacies" do
-          find_link("Edit my candidacy").click
+        it "displays a link to edit the candidacy" do
+          find_link("Edit candidacy").click
 
           expect(page).to have_field("candidacy_title", with: translated(candidacy.title, locale: :en))
         end
@@ -498,20 +459,19 @@ describe "Candidacy", skip: "Awaiting review" do
 
       context "when minimum committee size is zero" do
         let(:candidacy) { build(:candidacy, organization:, scoped_type: candidacy_type_scope) }
-        let(:expected_message) { "You are going to send the candidacy for an admin to review it and publish it. Once published you will not be able to edit it. Are you sure?" }
+        let(:expected_message) { "You are going to send the candidacy for review and publication. Once published, you will not be able to edit it." }
 
         before do
           first(".card__highlight .button__secondary").click
 
-          fill_in "Title", with: translated(candidacy.title, locale: :en)
+          fill_in "candidacy_title", with: translated(candidacy.title, locale: :en)
           fill_in "candidacy_description", with: translated(candidacy.description, locale: :en)
-          select("Online", from: "Signature collection type")
           select(translated(candidacy_type_scope&.scope&.name, locale: :en), from: "Scope")
           find_button("Continue").click
         end
 
         it "displays a send to technical validation link" do
-          expect(page).to have_link("Send my candidacy to technical validation")
+          expect(page).to have_link("Send candidacy to technical validation")
           expect(page).to have_css "a[data-confirm='#{expected_message}']"
         end
 
@@ -521,20 +481,19 @@ describe "Candidacy", skip: "Awaiting review" do
       context "when promoting committee is not enabled" do
         let(:candidacy) { build(:candidacy, organization:, scoped_type: candidacy_type_scope) }
         let(:candidacy_type_promoting_committee_enabled) { false }
-        let(:expected_message) { "You are going to send the candidacy for an admin to review it and publish it. Once published you will not be able to edit it. Are you sure?" }
+        let(:expected_message) { "You are going to send the candidacy for review and publication. Once published, you will not be able to edit it." }
 
         before do
           first(".card__highlight .button__secondary").click
 
-          fill_in "Title", with: translated(candidacy.title, locale: :en)
+          fill_in "candidacy_title", with: translated(candidacy.title, locale: :en)
           fill_in "candidacy_description", with: translated(candidacy.description, locale: :en)
-          select("Online", from: "Signature collection type")
           select(translated(candidacy_type_scope&.scope&.name, locale: :en), from: "Scope")
           find_button("Continue").click
         end
 
         it "displays a send to technical validation link" do
-          expect(page).to have_link("Send my candidacy to technical validation")
+          expect(page).to have_link("Send candidacy to technical validation")
           expect(page).to have_css "a[data-confirm='#{expected_message}']"
         end
 

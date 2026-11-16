@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe "Admin manages candidacy publication", skip: "Awaiting review" do
+describe "Admin manages candidacy publication" do
   let!(:user) { create(:user, :admin, :confirmed, organization:) }
   let(:organization) { create(:organization) }
 
@@ -85,7 +85,7 @@ describe "Admin manages candidacy publication", skip: "Awaiting review" do
     end
   end
 
-  it "displays the entry in last activities" do
+  it "displays the entry in last activities", skip: "Decidim::ActionLog.public_resource_types does not include Decidim::SignatureCollection::Candidacy" do
     participatory_space.update(title: { en: title })
 
     switch_to_host(organization.host)

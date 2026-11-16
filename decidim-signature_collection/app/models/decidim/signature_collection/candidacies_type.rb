@@ -70,7 +70,7 @@ module Decidim
       end
 
       def minimum_signing_age?
-        minimum_signing_age.present?
+        minimum_signing_age.to_i.positive?
       end
     end
   end

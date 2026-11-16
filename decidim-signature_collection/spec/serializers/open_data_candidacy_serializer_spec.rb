@@ -3,7 +3,7 @@
 require "spec_helper"
 
 module Decidim::SignatureCollection
-  describe OpenDataCandidacySerializer, skip: "Awaiting review" do
+  describe OpenDataCandidacySerializer do
     subject { described_class.new(candidacy) }
 
     let(:candidacy) { create(:candidacy, :with_area) }
@@ -57,8 +57,8 @@ module Decidim::SignatureCollection
       end
 
       context "when candidacy has custom signature dates" do
-        let(:custom_start_date) { 1.month.ago.to_date }
-        let(:custom_end_date) { 1.month.from_now.to_date }
+        let(:custom_start_date) { 2.months.ago.to_date }
+        let(:custom_end_date) { 2.months.from_now.to_date }
 
         before do
           candidacy.update!(signature_start_date: custom_start_date, signature_end_date: custom_end_date)

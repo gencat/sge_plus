@@ -2,8 +2,8 @@
 
 require "spec_helper"
 
-describe "Admin manages candidacies types", skip: "Awaiting review" do
-  let(:organization) { create(:organization) }
+describe "Admin manages candidacies types" do
+  let(:organization) { create(:organization, available_authorizations: %w(dummy_authorization_handler)) }
   let(:user) { create(:user, :admin, :confirmed, organization:) }
   let!(:candidacies_type) { create(:candidacies_type, organization:) }
   let(:attributes) { attributes_for(:candidacies_type) }
@@ -37,6 +37,7 @@ describe "Admin manages candidacies types", skip: "Awaiting review" do
       )
 
       select("Online", from: "Signature type")
+      select("Example authorization", from: "Authorization to verify document number on signatures")
 
       click_on "Create"
 
@@ -50,7 +51,8 @@ describe "Admin manages candidacies types", skip: "Awaiting review" do
   context "when updating an candidacy type" do
     it "updates the candidacy type" do
       within "tr", text: translated(candidacies_type.title) do
-        page.find(".action-icon--edit").click
+        find("button[data-controller='dropdown']").click
+        click_on "Configure"
       end
 
       fill_in_i18n(
@@ -66,8 +68,8 @@ describe "Admin manages candidacies types", skip: "Awaiting review" do
 
       select("Mixed", from: "Signature type")
       check "Enable attachments"
-      uncheck "Enable participants to undo their online signatures"
       uncheck "Enable comments"
+      select("Example authorization", from: "Authorization to verify document number on signatures")
 
       click_on "Update"
 
@@ -81,8 +83,9 @@ describe "Admin manages candidacies types", skip: "Awaiting review" do
   context "when deleting an candidacy type" do
     it "deletes the candidacy type" do
       within "tr", text: translated(candidacies_type.title) do
+        find("button[data-controller='dropdown']").click
         accept_confirm do
-          page.find(".action-icon--remove").click
+          click_on "Delete"
         end
       end
 
