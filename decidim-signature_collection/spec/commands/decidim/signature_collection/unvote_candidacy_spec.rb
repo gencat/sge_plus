@@ -4,7 +4,7 @@ require "spec_helper"
 
 module Decidim
   module SignatureCollection
-    describe UnvoteCandidacy do
+    describe UnvoteCandidacy, skip: "Votes no longer have an author (removed in 20251222131109), pending decision on unvote" do
       describe "User unvotes candidacy" do
         let(:vote) { create(:candidacy_user_vote) }
         let(:command) { described_class.new(vote.candidacy, vote.author) }

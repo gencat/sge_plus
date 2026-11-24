@@ -78,19 +78,20 @@ module Decidim
       }
       scope :closed, lambda {
         where(state: [:discarded, :rejected, :accepted])
-          .or(where(state: [:open]).currently_unsignable)
+          .or(currently_unsignable)
       }
       scope :published, -> { where.not(published_at: nil) }
       scope :with_state, ->(state) { where(state:) if state.present? }
 
       scope_search_multi :with_any_state, [:accepted, :rejected, :answered, :open, :closed]
 
-      # The signature period is configured in the candidacy type (see #signature_period_active?).
       scope :currently_signable, lambda {
-        where(scoped_type_id: CandidaciesTypeScope.with_active_signature_period.select(:id))
+        where(signature_start_date: ..Date.current)
+          .where(signature_end_date: Date.current..)
       }
       scope :currently_unsignable, lambda {
-        where.not(scoped_type_id: CandidaciesTypeScope.with_active_signature_period.select(:id))
+        where("signature_start_date > ?", Date.current)
+          .or(where(signature_end_date: ...Date.current))
       }
 
       scope :answered, -> { where.not(answered_at: nil) }

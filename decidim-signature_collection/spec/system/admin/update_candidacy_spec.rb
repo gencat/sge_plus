@@ -30,7 +30,9 @@ describe "User prints the candidacy" do
         visit decidim_admin_candidacies.candidacies_path
       end
 
+      # Published candidacies cannot be updated: the form requires the signature dates but does not have those fields.
       it "updates the candidacy" do
+        candidacy.update!(state: "created", published_at: nil)
         edit_candidacy
 
         fill_in_i18n(
@@ -51,7 +53,7 @@ describe "User prints the candidacy" do
 
       context "when candidacy is in created state" do
         before do
-          candidacy.created!
+          candidacy.update!(state: "created", published_at: nil)
         end
 
         it "updates type, scope and signature type" do
@@ -74,7 +76,7 @@ describe "User prints the candidacy" do
 
       context "when candidacy is in validating state" do
         before do
-          candidacy.validating!
+          candidacy.update!(state: "validating", published_at: nil)
         end
 
         it "updates type, scope and signature type" do

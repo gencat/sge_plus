@@ -230,10 +230,7 @@ es:
           notification_title: La candidatura <a href="%{resource_path}">%{resource_title}</a> ha logrado el %{percentage}% de las firmas.
       signature_collection:
         candidacy_sent_to_technical_validation:
-          email_intro: La candidatura "%{resource_title}" ha sido enviada a la validación técnica. Compruébala en <a href="%{admin_candidacy_url}">el panel de administración</a>
-          email_outro: Has recibido esta notificación porque administras la plataforma.
-          email_subject: La candidatura "%{resource_title}" fue enviada a validación técnica.
-          notification_title: La candidatura "%{resource_title}" ha sido enviada a validación técnica. Compruébalo en <a href="%{admin_candidacy_path}">el panel de administración</a>
+          notification_title: La candidatura "%{resource_title}" se ha enviado a validación técnica. Compruébalo a través del <a href="%{resource_path}">panel de administración</a>
       support_threshold_reached:
         email_intro: La candidatura %{resource_title} ha alcanzado el umbral de firmas
         email_outro: Has recibido esta notificación porque administras la plataforma.

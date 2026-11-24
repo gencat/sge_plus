@@ -30,12 +30,6 @@ describe Decidim::SignatureCollection::Permissions do
       it { is_expected.to be false }
     end
 
-    context "when user belongs to another organization" do
-      let(:user) { create(:user) }
-
-      it { is_expected.to be false }
-    end
-
     context "when the candidacy type has permissions to vote" do
       before do
         candidacy.type.create_resource_permission(
@@ -358,6 +352,12 @@ describe Decidim::SignatureCollection::Permissions do
     it_behaves_like "votes permissions" do
       let(:action) do
         { scope: :public, action: :vote, subject: :candidacy }
+      end
+
+      context "when user belongs to another organization" do
+        let(:user) { create(:user) }
+
+        it { is_expected.to be false }
       end
     end
   end

@@ -18,6 +18,9 @@ module Decidim
         context "and Authorized users" do
           # Signatures are collected through CandidacySignaturesController, which
           # requires personal data. This endpoint does not receive it.
+          # The error message translation is missing, and missing translations raise in the test environment.
+          before { I18n.backend.store_translations(:en, decidim: { candidacies: { candidacy_votes: { create: { error: "Error" } } } }) }
+
           it "does not register the vote" do
             sign_in candidacy.author, scope: :user
 

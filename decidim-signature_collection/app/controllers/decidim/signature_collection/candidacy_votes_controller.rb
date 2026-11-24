@@ -27,7 +27,7 @@ module Decidim
 
           on(:invalid) do
             render json: {
-              error: I18n.t("candidacy_votes.create.invalid", scope: "decidim.signature_collection")
+              error: I18n.t("candidacy_votes.create.error", scope: "decidim.candidacies")
             }, status: :unprocessable_entity
           end
         end

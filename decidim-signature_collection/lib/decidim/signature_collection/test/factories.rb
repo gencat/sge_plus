@@ -176,6 +176,8 @@ FactoryBot.define do
 
     trait :acceptable do
       signature_type { "online" }
+      signature_start_date { Date.current - 4.months }
+      signature_end_date { Date.current - 1.month }
 
       after(:build) do |candidacy|
         candidacy.type.signature_period_start = Date.current - 4.months
@@ -188,6 +190,8 @@ FactoryBot.define do
 
     trait :rejectable do
       signature_type { "online" }
+      signature_start_date { Date.current - 4.months }
+      signature_end_date { Date.current - 1.month }
 
       after(:build) do |candidacy|
         candidacy.type.signature_period_start = Date.current - 4.months

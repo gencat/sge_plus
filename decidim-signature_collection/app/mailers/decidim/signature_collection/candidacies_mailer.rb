@@ -100,7 +100,7 @@ module Decidim
         @organization = candidacy.organization
         @link = candidacy_url(candidacy, host: @organization.host)
 
-        recipients = members.map(&:email).compact_blank
+        recipients = members.map(&:email).compact
 
         with_user(current_user) do
           @subject = I18n.t(

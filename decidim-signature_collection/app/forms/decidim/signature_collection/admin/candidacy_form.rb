@@ -25,6 +25,8 @@ module Decidim
         validates :title, :description, translatable_presence: true
         validates :area, presence: true, if: ->(form) { form.area_id.present? }
         validates :signature_type, presence: true, if: :signature_type_updatable?
+        validates :signature_start_date, presence: true, if: ->(form) { form.context.candidacy.published? }
+        validates :signature_end_date, presence: true, if: ->(form) { form.context.candidacy.published? }
         validates :signature_end_date, date: { after: :signature_start_date }, if: lambda { |form|
           form.signature_start_date.present? && form.signature_end_date.present?
         }

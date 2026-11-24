@@ -302,7 +302,7 @@ RSpec.describe "Candidacy search" do
     context "and author is myself" do
       let(:author) { "myself" }
 
-      it "contains only published candidacies of the author" do
+      it "contains only candidacies of the author, including their created upcoming candidacy" do
         expect(subject).not_to include(decidim_escape_translated(candidacy1.title))
         expect(subject).not_to include(decidim_escape_translated(candidacy2.title))
         expect(subject).not_to include(decidim_escape_translated(candidacy3.title))
@@ -315,7 +315,7 @@ RSpec.describe "Candidacy search" do
         expect(subject).not_to include(decidim_escape_translated(rejected_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(answered_rejected_candidacy.title))
         expect(subject).not_to include(decidim_escape_translated(created_candidacy.title))
-        expect(subject).not_to include(decidim_escape_translated(user1_created_candidacy.title))
+        expect(subject).to include(decidim_escape_translated(user1_created_candidacy.title))
       end
     end
   end

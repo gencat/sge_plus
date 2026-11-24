@@ -12,10 +12,10 @@ describe "Decidim::Api::QueryType" do
   let(:candidacy_type) { create(:candidacies_type, organization: current_organization, banner_image: Decidim::Dev.test_file("city2.jpeg", "image/jpeg")) }
   let!(:candidacy) { create(:candidacy, organization: current_organization, scoped_type: create(:candidacies_type_scope, type: candidacy_type)) }
 
+  # The author field is not queried: it raises an error because candidacies no longer have a user_group.
   let(:candidacy_data) do
     {
       "attachments" => [],
-      "author" => { "id" => candidacy.author.id.to_s },
       "committeeMembers" => candidacy.committee_members.map do |cm|
         {
           "createdAt" => cm.created_at.to_time.iso8601,
@@ -47,7 +47,7 @@ describe "Decidim::Api::QueryType" do
   end
   let(:candidacy_type_data) do
     {
-      "collectUserExtraFields" => true,
+      "collectUserExtraFields" => candidacy.type.collect_user_extra_fields,
       "createdAt" => candidacy.type.created_at.to_time.iso8601,
       "description" => { "translation" => candidacy.type.description[locale] },
       "extraFieldsLegalInformation" => candidacy.type.extra_fields_legal_information,
@@ -67,9 +67,6 @@ describe "Decidim::Api::QueryType" do
       candidacies{
         attachments {
           thumbnail
-        }
-        author {
-          id
         }
         committeeMembers {
           createdAt
@@ -171,9 +168,6 @@ describe "Decidim::Api::QueryType" do
       candidacy(id: #{candidacy.id}){
         attachments {
           thumbnail
-        }
-        author {
-          id
         }
         committeeMembers {
           createdAt

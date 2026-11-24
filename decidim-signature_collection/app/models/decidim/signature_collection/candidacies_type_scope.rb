@@ -24,18 +24,6 @@ module Decidim
                dependent: :restrict_with_error,
                inverse_of: :scoped_type
 
-      # Type scopes whose candidacy type signature period is currently active.
-      # Mirrors Candidacy#signature_period_active? (a period with no start nor end is never active).
-      scope :with_active_signature_period, lambda {
-        now = Time.current
-        types = CandidaciesType.arel_table
-
-        joins(:type)
-          .where(types[:signature_period_start].not_eq(nil).or(types[:signature_period_end].not_eq(nil)))
-          .where(types[:signature_period_start].eq(nil).or(types[:signature_period_start].lteq(now)))
-          .where(types[:signature_period_end].eq(nil).or(types[:signature_period_end].gteq(now)))
-      }
-
       validates :scope, uniqueness: { scope: :type }
       validates :supports_required, presence: true
       validates :supports_required, numericality: {
