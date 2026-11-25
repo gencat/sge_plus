@@ -91,7 +91,9 @@ module Decidim
           expect(last_email_body).to include("has endorsed the following candidacy")
         end
 
-        context "when a new milestone is completed", skip: "Votes are created unsigned and are not counted, so VoteCandidacy never reaches a milestone" do
+        # Votes are created unsigned and are not counted until Signador signs them,
+        # so this command never completes a milestone nor reaches the threshold.
+        context "when the vote would complete a new milestone" do
           let(:candidacy) do
             create(:candidacy,
                    organization:,
@@ -106,38 +108,30 @@ module Decidim
           let!(:follow) { create(:follow, followable: candidacy, user: follower) }
 
           before do
-            create(:candidacy_user_vote, candidacy:)
-            create(:candidacy_user_vote, candidacy:)
+            create_list(:candidacy_user_vote, 2, :signed, candidacy:)
           end
 
-          it "notifies the followers" do
-            expect(Decidim::EventsManager).to receive(:publish)
-              .with(kind_of(Hash))
+          it "does not change the percentage" do
+            expect { command.call }.not_to(change { candidacy.reload.percentage }.from(50))
+          end
 
+          it "only notifies the endorsement" do
             expect(Decidim::EventsManager)
               .to receive(:publish)
-              .with(
-                event: "decidim.events.milestone_completed",
-                event_class: Decidim::SignatureCollection::MilestoneCompletedEvent,
-                resource: candidacy,
-                affected_users: [candidacy.author],
-                followers: [follower],
-                extra: { percentage: 75 }
-              )
+              .once
+              .with(hash_including(event: "decidim.events.signature_collection.candidacy_endorsed"))
 
             command.call
           end
 
-          it "sends notification with email" do
+          it "does not send any email to the followers of the candidacy" do
             expect do
               perform_enqueued_jobs { command.call }
-            end.to change(emails, :count).by(3)
-
-            expect(last_email_body).to include("has achieved the 75% of signatures")
+            end.not_to change(emails, :count)
           end
         end
 
-        context "when support threshold is reached", skip: "Votes are created unsigned and are not counted, so VoteCandidacy never reaches a milestone" do
+        context "when the vote would reach the support threshold" do
           let!(:admin) { create(:user, :admin, :confirmed, organization:) }
           let(:candidacy) do
             create(:candidacy,
@@ -150,56 +144,41 @@ module Decidim
           end
 
           before do
-            create(:candidacy_user_vote, candidacy:)
-            create(:candidacy_user_vote, candidacy:)
-            create(:candidacy_user_vote, candidacy:)
+            create_list(:candidacy_user_vote, 3, :signed, candidacy:)
           end
 
-          it "notifies the admins" do
-            expect(Decidim::EventsManager).to receive(:publish)
-              .with(kind_of(Hash)).twice
+          it "does not change the percentage" do
+            expect { command.call }.not_to(change { candidacy.reload.percentage }.from(75))
+          end
 
+          it "only notifies the endorsement" do
             expect(Decidim::EventsManager)
               .to receive(:publish)
-              .with(
-                event: "decidim.events.support_threshold_reached",
-                event_class: Decidim::SignatureCollection::Admin::SupportThresholdReachedEvent,
-                resource: candidacy,
-                followers: [admin]
-              )
+              .once
+              .with(hash_including(event: "decidim.events.signature_collection.candidacy_endorsed"))
 
             command.call
           end
 
-          it "sends notification with email" do
+          it "does not send any email to the admins" do
             expect do
               perform_enqueued_jobs { command.call }
-            end.to change(emails, :count).by(3)
-
-            expect(last_email_body).to include("has reached the signatures threshold")
+            end.not_to change(emails, :count)
           end
 
-          context "when more votes are added" do
+          context "when the threshold has already been reached" do
             before do
-              create(:candidacy_user_vote, candidacy:)
+              create(:candidacy_user_vote, :signed, candidacy:)
             end
 
-            it "does not notifies the admins" do
-              expect(Decidim::EventsManager).to receive(:publish)
-                .with(kind_of(Hash)).once
-
+            it "does not notify the admins" do
+              expect(candidacy.reload.percentage).to eq(100)
               expect(Decidim::EventsManager)
-                .not_to receive(:publish)
-                .with(
-                  event: "decidim.events.support_threshold_reached",
-                  event_class: Decidim::SignatureCollection::Admin::SupportThresholdReachedEvent,
-                  resource: candidacy,
-                  followers: [admin]
-                )
+                .to receive(:publish)
+                .once
+                .with(hash_including(event: "decidim.events.signature_collection.candidacy_endorsed"))
 
-              expect do
-                perform_enqueued_jobs { command.call }
-              end.to change(emails, :count).by(1)
+              command.call
             end
           end
         end

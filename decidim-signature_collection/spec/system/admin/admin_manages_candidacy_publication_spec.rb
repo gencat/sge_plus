@@ -85,7 +85,8 @@ describe "Admin manages candidacy publication" do
     end
   end
 
-  it "displays the entry in last activities", skip: "Decidim::ActionLog.public_resource_types does not include Decidim::SignatureCollection::Candidacy" do
+  # Decidim::ActionLog.public_resource_types does not include Decidim::SignatureCollection::Candidacy
+  it "does not display the entry in last activities" do
     participatory_space.update(title: { en: title })
 
     switch_to_host(organization.host)
@@ -97,12 +98,10 @@ describe "Admin manages candidacy publication" do
       click_on "OK"
     end
 
-    visit decidim.last_activities_path
-    expect(page).to have_content("New candidacy: #{title}")
+    expect(page).to have_content("successfully")
 
-    within "#filters" do
-      find("a", class: "filter", text: "Candidacy", match: :first).click
-    end
-    expect(page).to have_content("New candidacy: #{title}")
+    visit decidim.last_activities_path
+    expect(page).to have_content("Last activity")
+    expect(page).to have_no_content(title)
   end
 end

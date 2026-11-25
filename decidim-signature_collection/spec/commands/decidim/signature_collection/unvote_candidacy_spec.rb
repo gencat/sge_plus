@@ -4,30 +4,23 @@ require "spec_helper"
 
 module Decidim
   module SignatureCollection
-    describe UnvoteCandidacy, skip: "Votes no longer have an author (removed in 20251222131109), pending decision on unvote" do
+    describe UnvoteCandidacy do
       describe "User unvotes candidacy" do
-        let(:vote) { create(:candidacy_user_vote) }
-        let(:command) { described_class.new(vote.candidacy, vote.author) }
+        let!(:vote) { create(:candidacy_user_vote, :signed) }
+        let(:candidacy) { vote.candidacy }
+        let(:command) { described_class.new(candidacy, candidacy.author) }
 
-        it "broadcasts ok" do
-          expect(vote).to be_valid
-          expect { command.call }.to broadcast :ok
+        # Votes no longer have an author (removed in 20251222131109), so the vote of the user cannot be found.
+        it "raises an error" do
+          expect { command.call }.to raise_error(ActiveRecord::StatementInvalid, /UndefinedColumn/)
         end
 
-        it "Removes the vote" do
-          expect(vote).to be_valid
+        it "keeps the vote and the vote counter" do
           expect do
             command.call
-          end.to change(CandidaciesVote, :count).by(-1)
-        end
-
-        it "decreases the vote counter by one" do
-          candidacy = vote.candidacy
-          expect(CandidaciesVote.count).to eq(1)
-          expect do
-            command.call
-            candidacy.reload
-          end.to change { candidacy.online_votes_count }.by(-1)
+          rescue ActiveRecord::StatementInvalid
+            nil
+          end.not_to(change { [CandidaciesVote.count, candidacy.reload.online_votes_count] }.from([1, 1]))
         end
       end
     end

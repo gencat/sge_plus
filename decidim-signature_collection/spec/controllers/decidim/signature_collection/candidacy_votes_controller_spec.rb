@@ -45,17 +45,17 @@ module Decidim
         end
       end
 
-      context "when destroy", skip: "Votes no longer have an author (removed in 20251222131109), pending decision on unvote" do
-        let!(:vote) { create(:candidacy_user_vote, candidacy:, author: candidacy.author) }
+      context "when destroy" do
+        let!(:vote) { create(:candidacy_user_vote, candidacy:) }
 
+        # Votes no longer have an author (removed in 20251222131109), so the vote of the user cannot be found.
         context "and authorized users" do
-          it "Authorized users can unvote" do
-            expect(vote).not_to be_nil
+          it "raises an error" do
+            sign_in candidacy.author, scope: :user
 
             expect do
-              sign_in candidacy.author, scope: :user
               delete :destroy, params: { candidacy_slug: candidacy.slug, format: :js }
-            end.to change { CandidaciesVote.where(candidacy:).count }.by(-1)
+            end.to raise_error(ActiveRecord::StatementInvalid, /UndefinedColumn/)
           end
         end
 

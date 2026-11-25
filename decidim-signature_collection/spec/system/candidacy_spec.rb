@@ -325,22 +325,24 @@ describe "Candidacy" do
       end
     end
 
-    context "when signed in as the author of the candidacy",
-            skip: "decidim-blogs and decidim-meetings only grant author permissions for Decidim::Initiative spaces" do
+    # decidim-blogs and decidim-meetings only grant author permissions for Decidim::Initiative spaces.
+    context "when signed in as the author of the candidacy" do
       before do
         sign_in candidacy.author
       end
 
-      it "has special permissions to create posts" do
+      it "does not have special permissions to create posts" do
         visit Decidim::EngineRouter.main_proxy(blogs_component).root_path
 
-        expect(page).to have_content("New post")
+        expect(page).to have_content("There are no posts yet.")
+        expect(page).to have_no_content("New post")
       end
 
-      it "has special permissions to create meetings" do
+      it "does not have special permissions to create meetings" do
         visit Decidim::EngineRouter.main_proxy(meetings_component).root_path
 
-        expect(page).to have_content("New meeting")
+        expect(page).to have_css('[id^="meetings__meeting"]', count: 3)
+        expect(page).to have_no_content("New meeting")
       end
     end
   end

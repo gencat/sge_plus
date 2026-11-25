@@ -27,8 +27,7 @@ module Decidim
 
         @votes = current_candidacy.votes.with_xml_signed
 
-        serializer = Decidim::Forms::UserAnswersSerializer
-        pdf_export = Decidim::Exporters::CandidacyVotesPDF.new(@votes, current_candidacy, serializer).export
+        pdf_export = Decidim::Exporters::CandidacyVotesPDF.new(@votes, current_candidacy).export
 
         output = if pdf_signature_service
                    pdf_signature_service.new(pdf: pdf_export.read).signed_pdf

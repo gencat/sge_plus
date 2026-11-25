@@ -251,7 +251,7 @@ describe Decidim::SignatureCollection::Admin::Permissions do
           let(:action_name) { name }
           let(:context) { { candidacy:, attachment: } }
 
-          context "when attached to an candidacy", skip: "Allowing a previously disallowed action raises PermissionCannotBeDisallowedError" do
+          context "when attached to an candidacy" do
             let(:attachment) { create(:attachment, attached_to: candidacy) }
 
             it { is_expected.to be true }
@@ -265,13 +265,13 @@ describe Decidim::SignatureCollection::Admin::Permissions do
         end
       end
 
-      context "when reading", skip: "Allowing a previously disallowed action raises PermissionCannotBeDisallowedError" do
+      context "when reading" do
         let(:action_name) { :read }
 
         it { is_expected.to be true }
       end
 
-      context "when creating", skip: "Allowing a previously disallowed action raises PermissionCannotBeDisallowedError" do
+      context "when creating" do
         let(:action_name) { :create }
 
         it { is_expected.to be true }
@@ -279,6 +279,21 @@ describe Decidim::SignatureCollection::Admin::Permissions do
 
       it_behaves_like "attached to an candidacy", :update
       it_behaves_like "attached to an candidacy", :destroy
+
+      context "when the candidacy type does not allow attachments" do
+        let(:attachment) { create(:attachment, attached_to: candidacy) }
+        let(:context) { { candidacy:, attachment: } }
+
+        before { candidacy.type.update!(attachments_enabled: false) }
+
+        [:read, :create, :update, :destroy].each do |name|
+          context "when action is #{name}" do
+            let(:action_name) { name }
+
+            it { is_expected.to be false }
+          end
+        end
+      end
     end
   end
 

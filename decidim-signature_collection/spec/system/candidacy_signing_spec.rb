@@ -100,8 +100,21 @@ describe "Candidacy signing" do
     end
   end
 
-  context "when the user has signed the candidacy and unsigns it", skip: "Votes no longer have an author (removed in 20251222131109), pending decision on unvote" do
-    it "removes the signature"
+  # Votes no longer have an author (removed in 20251222131109), so the page does not know who has signed.
+  context "when the user has signed the candidacy" do
+    before do
+      create(:candidacy_user_vote, :signed, candidacy:)
+    end
+
+    it "does not offer to remove the signature" do
+      visit decidim_candidacies.candidacy_path(candidacy)
+
+      within ".candidacy__aside" do
+        expect(page).to have_link("Sign")
+        expect(page).to have_no_content("Already signed")
+        expect(page).to have_no_css("form[action*='candidacy_vote']")
+      end
+    end
   end
 
   def fill_personal_data

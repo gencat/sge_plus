@@ -425,13 +425,17 @@ describe "Candidacy" do
           fill_in "candidacy_title", with: translated(candidacy.title, locale: :en)
           fill_in "candidacy_description", with: translated(candidacy.description, locale: :en)
           select(translated(candidacy_type_scope&.scope&.name, locale: :en), from: "Scope")
-          dynamically_attach_file(:candidacy_attachments, Decidim::Dev.asset("Exampledocument.pdf"))
+          dynamically_attach_file(:candidacy_documents, Decidim::Dev.asset("Exampledocument.pdf"))
           find_button("Continue").click
+          # Wait for the navigation, so that the nodes of the previous page are not checked
+          expect(page).to have_current_path(%r{create_candidacy/(promotal_committee|finish)})
           expect(page).to have_content("Congratulations! The process has been successfully initiated.")
         end
 
-        it "saves the attachments", skip: "The form sends the files as attachments, but CandidacyForm expects documents, so they are not saved" do
-          expect(Decidim::SignatureCollection::Candidacy.last.documents.count).to eq(1)
+        it "saves the attachments" do
+          attachments = Decidim::SignatureCollection::Candidacy.last.attachments
+
+          expect(attachments.map { |attachment| attachment.file.filename.to_s }).to eq(["Exampledocument.pdf"])
         end
 
         context "when minimum committee size is above zero" do

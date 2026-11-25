@@ -577,13 +577,15 @@ describe Decidim::SignatureCollection::Admin::CandidaciesController do
         sign_in admin_user, scope: :user
       end
 
-      it "is allowed", skip: "Decidim::Forms::UserAnswersSerializer does not exist in Decidim 0.31" do
+      it "exports a PDF file" do
         get :export_pdf_signatures, params: { slug: candidacy.to_param, format: :pdf }
-        expect(flash[:alert]).to be_nil
+
         expect(response).to have_http_status(:ok)
+        expect(response.media_type).to eq("application/pdf")
+        expect(response.body).to start_with("%PDF")
       end
 
-      it "only exports signed votes", skip: "Decidim::Forms::UserAnswersSerializer does not exist in Decidim 0.31" do
+      it "only exports signed votes" do
         create(:candidacy_user_vote, candidacy:)
         signed_vote = create(:candidacy_user_vote, candidacy:, encrypted_xml_doc_signed: "signed")
         exported_votes = nil
@@ -594,6 +596,7 @@ describe Decidim::SignatureCollection::Admin::CandidaciesController do
 
         get :export_pdf_signatures, params: { slug: candidacy.to_param, format: :pdf }
 
+        expect(response).to have_http_status(:ok)
         expect(exported_votes).to eq([signed_vote])
       end
     end

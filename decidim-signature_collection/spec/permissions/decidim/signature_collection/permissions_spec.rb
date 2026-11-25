@@ -370,7 +370,7 @@ describe Decidim::SignatureCollection::Permissions do
     end
   end
 
-  context "when unvoting an candidacy", skip: "Votes no longer have an author (removed in 20251222131109), pending decision on unvote" do
+  context "when unvoting an candidacy" do
     let(:action) do
       { scope: :public, action: :unvote, subject: :candidacy }
     end
@@ -379,11 +379,9 @@ describe Decidim::SignatureCollection::Permissions do
       { candidacy: }
     end
     let(:votes_enabled?) { true }
-    let(:accepts_online_unvotes?) { true }
 
     before do
       allow(candidacy).to receive(:votes_enabled?).and_return(votes_enabled?)
-      allow(candidacy).to receive(:accepts_online_unvotes?).and_return(accepts_online_unvotes?)
     end
 
     context "when candidacy has votes disabled" do
@@ -393,7 +391,9 @@ describe Decidim::SignatureCollection::Permissions do
     end
 
     context "when candidacy has unvotes disabled" do
-      let(:accepts_online_unvotes?) { false }
+      before do
+        candidacy.type.update!(undo_online_signatures_enabled: false)
+      end
 
       it { is_expected.to be false }
     end
@@ -404,17 +404,12 @@ describe Decidim::SignatureCollection::Permissions do
       it { is_expected.to be false }
     end
 
-    context "when user has not voted the candidacy" do
-      it { is_expected.to be false }
-    end
-
-    context "when user has verified user groups" do
-      before do
-        create(:user_group, :verified, users: [user], organization: user.organization)
-        create(:candidacy_user_vote, candidacy:, author: user)
+    # Votes no longer have an author (removed in 20251222131109), so the votes of the user cannot be found.
+    context "when candidacy accepts unvotes" do
+      it "raises an error" do
+        expect(candidacy).to be_accepts_online_unvotes
+        expect { subject }.to raise_error(ActiveRecord::StatementInvalid, /UndefinedColumn/)
       end
-
-      it { is_expected.to be true }
     end
   end
 
