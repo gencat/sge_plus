@@ -26,6 +26,9 @@ gem "dotenv", "~> 3.2.0"
 
 gem "solid_queue", ">= 1.2.0"
 
+# Active Storage service for Amazon S3
+gem "aws-sdk-s3", "~> 1.0", require: false
+
 # Memcached client for Ruby. It is used by Rails to cache data in Memcached.
 gem "dalli", "~> 5.0.5"
 
