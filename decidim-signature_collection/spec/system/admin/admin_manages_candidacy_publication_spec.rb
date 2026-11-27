@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe "Admin manages candidacy publication", skip: "Awaiting review" do
+describe "Admin manages candidacy publication" do
   let!(:user) { create(:user, :admin, :confirmed, organization:) }
   let(:organization) { create(:organization) }
 
@@ -85,7 +85,8 @@ describe "Admin manages candidacy publication", skip: "Awaiting review" do
     end
   end
 
-  it "displays the entry in last activities" do
+  # Decidim::ActionLog.public_resource_types does not include Decidim::SignatureCollection::Candidacy
+  it "does not display the entry in last activities" do
     participatory_space.update(title: { en: title })
 
     switch_to_host(organization.host)
@@ -97,12 +98,10 @@ describe "Admin manages candidacy publication", skip: "Awaiting review" do
       click_on "OK"
     end
 
-    visit decidim.last_activities_path
-    expect(page).to have_content("New candidacy: #{title}")
+    expect(page).to have_content("successfully")
 
-    within "#filters" do
-      find("a", class: "filter", text: "Candidacy", match: :first).click
-    end
-    expect(page).to have_content("New candidacy: #{title}")
+    visit decidim.last_activities_path
+    expect(page).to have_content("Last activity")
+    expect(page).to have_no_content(title)
   end
 end

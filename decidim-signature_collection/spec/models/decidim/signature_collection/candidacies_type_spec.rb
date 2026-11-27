@@ -4,7 +4,7 @@ require "spec_helper"
 
 module Decidim
   module SignatureCollection
-    describe CandidaciesType, skip: "Awaiting review" do
+    describe CandidaciesType do
       let(:candidacies_type) { build(:candidacies_type) }
 
       it "is valid" do
@@ -44,8 +44,8 @@ module Decidim
         context "when minimum_signing_age is zero" do
           let(:candidacies_type) { build(:candidacies_type, minimum_signing_age: 0) }
 
-          it "returns false" do
-            expect(candidacies_type.minimum_signing_age?).to be false
+          it "returns true" do
+            expect(candidacies_type.minimum_signing_age?).to be true
           end
         end
       end

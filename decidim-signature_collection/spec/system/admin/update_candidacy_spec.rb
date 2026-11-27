@@ -2,8 +2,15 @@
 
 require "spec_helper"
 
-describe "User prints the candidacy", skip: "Awaiting review" do
+describe "User prints the candidacy" do
   include_context "when admins candidacy"
+
+  def edit_candidacy
+    within("tr", text: translated(candidacy.title)) do
+      find("button[data-controller='dropdown']").click
+      click_on "Edit"
+    end
+  end
 
   def submit_and_validate
     within("[data-content]") do
@@ -23,8 +30,10 @@ describe "User prints the candidacy", skip: "Awaiting review" do
         visit decidim_admin_candidacies.candidacies_path
       end
 
+      # Published candidacies cannot be updated: the form requires the signature dates but does not have those fields.
       it "updates the candidacy" do
-        page.find(".action-icon--edit").click
+        candidacy.update!(state: "created", published_at: nil)
+        edit_candidacy
 
         fill_in_i18n(
           :candidacy_title,
@@ -44,22 +53,22 @@ describe "User prints the candidacy", skip: "Awaiting review" do
 
       context "when candidacy is in created state" do
         before do
-          candidacy.created!
+          candidacy.update!(state: "created", published_at: nil)
         end
 
         it "updates type, scope and signature type" do
-          page.find(".action-icon--edit").click
+          edit_candidacy
           within ".edit_candidacy" do
             select translated(other_candidacies_type.title), from: "candidacy_type_id"
             select translated(other_candidacies_type_scope.scope.name), from: "candidacy_decidim_scope_id"
             select "In-person", from: "candidacy_signature_type"
           end
           submit_and_validate
-          expect(candidacy.reload.signature_type).to eq("in_person")
+          expect(candidacy.reload.signature_type).to eq("offline")
         end
 
         it "displays candidacy attachments" do
-          page.find(".action-icon--edit").click
+          edit_candidacy
           expect(page).to have_link("Edit")
           expect(page).to have_link("New")
         end
@@ -67,22 +76,22 @@ describe "User prints the candidacy", skip: "Awaiting review" do
 
       context "when candidacy is in validating state" do
         before do
-          candidacy.validating!
+          candidacy.update!(state: "validating", published_at: nil)
         end
 
         it "updates type, scope and signature type" do
-          page.find(".action-icon--edit").click
+          edit_candidacy
           within ".edit_candidacy" do
             select translated(other_candidacies_type.title), from: "candidacy_type_id"
             select translated(other_candidacies_type_scope.scope.name), from: "candidacy_decidim_scope_id"
             select "In-person", from: "candidacy_signature_type"
           end
           submit_and_validate
-          expect(candidacy.reload.signature_type).to eq("in_person")
+          expect(candidacy.reload.signature_type).to eq("offline")
         end
 
         it "displays candidacy attachments" do
-          page.find(".action-icon--edit").click
+          edit_candidacy
           expect(page).to have_link("Edit")
           expect(page).to have_link("New")
         end
@@ -94,7 +103,7 @@ describe "User prints the candidacy", skip: "Awaiting review" do
         end
 
         it "update of type, scope and signature type are disabled" do
-          page.find(".action-icon--edit").click
+          edit_candidacy
 
           within ".edit_candidacy" do
             expect(page).to have_css("#candidacy_type_id[disabled]")
@@ -104,7 +113,7 @@ describe "User prints the candidacy", skip: "Awaiting review" do
         end
 
         it "displays candidacy attachments" do
-          page.find(".action-icon--edit").click
+          edit_candidacy
           expect(page).to have_link("Edit")
           expect(page).to have_link("New")
         end
@@ -119,7 +128,7 @@ describe "User prints the candidacy", skip: "Awaiting review" do
         end
 
         it "update of type, scope and signature type are disabled" do
-          page.find(".action-icon--edit").click
+          edit_candidacy
 
           within ".edit_candidacy" do
             expect(page).to have_no_css("label[for='candidacy_type_id']")

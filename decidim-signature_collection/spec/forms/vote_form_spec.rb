@@ -4,244 +4,154 @@ require "spec_helper"
 
 module Decidim
   module SignatureCollection
-    describe VoteForm, skip: "Awaiting review" do
+    describe VoteForm do
       subject { form }
 
       let(:form) { described_class.from_params(attributes).with_context(context) }
 
       let(:organization) { create(:organization) }
-      let!(:city) { create(:scope, organization:) }
-      let!(:district1) { create(:subscope, parent: city) }
-      let!(:district2) { create(:subscope, parent: city) }
-      let!(:neighbourhood1) { create(:subscope, parent: district1) }
-      let!(:neighbourhood2) { create(:subscope, parent: district2) }
-      let!(:neighbourhood3) { create(:subscope, parent: district1) }
-      let!(:neighbourhood4) { create(:subscope, parent: district2) }
-      let!(:candidacy_type) do
-        create(
-          :candidacies_type,
-          organization:,
-          document_number_authorization_handler:,
-          child_scope_threshold_enabled:
-        )
-      end
-      let!(:global_candidacy_type_scope) { create(:candidacies_type_scope, scope: nil, type: candidacy_type) }
-      let!(:city_candidacy_type_scope) { create(:candidacies_type_scope, scope: city, type: candidacy_type) }
-      let!(:district_1_candidacy_type_scope) { create(:candidacies_type_scope, scope: district1, type: candidacy_type) }
-      let!(:district_2_candidacy_type_scope) { create(:candidacies_type_scope, scope: district2, type: candidacy_type) }
-      let!(:neighbourhood_1_candidacy_type_scope) { create(:candidacies_type_scope, scope: neighbourhood1, type: candidacy_type) }
-      let!(:neighbourhood_2_candidacy_type_scope) { create(:candidacies_type_scope, scope: neighbourhood2, type: candidacy_type) }
-      let!(:neighbourhood_3_candidacy_type_scope) { create(:candidacies_type_scope, scope: neighbourhood3, type: candidacy_type) }
-      let!(:authorization) do
-        create(
-          :authorization,
-          :granted,
-          name: "dummy_authorization_handler",
-          user: current_user,
-          unique_id: document_number,
-          metadata: { document_number:, postal_code:, scope_id: user_scope.id }
-        )
-      end
-      let(:user_scope) { district1 }
-      let(:scoped_type) { district_1_candidacy_type_scope }
+      let(:candidacy) { create(:candidacy, organization:) }
 
-      let(:candidacy) do
-        create(
-          :candidacy,
-          organization:,
-          scoped_type:
-        )
-      end
-      let(:document_number_authorization_handler) { "dummy_authorization_handler" }
-      let(:child_scope_threshold_enabled) { false }
-
-      let(:current_user) { create(:user, organization: candidacy.organization) }
-
-      let(:document_number) { "01234567A" }
-      let(:postal_code) { "87111" }
+      let(:document_type) { described_class.document_types[:nif] }
+      let(:document_number) { "12345678Z" }
       let(:personal_data) do
         {
           name: "James",
           first_surname: "Morgan",
           second_surname: "McGill",
+          document_type:,
           document_number:,
           date_of_birth: 40.years.ago.to_date,
-          postal_code:
+          postal_code: "08001"
         }
       end
 
-      let(:vote_attributes) do
-        {
-          candidacy:
-        }
-      end
-      let(:attributes) { personal_data.merge(vote_attributes) }
+      let(:attributes) { personal_data.merge(candidacy:) }
       let(:context) { { current_organization: organization } }
 
       context "when everything is OK" do
         it { is_expected.to be_valid }
       end
 
-      describe "personal data" do
-        context "when personal data is blank" do
-          let(:personal_data) { {} }
+      context "when personal data is blank" do
+        let(:personal_data) { {} }
+
+        it { is_expected.not_to be_valid }
+      end
+
+      %w(name first_surname document_type document_number date_of_birth postal_code).each do |field|
+        context "when #{field} is missing" do
+          let(:attributes) { personal_data.except(field.to_sym).merge(candidacy:) }
 
           it { is_expected.not_to be_valid }
         end
+      end
 
-        context "when personal data is present" do
+      context "when second surname is missing" do
+        let(:attributes) { personal_data.except(:second_surname).merge(candidacy:) }
+
+        it { is_expected.to be_valid }
+      end
+
+      context "when there is no candidacy" do
+        let(:attributes) { personal_data }
+
+        it { is_expected.not_to be_valid }
+      end
+
+      describe "document number" do
+        context "with a NIF with a wrong letter" do
+          let(:document_number) { "12345678A" }
+
+          it "is not valid" do
+            expect(form).not_to be_valid
+            expect(form.errors.details[:document_number]).to include(error: :invalid_nif_letter)
+          end
+        end
+
+        context "with a NIF with a wrong format" do
+          let(:document_number) { "1234567Z" }
+
+          it "is not valid" do
+            expect(form).not_to be_valid
+            expect(form.errors.details[:document_number]).to include(error: :invalid_nif_format)
+          end
+        end
+
+        context "with a lowercase NIF" do
+          let(:document_number) { "12345678z" }
+
           it { is_expected.to be_valid }
         end
 
-        describe "#metadata" do
-          subject { described_class.from_params(attributes).with_context(context).metadata }
+        context "with a NIE" do
+          let(:document_type) { described_class.document_types[:nie] }
+          let(:document_number) { "X1234567L" }
 
-          it { is_expected.to eq(personal_data) }
-        end
+          it { is_expected.to be_valid }
 
-        describe "#encrypted_metadata" do
-          subject { described_class.from_params(attributes).with_context(context).encrypted_metadata }
+          context "with a wrong letter" do
+            let(:document_number) { "X1234567A" }
 
-          it { is_expected.not_to eq(personal_data) }
+            it "is not valid" do
+              expect(form).not_to be_valid
+              expect(form.errors.details[:document_number]).to include(error: :invalid_nie_letter)
+            end
+          end
 
-          [:name, :first_surname, :second_surname, :document_number, :date_of_birth, :postal_code].each do |personal_attribute|
-            it { is_expected.not_to include(personal_data[personal_attribute].to_s) }
+          context "with a wrong format" do
+            let(:document_number) { "12345678Z" }
+
+            it "is not valid" do
+              expect(form).not_to be_valid
+              expect(form.errors.details[:document_number]).to include(error: :invalid_nie_format)
+            end
           end
         end
       end
 
-      describe "user_authorized_scope" do
-        subject { form.user_authorized_scope }
+      describe "#hash_id" do
+        it "is the same for the same candidacy and document number" do
+          other_form = described_class.from_params(attributes.merge(name: "Other")).with_context(context)
 
-        context "when a handler is configured" do
-          it { is_expected.to eq(user_scope) }
-
-          context "when the authorization metadata does not match" do
-            before do
-              authorization.metadata["scope_id"] = nil
-              authorization.save!
-            end
-
-            it { is_expected.to be_nil }
-          end
+          expect(form.hash_id).to eq(other_form.hash_id)
         end
 
-        context "when no handler is configured" do
-          let(:document_number_authorization_handler) { nil }
+        it "changes with the document number" do
+          other_form = described_class.from_params(attributes.merge(document_number: "87654321X")).with_context(context)
 
-          it { is_expected.to eq(candidacy.scope) }
+          expect(form.hash_id).not_to eq(other_form.hash_id)
         end
 
-        context "when the authorization does not have metadata" do
-          let!(:authorization) do
-            create(
-              :authorization,
-              :granted,
-              name: "dummy_authorization_handler",
-              user: current_user,
-              unique_id: document_number,
-              metadata: nil
-            )
-          end
+        it "changes with the candidacy" do
+          other_form = described_class.from_params(attributes.merge(candidacy: create(:candidacy, organization:))).with_context(context)
 
-          it { is_expected.to be_nil }
+          expect(form.hash_id).not_to eq(other_form.hash_id)
         end
       end
 
-      describe "authorized_scope_candidates" do
-        context "when it is a global scope candidacy" do
-          let(:scoped_type) { global_candidacy_type_scope }
-
-          it "includes all the scopes of the organization" do
-            expect(form.authorized_scope_candidates.compact).to match_array(organization.scopes)
-          end
-
-          it "includes the scope" do
-            expect(form.authorized_scope_candidates).to include(nil)
-          end
+      context "when the document number has already signed the candidacy" do
+        before do
+          create(:candidacy_user_vote, candidacy:, hash_id: form.hash_id)
         end
 
-        context "when it is a fixed scope" do
-          let(:scoped_type) { district_1_candidacy_type_scope }
-
-          it "returns the scope descendants" do
-            expect(form.authorized_scope_candidates).to contain_exactly(neighbourhood1, neighbourhood3, district1)
-          end
+        it "is not valid" do
+          expect(form).not_to be_valid
+          expect(form.errors.details[:document_number]).to include(error: :taken)
         end
       end
 
-      describe "authorized_scopes" do
-        subject { form.authorized_scopes }
+      describe "#encrypted_metadata" do
+        it "can be decrypted with the personal data" do
+          decrypted = DataEncryptor.new(secret: Rails.application.secret_key_base).decrypt(form.encrypted_metadata)
 
-        context "when the authorization is not valid" do
-          subject { form }
-
-          before do
-            authorization.granted_at = nil
-            authorization.save!
-          end
-
-          it { is_expected.not_to be_valid }
+          expect(decrypted).to eq(personal_data.as_json)
         end
+      end
 
-        context "when an authorization is not needed" do
-          let(:document_number_authorization_handler) { nil }
-
-          it { is_expected.to eq([candidacy.scope]) }
-        end
-
-        context "when the authorization is valid" do
-          context "when it is a global scope candidacy" do
-            let(:scoped_type) { global_candidacy_type_scope }
-
-            context "when child scope voting is enabled" do
-              let(:child_scope_threshold_enabled) { true }
-
-              context "when the user scope has children" do
-                let(:user_scope) { district1 }
-
-                it { is_expected.to contain_exactly(nil, city, district1) }
-              end
-
-              context "when the user scope is a leaf" do
-                let(:user_scope) { neighbourhood1 }
-
-                it { is_expected.to contain_exactly(nil, city, district1, neighbourhood1) }
-              end
-            end
-
-            context "when child scope voting is disabled" do
-              let(:child_scope_threshold_enabled) { false }
-
-              it { is_expected.to eq([nil]) }
-            end
-          end
-
-          context "when it has a defined scope" do
-            let(:scoped_type) { district_1_candidacy_type_scope }
-
-            context "when child scope voting is enabled" do
-              let(:child_scope_threshold_enabled) { true }
-
-              context "when the user scope has children" do
-                let(:user_scope) { district1 }
-
-                it { is_expected.to contain_exactly(district1) }
-              end
-
-              context "when the user scope is a leaf" do
-                let(:user_scope) { neighbourhood1 }
-
-                it { is_expected.to contain_exactly(district1, neighbourhood1) }
-              end
-            end
-
-            context "when child scope voting is disabled" do
-              let(:child_scope_threshold_enabled) { false }
-
-              it { is_expected.to eq([district1]) }
-            end
-          end
+      describe "#filename" do
+        it "is named after the document number" do
+          expect(form.filename).to eq("12345678Z.xml")
         end
       end
     end

@@ -61,7 +61,6 @@ module Decidim
             get :export_votes, to: "candidacies#export_votes"
           end
 
-          resource :candidacy_vote, only: [:create, :destroy]
           resources :committee_requests, only: [:new] do
             collection do
               get :spawn
@@ -162,7 +161,6 @@ module Decidim
         config.to_prepare do
           Decidim::AuthorizationTransfer.register(:signature_collection) do |transfer|
             transfer.move_records(Decidim::SignatureCollection::Candidacy, :decidim_author_id)
-            transfer.move_records(Decidim::SignatureCollection::CandidaciesVote, :decidim_author_id)
           end
         end
       end

@@ -4,12 +4,11 @@ require "spec_helper"
 
 module Decidim
   module SignatureCollection
-    describe VoteCandidacy, skip: "Awaiting review" do
+    describe VoteCandidacy do
       let(:form_klass) { VoteForm }
       let(:organization) { create(:organization) }
       let(:candidacy) { create(:candidacy, organization:) }
 
-      let(:current_user) { create(:user, organization: candidacy.organization) }
       let(:form) do
         form_klass
           .from_params(
@@ -20,7 +19,12 @@ module Decidim
       let(:form_params) do
         {
           candidacy:
-        }
+        }.merge(personal_data_params)
+      end
+
+      let(:document_number) do
+        number = ::Faker::Number.number(digits: 8)
+        "#{number}#{"TRWAGMYFPDXBNJZSQVHLCKE"[number % 23]}"
       end
 
       let(:personal_data_params) do
@@ -29,7 +33,7 @@ module Decidim
           first_surname: ::Faker::Name.last_name,
           second_surname: ::Faker::Name.last_name,
           document_type: 1,
-          document_number: ::Faker::IdNumber.spanish_citizen_number,
+          document_number:,
           date_of_birth: ::Faker::Date.birthday(min_age: 18, max_age: 40),
           postal_code: ::Faker::Address.zip_code
         }
@@ -48,9 +52,14 @@ module Decidim
           end.to change(CandidaciesVote, :count).by(1)
         end
 
-        it "increases the vote counter by one" do
+        it "does not count the vote until it is signed" do
           expect do
             command.call
+            candidacy.reload
+          end.not_to change(candidacy, :online_votes_count)
+
+          expect do
+            CandidaciesVote.last.update!(encrypted_xml_doc_signed: "signed")
             candidacy.reload
           end.to change(candidacy, :online_votes_count).by(1)
         end
@@ -77,12 +86,14 @@ module Decidim
 
           expect do
             perform_enqueued_jobs { command.call }
-          end.to change(emails, :count).by(2)
+          end.to change(emails, :count).by(1)
 
           expect(last_email_body).to include("has endorsed the following candidacy")
         end
 
-        context "when a new milestone is completed" do
+        # Votes are created unsigned and are not counted until Signador signs them,
+        # so this command never completes a milestone nor reaches the threshold.
+        context "when the vote would complete a new milestone" do
           let(:candidacy) do
             create(:candidacy,
                    organization:,
@@ -97,38 +108,30 @@ module Decidim
           let!(:follow) { create(:follow, followable: candidacy, user: follower) }
 
           before do
-            create(:candidacy_user_vote, candidacy:)
-            create(:candidacy_user_vote, candidacy:)
+            create_list(:candidacy_user_vote, 2, :signed, candidacy:)
           end
 
-          it "notifies the followers" do
-            expect(Decidim::EventsManager).to receive(:publish)
-              .with(kind_of(Hash))
+          it "does not change the percentage" do
+            expect { command.call }.not_to(change { candidacy.reload.percentage }.from(50))
+          end
 
+          it "only notifies the endorsement" do
             expect(Decidim::EventsManager)
               .to receive(:publish)
-              .with(
-                event: "decidim.events.milestone_completed",
-                event_class: Decidim::SignatureCollection::MilestoneCompletedEvent,
-                resource: candidacy,
-                affected_users: [candidacy.author],
-                followers: [follower],
-                extra: { percentage: 75 }
-              )
+              .once
+              .with(hash_including(event: "decidim.events.signature_collection.candidacy_endorsed"))
 
             command.call
           end
 
-          it "sends notification with email" do
+          it "does not send any email to the followers of the candidacy" do
             expect do
               perform_enqueued_jobs { command.call }
-            end.to change(emails, :count).by(3)
-
-            expect(last_email_body).to include("has achieved the 75% of signatures")
+            end.not_to change(emails, :count)
           end
         end
 
-        context "when support threshold is reached" do
+        context "when the vote would reach the support threshold" do
           let!(:admin) { create(:user, :admin, :confirmed, organization:) }
           let(:candidacy) do
             create(:candidacy,
@@ -141,148 +144,77 @@ module Decidim
           end
 
           before do
-            create(:candidacy_user_vote, candidacy:)
-            create(:candidacy_user_vote, candidacy:)
-            create(:candidacy_user_vote, candidacy:)
+            create_list(:candidacy_user_vote, 3, :signed, candidacy:)
           end
 
-          it "notifies the admins" do
-            expect(Decidim::EventsManager).to receive(:publish)
-              .with(kind_of(Hash)).twice
+          it "does not change the percentage" do
+            expect { command.call }.not_to(change { candidacy.reload.percentage }.from(75))
+          end
 
+          it "only notifies the endorsement" do
             expect(Decidim::EventsManager)
               .to receive(:publish)
-              .with(
-                event: "decidim.events.support_threshold_reached",
-                event_class: Decidim::SignatureCollection::Admin::SupportThresholdReachedEvent,
-                resource: candidacy,
-                followers: [admin]
-              )
+              .once
+              .with(hash_including(event: "decidim.events.signature_collection.candidacy_endorsed"))
 
             command.call
           end
 
-          it "sends notification with email" do
+          it "does not send any email to the admins" do
             expect do
               perform_enqueued_jobs { command.call }
-            end.to change(emails, :count).by(3)
-
-            expect(last_email_body).to include("has reached the signatures threshold")
+            end.not_to change(emails, :count)
           end
 
-          context "when more votes are added" do
+          context "when the threshold has already been reached" do
             before do
-              create(:candidacy_user_vote, candidacy:)
+              create(:candidacy_user_vote, :signed, candidacy:)
             end
 
-            it "does not notifies the admins" do
-              expect(Decidim::EventsManager).to receive(:publish)
-                .with(kind_of(Hash)).once
-
+            it "does not notify the admins" do
+              expect(candidacy.reload.percentage).to eq(100)
               expect(Decidim::EventsManager)
-                .not_to receive(:publish)
-                .with(
-                  event: "decidim.events.support_threshold_reached",
-                  event_class: Decidim::SignatureCollection::Admin::SupportThresholdReachedEvent,
-                  resource: candidacy,
-                  followers: [admin]
-                )
+                .to receive(:publish)
+                .once
+                .with(hash_including(event: "decidim.events.signature_collection.candidacy_endorsed"))
 
-              expect do
-                perform_enqueued_jobs { command.call }
-              end.to change(emails, :count).by(1)
+              command.call
             end
           end
         end
 
-        context "when candidacy type requires extra user fields" do
-          let(:candidacy) do
-            create(
-              :candidacy,
-              :with_user_extra_fields_collection,
-              organization:
-            )
+        it "stores encrypted user personal data in vote" do
+          command.call
+          vote = CandidaciesVote.last
+          expect(vote.encrypted_metadata).to be_present
+
+          encryptor = DataEncryptor.new(secret: Rails.application.secret_key_base)
+          expect(encryptor.decrypt(vote.encrypted_metadata)).to eq personal_data_params.as_json
+        end
+
+        context "when form does not contain personal data" do
+          let(:personal_data_params) { {} }
+
+          it "broadcasts invalid" do
+            expect { command.call }.to broadcast :invalid
           end
-          let(:form_with_personal_data) do
-            form_klass.from_params(form_params.merge(personal_data_params)).with_context(current_organization: organization)
+        end
+
+        context "when document number is not valid" do
+          let(:document_number) { "12345678A" }
+
+          it "broadcasts invalid" do
+            expect { command.call }.to broadcast :invalid
+          end
+        end
+
+        context "when another signature exists with the same hash_id" do
+          before do
+            create(:candidacy_user_vote, candidacy:, hash_id: form.hash_id)
           end
 
-          let(:invalid_command) { described_class.new(form) }
-          let(:command_with_personal_data) { described_class.new(form_with_personal_data) }
-
-          it "broadcasts invalid when form does not contain personal data" do
-            expect { invalid_command.call }.to broadcast :invalid
-          end
-
-          context "when another signature exists with the same hash_id" do
-            before do
-              create(:candidacy_user_vote, candidacy:, hash_id: form_with_personal_data.hash_id)
-            end
-
-            it "broadcasts invalid" do
-              expect { command_with_personal_data.call }.to broadcast :invalid
-            end
-          end
-
-          context "when candidacy type has document number authorization handler" do
-            let(:handler_name) { "dummy_authorization_handler" }
-            let(:unique_id) { "test_digest" }
-            let(:metadata) do
-              {
-                test: "dummy",
-                scope_id: candidacy.scoped_type.scope.id
-              }
-            end
-            let!(:authorization_handler) { Decidim::AuthorizationHandler.handler_for(handler_name) }
-
-            before do
-              allow(authorization_handler).to receive(:unique_id).and_return(unique_id)
-              allow(authorization_handler).to receive(:metadata).and_return(metadata)
-              allow(Decidim::AuthorizationHandler).to receive(:handler_for).and_return(authorization_handler)
-              candidacy.type.update(document_number_authorization_handler: handler_name)
-            end
-
-            context "when current_user does not have any authorization for the handler" do
-              it "broadcasts invalid" do
-                expect { command_with_personal_data.call }.to broadcast :invalid
-              end
-            end
-
-            context "when current_user have an an authorization for the handler" do
-              let!(:authorization) { create(:authorization, granted_at:, name: handler_name, unique_id: authorization_unique_id, metadata: authorization_metadata, user: current_user) }
-              let(:authorization_unique_id) { unique_id }
-              let(:authorization_metadata) { metadata }
-              let(:granted_at) { 1.minute.ago }
-
-              context "when authorization unique_id and metadata are coincident with handler" do
-                it "broadcasts ok" do
-                  expect { command_with_personal_data.call }.to broadcast :ok
-                end
-
-                it "stores encrypted user personal data in vote" do
-                  command_with_personal_data.call
-                  vote = CandidaciesVote.last
-                  expect(vote.encrypted_metadata).to be_present
-                  expect(vote.decrypted_metadata).to eq personal_data_params
-                end
-              end
-
-              context "when authorization unique_id is different of handler unique_id" do
-                let(:authorization_unique_id) { "other" }
-
-                it "broadcasts invalid" do
-                  expect { command_with_personal_data.call }.to broadcast :invalid
-                end
-              end
-
-              context "when authorization is not fully granted" do
-                let(:granted_at) { nil }
-
-                it "broadcasts invalid" do
-                  expect { command_with_personal_data.call }.to broadcast :invalid
-                end
-              end
-            end
+          it "broadcasts invalid" do
+            expect { command.call }.to broadcast :invalid
           end
         end
       end

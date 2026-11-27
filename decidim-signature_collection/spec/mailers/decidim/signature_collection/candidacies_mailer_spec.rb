@@ -4,7 +4,7 @@ require "spec_helper"
 
 module Decidim
   module SignatureCollection
-    describe CandidaciesMailer, skip: "Awaiting review" do
+    describe CandidaciesMailer do
       include Decidim::TranslationsHelper
 
       let(:organization) { create(:organization, host: "1.lvh.me") }
@@ -17,7 +17,7 @@ module Decidim
 
         context "when the promoting committee is enabled" do
           it "renders the headers" do
-            expect(mail.subject).to eq("Your candidacy '#{translated(candidacy.title)}' has been created")
+            expect(mail.subject).to eq("Your candidacy '#{translated(candidacy.title)}' has been created. You can still review and edit it.")
             expect(mail.to).to eq([candidacy.author.email])
           end
 
@@ -26,7 +26,7 @@ module Decidim
           end
 
           it "renders the promoter committee help" do
-            expect(mail.body).to match("Forward the following link to invite people to the promoter committee")
+            expect(mail.body).to match("Remember to send it to <b>Technical Validation</b>")
           end
         end
 
@@ -37,7 +37,7 @@ module Decidim
           let(:candidacy) { create(:candidacy, organization:, scoped_type:) }
 
           it "renders the headers" do
-            expect(mail.subject).to eq("Your candidacy '#{translated(candidacy.title)}' has been created")
+            expect(mail.subject).to eq("Your candidacy '#{translated(candidacy.title)}' has been created. You can still review and edit it.")
             expect(mail.to).to eq([candidacy.author.email])
           end
 
@@ -46,13 +46,13 @@ module Decidim
           end
 
           it "does not render the promoter committee help" do
-            expect(mail.body).not_to match("Forward the following link to invite people to the promoter committee")
+            expect(mail.body).not_to match("Remember to send it to <b>Technical Validation</b>")
           end
         end
 
         it "renders the correct link" do
-          expect(mail).to have_link(router.candidacy_url(candidacy, host: candidacy.organization.host))
-          expect(mail).to have_no_link(admin_router.candidacy_url(candidacy, host: candidacy.organization.host))
+          expect(mail).to have_link(href: router.candidacy_url(candidacy, host: candidacy.organization.host))
+          expect(mail).to have_no_link(href: admin_router.candidacy_url(candidacy, host: candidacy.organization.host))
         end
       end
 
@@ -97,7 +97,7 @@ module Decidim
         end
 
         it "renders the body with candidacy title" do
-          expect(mail.body.encoded).to include(decidim_sanitize_translated(candidacy.title))
+          expect(mail.body.encoded).to include(decidim_escape_translated(candidacy.title))
         end
 
         it "includes the validation instruction message" do
@@ -127,7 +127,9 @@ module Decidim
       end
 
       context "when notifies members candidacy answered" do
-        let(:candidacy) { create(:candidacy, :answered, organization:) }
+        let(:candidacy) do
+          create(:candidacy, organization:, answer: { en: "Measured answer" }, answer_url: "http://decidim.org", answered_at: Time.current)
+        end
         let(:current_user) { create(:user, :admin, organization:) }
         let!(:admin1) { create(:user, :admin, organization:, email: "admin1@example.org") }
         let!(:committee_member) { create(:user, organization:, email: "member@example.org") }
@@ -143,7 +145,7 @@ module Decidim
         end
 
         it "renders the body with candidacy title" do
-          expect(mail.body.encoded).to include(decidim_sanitize_translated(candidacy.title))
+          expect(mail.body.encoded).to include(decidim_escape_translated(candidacy.title))
         end
 
         it "includes the answered body message" do
@@ -176,7 +178,7 @@ module Decidim
         end
 
         context "when a member has no email" do
-          let(:user_without_email) { create(:user, organization:, email: nil) }
+          let(:user_without_email) { create(:user, :deleted, organization:) }
           let(:members) { [admin1, user_without_email] }
 
           it "sends only to members with email" do

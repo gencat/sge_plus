@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe "Admin manages candidacy components", skip: "Awaiting review" do
+describe "Admin manages candidacy components" do
   let(:organization) { create(:organization) }
   let(:user) { create(:user, :admin, :confirmed, organization:) }
 
@@ -18,10 +18,10 @@ describe "Admin manages candidacy components", skip: "Awaiting review" do
     before do
       visit decidim_admin_candidacies.components_path(candidacy)
 
-      find("button[data-toggle=add-component-dropdown]").click
+      find("button[data-target=add-component-dropdown]").click
 
       within "#add-component-dropdown" do
-        find(".dummy").click
+        find("a[href*='type=dummy']").click
       end
 
       within ".item__edit" do
@@ -67,7 +67,8 @@ describe "Admin manages candidacy components", skip: "Awaiting review" do
     context "and then edit it" do
       before do
         within "tr", text: translated(attributes[:name]) do
-          page.find(".action-icon--configure").click
+          find("button[data-controller='dropdown']").click
+          click_on "Configure"
         end
       end
 
@@ -108,7 +109,8 @@ describe "Admin manages candidacy components", skip: "Awaiting review" do
 
     it "updates the component" do
       within ".component-#{component.id}" do
-        page.find(".action-icon--configure").click
+        find("button[data-controller='dropdown']").click
+        click_on "Configure"
       end
 
       within ".item__edit" do
@@ -133,7 +135,8 @@ describe "Admin manages candidacy components", skip: "Awaiting review" do
       expect(page).to have_content(translated(attributes[:name]))
 
       within "tr", text: translated(attributes[:name]) do
-        page.find(".action-icon--configure").click
+        find("button[data-controller='dropdown']").click
+        click_on "Configure"
       end
 
       within ".global-settings" do
@@ -168,7 +171,8 @@ describe "Admin manages candidacy components", skip: "Awaiting review" do
 
     it "soft deletes the component" do
       within ".component-#{component.id}" do
-        accept_confirm { click_on("Soft delete") }
+        find("button[data-controller='dropdown']").click
+        accept_confirm { click_on("Move to trash") }
       end
 
       expect(page).to have_no_content("My component")
@@ -192,11 +196,12 @@ describe "Admin manages candidacy components", skip: "Awaiting review" do
     context "when the component is unpublished" do
       it "publishes the component" do
         within ".component-#{component.id}" do
-          page.find(".action-icon--publish").click
+          find("button[data-controller='dropdown']").click
+          click_on "Publish"
         end
 
         within ".component-#{component.id}" do
-          expect(page).to have_css(".action-icon--unpublish")
+          expect(page).to have_css(".label.success")
         end
       end
     end
@@ -206,11 +211,12 @@ describe "Admin manages candidacy components", skip: "Awaiting review" do
 
       it "hides the component from the menu" do
         within ".component-#{component.id}" do
-          click_on "Hide"
+          find("button[data-controller='dropdown']").click
+          click_on "Hide from menu"
         end
 
         within ".component-#{component.id}" do
-          expect(page).to have_css(".action-icon--menu-hidden")
+          expect(page).to have_css(".label.warning")
         end
       end
     end
@@ -221,11 +227,12 @@ describe "Admin manages candidacy components", skip: "Awaiting review" do
 
       it "unpublishes the component" do
         within ".component-#{component.id}" do
+          find("button[data-controller='dropdown']").click
           click_on "Unpublish"
         end
 
         within ".component-#{component.id}" do
-          expect(page).to have_css(".action-icon--publish")
+          expect(page).to have_css(".label.alert")
         end
       end
     end
@@ -248,8 +255,8 @@ describe "Admin manages candidacy components", skip: "Awaiting review" do
 
       visit current_path
 
-      expect(page.text.index("Component 2")).to be < page.text.index("Component 1")
-      expect(page.text.index("Component 1")).to be < page.text.index("Component 3")
+      expect(page.text.index("Component 2")).to be < page.text.index("Component 3")
+      expect(page.text.index("Component 3")).to be < page.text.index("Component 1")
     end
   end
 

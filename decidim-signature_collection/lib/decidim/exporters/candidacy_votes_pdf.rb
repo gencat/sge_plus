@@ -50,8 +50,8 @@ module Decidim
         data_row = [
           layout.text(candidacy.reference, style: :candidacy_td),
           layout.text(translated_attribute(candidacy.title), style: :candidacy_td),
-          layout.text(I18n.l(candidacy.type.signature_period_start.to_date, format: :long), style: :candidacy_td),
-          layout.text(I18n.l(candidacy.type.signature_period_end.to_date, format: :long), style: :candidacy_td),
+          layout.text(period_date(candidacy.type.signature_period_start), style: :candidacy_td),
+          layout.text(period_date(candidacy.type.signature_period_end), style: :candidacy_td),
           layout.text(collection.count.to_s, style: :candidacy_td),
           layout.text(scope(candidacy), style: :candidacy_td),
           layout.text(translated_attribute(candidacy.type.title), style: :candidacy_td)
@@ -87,7 +87,7 @@ module Decidim
           layout.text(truncate(model.hash_id), style: :vote_td)
         ]
 
-        metadata = model.encrypted_metadata ? encryptor.decrypt(model.encrypted_metadata) : {}
+        metadata = (model.encrypted_metadata ? encryptor.decrypt(model.encrypted_metadata) : {}).with_indifferent_access
 
         full_name = [metadata[:name], metadata[:first_surname], metadata[:second_surname]].compact.join(" ")
         date_of_birth = metadata[:date_of_birth] ? I18n.l(metadata[:date_of_birth].to_date, format: :long) : ""
@@ -99,6 +99,11 @@ module Decidim
           layout.text(metadata[:postal_code].to_s, style: :vote_td)
         ]
         [cell]
+      end
+
+      # The signature period of the type can have no start or no end.
+      def period_date(date)
+        date ? I18n.l(date.to_date, format: :long) : ""
       end
 
       def scope(model)

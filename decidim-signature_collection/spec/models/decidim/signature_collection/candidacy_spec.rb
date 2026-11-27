@@ -3,7 +3,7 @@
 require "spec_helper"
 
 module Decidim
-  describe SignatureCollection::Candidacy, skip: "Awaiting review" do
+  describe SignatureCollection::Candidacy do
     subject { candidacy }
 
     let(:organization) { create(:organization) }
@@ -122,8 +122,9 @@ module Decidim
 
       it "publish!" do
         validating_candidacy.publish!
-        expect(validating_candidacy).to have_signature_interval_defined
+        expect(validating_candidacy).to be_open
         expect(validating_candidacy.published_at).not_to be_nil
+        expect(validating_candidacy.signature_start_date).to eq(Date.current)
       end
 
       context "when mailing" do

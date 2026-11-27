@@ -37,7 +37,7 @@
     <% end %>
 
     <% if candidacy_type.attachments_enabled? %>
-      <%= f.attachment :attachments,
+      <%= f.attachment :documents,
                        multiple: true,
                        label: t("decidim.signature_collection.form.add_attachments"),
                        button_label: t("decidim.signature_collection.form.add_attachments"),

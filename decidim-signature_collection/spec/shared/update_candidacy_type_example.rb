@@ -26,6 +26,7 @@ shared_examples "update an candidacy type" do
         title: Decidim::Faker::Localized.sentence(word_count: 5).except("machine_translations"),
         description: Decidim::Faker::Localized.sentence(word_count: 25).except("machine_translations"),
         signature_type: "offline",
+        elections: "congress",
         attachments_enabled: true,
         undo_online_signatures_enabled: false,
         custom_signature_end_date_enabled: true,

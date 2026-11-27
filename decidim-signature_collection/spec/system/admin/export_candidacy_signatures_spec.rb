@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe "Admin export candidacies' signature", skip: "Awaiting review" do
+describe "Admin export candidacies' signature" do
   include_context "when admins candidacy"
 
   let!(:votes) { create_list(:candidacy_user_vote, 5, candidacy:) }
@@ -16,7 +16,8 @@ describe "Admin export candidacies' signature", skip: "Awaiting review" do
     visit decidim_admin_candidacies.candidacies_path
 
     within "tr", text: translated(candidacy.title) do
-      page.find(".action-icon--edit").click
+      find("button[data-controller='dropdown']").click
+      click_on "Edit"
     end
 
     click_on "Export PDF of signatures"

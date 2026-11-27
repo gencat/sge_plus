@@ -2,211 +2,135 @@
 
 require "spec_helper"
 
-describe "Candidacy signing", skip: "Awaiting review" do
-  let(:organization) { create(:organization, available_authorizations: authorizations) }
-  let(:candidacy) do
-    create(:candidacy, organization:)
-  end
+describe "Candidacy signing" do
+  let(:organization) { create(:organization) }
+  let(:candidacy) { create(:candidacy, organization:) }
   let(:confirmed_user) { create(:user, :confirmed, organization:) }
-  let(:authorizations) { %w(dummy_authorization_handler another_dummy_authorization_handler) }
+  let(:document_number) { "12345678Z" }
+  # Signador is an external service: the signature process is stubbed and redirects back to the candidacy.
+  let(:signature_result) { { success: true, sign_url: decidim_candidacies.candidacy_path(candidacy) } }
+  let(:signature_process) { double(call: signature_result) }
 
   before do
-    allow(Decidim::SignatureCollection)
-      .to receive(:do_not_require_authorization)
-      .and_return(true)
+    stub_const("ValidSignador::StartSignatureProcess", Class.new)
+    allow(ValidSignador::StartSignatureProcess).to receive(:new).and_return(signature_process)
     switch_to_host(organization.host)
     login_as confirmed_user, scope: :user
   end
 
-  context "when the user has not signed the candidacy" do
-    context "when online signatures are enabled for site" do
-      context "when candidacy type only allows In-person signatures" do
-        let(:candidacy) { create(:candidacy, organization:, signature_type: "offline") }
+  context "when candidacy type only allows In-person signatures" do
+    let(:candidacy) { create(:candidacy, organization:, signature_type: "offline") }
 
-        it "voting disabled message is shown" do
-          visit decidim_candidacies.candidacy_path(candidacy)
+    it "voting disabled message is shown" do
+      visit decidim_candidacies.candidacy_path(candidacy)
 
-          expect(page).to have_content("Signing disabled")
-        end
+      expect(page).to have_content("Signing disabled")
+    end
 
-        it "shows the offline supports received" do
-          candidacy.update(offline_votes: { candidacy.scoped_type.scope.id.to_s => 1357, "total" => 1357 })
+    it "shows the offline supports received" do
+      candidacy.update(offline_votes: { candidacy.scoped_type.scope.id.to_s => 1357, "total" => 1357 })
 
-          visit decidim_candidacies.candidacy_path(candidacy)
+      visit decidim_candidacies.candidacy_path(candidacy)
 
-          expect(page).to have_content("1357 1000\nSignatures")
-        end
-      end
+      expect(page).to have_content("1357 1000\nSignatures")
     end
   end
 
-  context "when the user has signed the candidacy and unsigns it" do
-    context "when candidacy type has unvotes disabled" do
-      let(:candidacies_type) { create(:candidacies_type, :undo_online_signatures_disabled, organization:) }
-      let(:scope) { create(:candidacies_type_scope, type: candidacies_type) }
-      let(:candidacy) { create(:candidacy, organization:, scoped_type: scope) }
+  context "when the user signs the candidacy" do
+    it "creates an unsigned signature and starts the Signador process" do
+      fill_personal_data
 
-      it "unsigning candidacy is disabled" do
-        vote_candidacy
-
-        within ".candidacy__aside" do
-          expect(page).to have_content(signature_text(1))
-          expect(page).to have_button("Already signed", disabled: true)
-          click_on("Already signed", disabled: true)
-          expect(page).to have_content(signature_text(1))
-        end
-      end
-    end
-
-    it "removes the signature" do
-      vote_candidacy
+      expect(page).to have_current_path(decidim_candidacies.candidacy_path(candidacy))
+      expect(Decidim::SignatureCollection::CandidaciesVote.where(candidacy:).count).to eq(1)
+      expect(Decidim::SignatureCollection::CandidaciesVote.last.encrypted_xml_doc_signed).to be_nil
 
       within ".candidacy__aside" do
-        expect(page).to have_content(signature_text(1))
-        click_on("Already signed")
         expect(page).to have_content(signature_text(0))
       end
     end
-  end
 
-  context "when the candidacy type has permissions to vote" do
-    before do
-      candidacy.type.create_resource_permission(
-        permissions: {
-          "vote" => {
-            "authorization_handlers" => {
-              "dummy_authorization_handler" => { "options" => {} },
-              "another_dummy_authorization_handler" => { "options" => {} }
-            }
-          }
-        }
-      )
-    end
+    context "when the signature process cannot be started" do
+      let(:signature_result) { { success: false, error: "Signador unavailable" } }
 
-    context "and has not signed the candidacy yet" do
-      context "and is not verified" do
-        it "signin candidacy is disabled", :slow do
-          visit decidim_candidacies.candidacy_path(candidacy)
+      it "shows an error" do
+        fill_personal_data
 
-          within ".candidacy__aside" do
-            expect(page).to have_content("Sign")
-            click_on "Sign"
-          end
-
-          expect(page).to have_content("You are almost ready to sign on the #{translated_attribute(candidacy.title)} candidacy")
-          expect(page).to have_css("a[data-verification]", count: 2)
-        end
-      end
-
-      context "and is verified" do
-        before do
-          create(:authorization, name: "dummy_authorization_handler", user: confirmed_user, granted_at: 2.seconds.ago)
-          create(:authorization, name: "another_dummy_authorization_handler", user: confirmed_user, granted_at: 2.seconds.ago)
-        end
-
-        it "votes as themselves" do
-          vote_candidacy
-
-          within ".candidacy__aside" do
-            expect(page).to have_content(signature_text(1))
-          end
-        end
+        expect(page).to have_content("There was a problem signing the candidacy.")
+        expect(page).to have_current_path(decidim_candidacies.fill_personal_data_candidacy_signatures_path(candidacy))
       end
     end
 
-    context "and has signed the candidacy" do
+    context "when the personal data is not valid" do
+      let(:document_number) { "12345678A" }
+
+      it "does not register the signature" do
+        fill_personal_data
+
+        expect(page).to have_content("Personal data is not consistent with data provided for authorization.")
+        expect(Decidim::SignatureCollection::CandidaciesVote.where(candidacy:).count).to eq(0)
+      end
+    end
+
+    context "when the document number has already signed the candidacy" do
       before do
-        candidacy.votes.create(author: confirmed_user, scope: candidacy.scope)
+        hash_id = Decidim::SignatureCollection::VoteForm.from_params(candidacy:, document_number:).hash_id
+        create(:candidacy_user_vote, candidacy:, hash_id:)
       end
 
-      context "and is not verified" do
-        it "unsigning candidacy is disabled" do
-          visit decidim_candidacies.candidacy_path(candidacy)
+      it "does not register the signature" do
+        fill_personal_data
 
-          within ".candidacy__aside" do
-            expect(page).to have_content(signature_text(1))
-            expect(page).to have_button("Already signed", disabled: true)
-            click_on("Already signed", disabled: true)
-            expect(page).to have_content(signature_text(1))
-          end
-        end
+        expect(page).to have_content("Personal data is not consistent with data provided for authorization.")
+        expect(Decidim::SignatureCollection::CandidaciesVote.where(candidacy:).count).to eq(1)
       end
     end
   end
 
-  context "when the candidacy requires user extra fields collection to be signed" do
-    let(:candidacy) do
-      create(:candidacy, :with_user_extra_fields_collection, organization:)
+  context "when Signador has signed the signature" do
+    before do
+      create(:candidacy_user_vote, :signed, candidacy:)
     end
 
-    context "when the user has not signed the candidacy yet and signs it" do
-      context "when the personal data is filled" do
-        before do
-          create(
-            :authorization,
-            :granted,
-            name: "dummy_authorization_handler",
-            user: confirmed_user,
-            unique_id: "012345678X",
-            metadata: { document_number: "012345678X", postal_code: "01234", scope_id: candidacy.scope.id }
-          )
-        end
+    it "counts the signature" do
+      visit decidim_candidacies.candidacy_path(candidacy)
 
-        it "adds the signature" do
-          vote_candidacy
-
-          within ".candidacy__aside" do
-            expect(page).to have_content(signature_text(1))
-          end
-        end
-      end
-
-      context "when the personal data is not filled" do
-        it "does not allow voting" do
-          visit decidim_candidacies.candidacy_path(candidacy)
-
-          within ".candidacy__aside" do
-            expect(page).to have_content(signature_text(0))
-            click_on "Sign"
-          end
-          click_on "Continue"
-
-          expect(page).to have_content "error"
-
-          visit decidim_candidacies.candidacy_path(candidacy)
-
-          within ".candidacy__aside" do
-            expect(page).to have_content(signature_text(0))
-            click_on "Sign"
-          end
-        end
+      within ".candidacy__aside" do
+        expect(page).to have_content(signature_text(1))
       end
     end
   end
 
-  def vote_candidacy
+  # Votes have no author (removed in 20251222131109), so signatures cannot be removed.
+  context "when the user has signed the candidacy" do
+    before do
+      create(:candidacy_user_vote, :signed, candidacy:)
+    end
+
+    it "does not offer to remove the signature" do
+      visit decidim_candidacies.candidacy_path(candidacy)
+
+      within ".candidacy__aside" do
+        expect(page).to have_link("Sign")
+        expect(page).to have_no_content("Already signed")
+        expect(page).to have_no_css("form[action*='candidacy_vote']")
+      end
+    end
+  end
+
+  def fill_personal_data
     visit decidim_candidacies.candidacy_path(candidacy)
 
     within ".candidacy__aside" do
-      expect(page).to have_content(signature_text(0))
       click_on "Sign"
     end
 
-    if has_content?("Complete your data")
-      fill_in :candidacies_vote_name_and_surname, with: confirmed_user.name
-      fill_in :candidacies_vote_document_number, with: "012345678X"
-      fill_in_datepicker :candidacies_vote_date_of_birth_date, with: 30.years.ago.strftime("01/01/%Y")
-      fill_in :candidacies_vote_postal_code, with: "01234"
-
-      click_on "Continue"
-
-      expect(page).to have_content("candidacy has been successfully signed")
-      click_on "Back to candidacy"
-    end
-
-    within ".candidacy__aside" do
-      expect(page).to have_content(signature_text(1))
-    end
+    fill_in :candidacies_vote_name, with: "John"
+    fill_in :candidacies_vote_first_surname, with: "Doe"
+    select "NIF", from: :candidacies_vote_document_type
+    fill_in :candidacies_vote_document_number, with: document_number
+    fill_in_datepicker :candidacies_vote_date_of_birth_date, with: "01/01/1990"
+    fill_in :candidacies_vote_postal_code, with: "08001"
+    click_on "Continue"
   end
 
   def signature_text(number)

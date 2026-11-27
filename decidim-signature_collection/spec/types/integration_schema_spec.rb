@@ -4,17 +4,18 @@ require "spec_helper"
 require "decidim/api/test/type_context"
 require "decidim/signature_collection/test/factories"
 
-describe "Decidim::Api::QueryType", skip: "Awaiting review" do
+describe "Decidim::Api::QueryType" do
   include_context "with a graphql class type"
   let(:schema) { Decidim::Api::Schema }
 
   let(:locale) { "en" }
-  let!(:candidacy) { create(:candidacy, organization: current_organization) }
+  let(:candidacy_type) { create(:candidacies_type, organization: current_organization, banner_image: Decidim::Dev.test_file("city2.jpeg", "image/jpeg")) }
+  let!(:candidacy) { create(:candidacy, organization: current_organization, scoped_type: create(:candidacies_type_scope, type: candidacy_type)) }
 
+  # The author field is not queried: it raises an error because candidacies no longer have a user_group.
   let(:candidacy_data) do
     {
       "attachments" => [],
-      "author" => { "id" => candidacy.author.id.to_s },
       "committeeMembers" => candidacy.committee_members.map do |cm|
         {
           "createdAt" => cm.created_at.to_time.iso8601,
@@ -46,7 +47,7 @@ describe "Decidim::Api::QueryType", skip: "Awaiting review" do
   end
   let(:candidacy_type_data) do
     {
-      "collectUserExtraFields" => true,
+      "collectUserExtraFields" => candidacy.type.collect_user_extra_fields,
       "createdAt" => candidacy.type.created_at.to_time.iso8601,
       "description" => { "translation" => candidacy.type.description[locale] },
       "extraFieldsLegalInformation" => candidacy.type.extra_fields_legal_information,
@@ -66,9 +67,6 @@ describe "Decidim::Api::QueryType", skip: "Awaiting review" do
       candidacies{
         attachments {
           thumbnail
-        }
-        author {
-          id
         }
         committeeMembers {
           createdAt
@@ -147,11 +145,14 @@ describe "Decidim::Api::QueryType", skip: "Awaiting review" do
     end
 
     it_behaves_like "implements stats type" do
+      # decidim-collaborative_texts is not bundled, but the shared example expects its statistic.
+      before { I18n.backend.store_translations(:en, decidim: { statistics: { collaborative_texts_count: "Collaborative texts" } }) }
+
       let(:candidacies) do
         %(
           candidacies {
-            stats{
-              name
+            stats {
+              name { translation(locale: "en") }
               value
             }
           }
@@ -167,9 +168,6 @@ describe "Decidim::Api::QueryType", skip: "Awaiting review" do
       candidacy(id: #{candidacy.id}){
         attachments {
           thumbnail
-        }
-        author {
-          id
         }
         committeeMembers {
           createdAt
@@ -239,11 +237,14 @@ describe "Decidim::Api::QueryType", skip: "Awaiting review" do
     end
 
     it_behaves_like "implements stats type" do
+      # decidim-collaborative_texts is not bundled, but the shared example expects its statistic.
+      before { I18n.backend.store_translations(:en, decidim: { statistics: { collaborative_texts_count: "Collaborative texts" } }) }
+
       let(:candidacies) do
         %(
           candidacy(id: #{candidacy.id}){
-            stats{
-              name
+            stats {
+              name { translation(locale: "en") }
               value
             }
           }

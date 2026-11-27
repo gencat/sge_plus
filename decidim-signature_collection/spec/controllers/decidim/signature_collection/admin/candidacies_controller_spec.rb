@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe Decidim::SignatureCollection::Admin::CandidaciesController, skip: "Awaiting review" do
+describe Decidim::SignatureCollection::Admin::CandidaciesController do
   routes { Decidim::SignatureCollection::AdminEngine.routes }
 
   let(:user) { create(:user, :confirmed, :admin_terms_accepted, organization:) }
@@ -577,10 +577,12 @@ describe Decidim::SignatureCollection::Admin::CandidaciesController, skip: "Awai
         sign_in admin_user, scope: :user
       end
 
-      it "is allowed" do
+      it "exports a PDF file" do
         get :export_pdf_signatures, params: { slug: candidacy.to_param, format: :pdf }
-        expect(flash[:alert]).to be_nil
+
         expect(response).to have_http_status(:ok)
+        expect(response.media_type).to eq("application/pdf")
+        expect(response.body).to start_with("%PDF")
       end
 
       it "only exports signed votes" do
@@ -594,6 +596,7 @@ describe Decidim::SignatureCollection::Admin::CandidaciesController, skip: "Awai
 
         get :export_pdf_signatures, params: { slug: candidacy.to_param, format: :pdf }
 
+        expect(response).to have_http_status(:ok)
         expect(exported_votes).to eq([signed_vote])
       end
     end
@@ -634,7 +637,7 @@ describe Decidim::SignatureCollection::Admin::CandidaciesController, skip: "Awai
         it "enqueues the job" do
           expect(Decidim::SignatureCollection::ExportCandidaciesJob).to receive(:perform_later).with(admin_user, organization, "csv", collection_ids)
 
-          get :export, params: { format: :csv, collection_ids: }
+          get :export, params: { format: :csv, collection_ids: collection_ids.join(",") }
           expect(flash[:alert]).to be_nil
           expect(response).to have_http_status(:found)
         end
