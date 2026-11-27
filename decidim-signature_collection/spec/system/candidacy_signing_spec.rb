@@ -100,7 +100,7 @@ describe "Candidacy signing" do
     end
   end
 
-  # Votes no longer have an author (removed in 20251222131109), so the page does not know who has signed.
+  # Votes have no author (removed in 20251222131109), so signatures cannot be removed.
   context "when the user has signed the candidacy" do
     before do
       create(:candidacy_user_vote, :signed, candidacy:)

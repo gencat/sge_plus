@@ -277,13 +277,6 @@ module Decidim
         end
       end
 
-      # Public: Check if the user has voted the question.
-      #
-      # Returns Boolean.
-      def voted_by?(user)
-        votes.where(author: user).any?
-      end
-
       # Public: Checks if the organization has given an answer for the candidacy.
       #
       # Returns a Boolean.
@@ -466,10 +459,6 @@ module Decidim
 
       def accepts_online_votes?
         votes_enabled? && (online_signature_type? || any_signature_type?)
-      end
-
-      def accepts_online_unvotes?
-        accepts_online_votes? && type.undo_online_signatures_enabled?
       end
 
       def minimum_committee_members

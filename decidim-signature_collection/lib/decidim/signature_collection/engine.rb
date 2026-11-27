@@ -61,7 +61,6 @@ module Decidim
             get :export_votes, to: "candidacies#export_votes"
           end
 
-          resource :candidacy_vote, only: [:create, :destroy]
           resources :committee_requests, only: [:new] do
             collection do
               get :spawn
